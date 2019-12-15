@@ -22,8 +22,8 @@ Python Client Library for Land Cover Classification System Web Service
         :target: https://coveralls.io/github/brazil-data-cube/lccs.py?branch=master
         :alt: Code Coverage Test
 
-.. image:: https://readthedocs.org/projects/stacpy/badge/?version=latest
-        :target: https://lccspy.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/lccs/badge/?version=latest
+        :target: https://lccs.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
 .. image:: https://img.shields.io/badge/lifecycle-experimental-orange.svg
