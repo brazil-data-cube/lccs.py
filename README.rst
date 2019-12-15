@@ -1,8 +1,8 @@
 ..
-    This file is part of Land Cover Classification System Web Service.
+    This file is part of Python Client Library for the LCCS Web Service.
     Copyright (C) 2019 INPE.
 
-    Land Cover Classification System Web Service is free software; you can redistribute it and/or modify it
+    Python Client Library for the LCCS Web Service is free software; you can redistribute it and/or modify it
     under the terms of the MIT License; see LICENSE file for more details.
 
 
@@ -12,30 +12,41 @@ Python Client Library for Land Cover Classification System Web Service
 
 .. image:: https://img.shields.io/badge/license-MIT-green
         :target: https://github.com//brazil-data-cube/lccs.py/blob/master/LICENSE
+        :alt: Software License
 
-.. image:: https://img.shields.io/badge/build-todo-success
+.. image:: https://travis-ci.org/brazil-data-cube/lccs.py.svg?branch=master
         :target: https://travis-ci.org/brazil-data-cube/lccs.py
+        :alt: Build Status
 
-.. image:: https://img.shields.io/badge/tests-0%20passed,%200%20failed-critical
-        :target: https://travis-ci.org/brazil-data-cube/lccs.py
+.. image:: https://coveralls.io/repos/github/brazil-data-cube/lccs.py/badge.svg?branch=master
+        :target: https://coveralls.io/github/brazil-data-cube/lccs.py?branch=master
+        :alt: Code Coverage Test
 
-.. image:: https://img.shields.io/badge/coverage-000%25-critical
-        :target: https://coveralls.io/r/brazil-data-cube/lccs.py
+.. image:: https://readthedocs.org/projects/stacpy/badge/?version=latest
+        :target: https://lccspy.readthedocs.io/en/latest/?badge=latest
+        :alt: Documentation Status
 
 .. image:: https://img.shields.io/badge/lifecycle-experimental-orange.svg
         :target: https://www.tidyverse.org/lifecycle/#experimental
+        :alt: Software Life Cycle
 
 
 Installation
 ============
 
-**Under Development!**
+See `INSTALL.rst <./INSTALL.rst>`_.
+
+
+Running
+=======
+
+See `RUNNING.rst <./RUNNING.rst>`_.
 
 
 Developer Documentation
 =======================
 
-**Under Development!**
+See https://lccspy.readthedocs.io/en/latest.
 
 
 License
@@ -44,5 +55,5 @@ License
 .. admonition::
     Copyright (C) 2019 INPE.
 
-    Land Cover Classification System Web Service is free software; you can redistribute it and/or modify it
+    Python Client Library for the LCCS Web Service is free software; you can redistribute it and/or modify it
     under the terms of the MIT License; see LICENSE file for more details.
