@@ -19,3 +19,4 @@ recursive-include doc *.py
 recursive-include doc *.rst
 recursive-include doc Makefile
 recursive-include tests *.py
+recursive-include exemples *.py
