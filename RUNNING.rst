@@ -6,8 +6,9 @@
     under the terms of the MIT License; see LICENSE file for more details.
 
 
-Running STAC Client in the Command Line
-=======================================
+======================================================================
+Python Client Library for Land Cover Classification System Web Service
+======================================================================
 
 **Under Development!**
 
