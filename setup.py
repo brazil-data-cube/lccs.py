@@ -32,7 +32,7 @@ tests_require = [
 
 extras_require = {
     'docs': docs_require,
-    'oauth': [ 'requests_oauthlib>=1.3' ],
+    'oauth': ['requests_oauthlib>=1.3'],
     'tests': tests_require,
 }
 
@@ -71,9 +71,9 @@ setup(
     include_package_data=True,
     platforms='any',
     entry_points={
-        # 'console_scripts': [
-        #     'lccs = lccs.cli:cli',
-        # ],
+        'console_scripts': [
+            'lccs = lccs.cli:cli',
+        ],
     },
     extras_require=extras_require,
     install_requires=install_requires,
