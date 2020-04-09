@@ -37,11 +37,10 @@ Installation
 See `INSTALL.rst <./INSTALL.rst>`_.
 
 
-Running
-=======
+Using LCCS in the Command Line
+==============================
 
-See `RUNNING.rst <./RUNNING.rst>`_.
-
+See `CLI.rst <./CLI.rst>`_.
 
 Developer Documentation
 =======================
