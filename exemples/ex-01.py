@@ -20,15 +20,15 @@ print(service.classification_systems)
 
 print("\nInformations about TerraClass_AMZ Classification System:")
 class_system = service.classification_system(system_id='TerraClass_AMZ')
-# print(class_system.description)
+print(class_system.description)
 
 print("\nTerraClass_AMZ Classes: \n")
 classes = class_system.classes()
-# print(classes)
+print(classes)
 
 print("\nTerraClass_AMZ Desflorestamento informations: \n")
 class_desflorestamento = class_system.classes(class_id='Desflorestamento')
-# print(class_desflorestamento)
+print(class_desflorestamento)
 
 all_mapping = service.avaliable_mappings(system_id_source='TerraClass_AMZ')
 
