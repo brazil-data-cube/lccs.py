@@ -44,8 +44,7 @@ class lccs:
 
     @property
     def classification_systems(self):
-        """ Retrieves the list of names of all available
-            land use and and cover classification systems in the service.
+        """Retrieve the list of names of all available classification systems in the service.
 
         :returns: List of Classification Systems.
         :rtype: dict
@@ -116,12 +115,12 @@ class lccs:
     def styles(self, system_id):
         """Fetch styles of the a giving classification system.
 
-         :param system_id: A classification System system_id (name).
-         :type system_id: str
+        :param system_id: A classification System system_id (name).
+        :type system_id: str
 
-         :returns: Avaliable Classification Systems Styles.
-         :rtype: list
-         """
+        :returns: Avaliable Classification Systems Styles.
+        :rtype: list
+        """
         try:
             data = Utils._get('{}/classification_systems/{}/styles'.format(self._url, system_id))
             return data
