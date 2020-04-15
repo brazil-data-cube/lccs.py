@@ -6,7 +6,7 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 """Python Client Library for the LCCS Web Service."""
-from .class_system import ClassSystemClass
+from .class_system import ClassificationSystemClass
 from .utils import Utils
 
 
@@ -42,11 +42,13 @@ class Mappings(dict):
         """:return: the Class code."""
         for i in self['links']:
             if i['rel'] == 'source_class':
-                return ClassSystemClass(Utils._get(i['href'], self._validate))
+                return ClassificationSystemClass(Utils._get(i['href']), self._validate)
+
+
 
     @property
     def target_class(self):
         """:return: the Class code."""
         for i in self['links']:
             if i['rel'] == 'target_class':
-                return ClassSystemClass(Utils._get(i['href'], self._validate))
+                return ClassificationSystemClass(Utils._get(i['href']), self._validate)
