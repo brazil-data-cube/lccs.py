@@ -8,33 +8,37 @@
 """LCCS Python Client Samples."""
 
 import os
-from pprint import pprint
 
 from lccs import lccs
 
-url = os.environ.get('LCCS_SERVER_URL', 'http://0.0.0.0:5000/lccs_ws/')
+url = os.environ.get('LCCS_SERVER_URL', 'http://0.0.0.0:5000/lccs/')
 
 service = lccs(url)
 
-retval = service.classification_systems()
+print("Classificatom System Avaliable on Service:")
+print(service.classification_systems)
 
-print("Sistemas de Classificação Disponíveis: \n")
-print(retval)
-
-class_system = service.classification_system(system_id='TerraClass')
-
-print("\n Descrição do sistema TerraClass: ")
+print("\nInformations about TerraClass_AMZ Classification System:")
+class_system = service.classification_system(system_id='TerraClass_AMZ')
 print(class_system.description)
 
-print("Classes do TerraClass:")
+print("\nTerraClass_AMZ Classes: \n")
 classes = class_system.classes()
-pprint(classes)
+print(classes)
 
-classes = class_system.classes(class_id='Desflorestamento')
-pprint(classes.name)
+print("\nTerraClass_AMZ Desflorestamento informations: \n")
+class_desflorestamento = class_system.classes(class_id='Desflorestamento')
+print(class_desflorestamento)
 
-mapping = service.mappings(system_id_source='TerraClass', system_id_target='PRODES')
+all_mapping = service.avaliable_mappings(system_id_source='TerraClass_AMZ')
 
-print("Mapping TerraClass to PRODES: \n")
-for mp in mapping:
-    print("Source Class: {} | Target Class: {}".format(mp.source_class.name, mp.target_class.name))
+if all_mapping:
+
+    for target in all_mapping:
+        mapping = service.mappings(system_id_source='TerraClass_AMZ', system_id_target=target)
+
+        print("Mapping TerraClass to {}: \n".format(target))
+        for mp in mapping:
+            print("Source Class: {} | Target Class: {}".format(mp.source_class.name, mp.target_class.name))
+
+styles = service.styles(system_id='TerraClass_AMZ')

@@ -7,12 +7,12 @@
 #
 """Python Client Library for the LCCS Web Service."""
 
-from .classes import ClassSystemClass, ClassSystemClasses
+from .classes import ClassificationSystemClass, ClassificationSystemClasses
 from .link import Link
 from .utils import Utils
 
 
-class ClassSystem(dict):
+class ClassificationSystem(dict):
     """Classification Systems."""
 
     def __init__(self, data, validate=False):
@@ -20,9 +20,10 @@ class ClassSystem(dict):
 
         :param data: Dict with class system metadata.
         :param validate: true if the Class System should be validate using its jsonschema. Default is False.
+        :type bool
         """
         self._validate = validate
-        super(ClassSystem, self).__init__(data or {})
+        super(ClassificationSystem, self).__init__(data or {})
 
     @property
     def links(self):
@@ -50,7 +51,7 @@ class ClassSystem(dict):
             if link['rel'] == 'classes':
                 if class_id is not None:
                     data = Utils._get('{}/{}'.format(link["href"], class_id))
-                    return ClassSystemClass(data, self._validate)
+                    return ClassificationSystemClass(data, self._validate)
                 data = Utils._get(link['href'], params=filter)
-                return ClassSystemClasses(data).get_class
-        return ClassSystemClasses({})
+                return ClassificationSystemClasses(data).get_class
+        return ClassificationSystemClasses({})

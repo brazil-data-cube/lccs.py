@@ -9,17 +9,19 @@
 from .utils import Utils
 
 
-class ClassSystemClass(dict):
+class ClassificationSystemClass(dict):
     """Class."""
 
     def __init__(self, data, validate=False):
         """Initialize instance with dictionary data.
 
         :param data: Dict with Class metadata.
+
         :param validate: true if the Class should be validate using its jsonschema. Default is False.
+        :type bool
         """
         self._validate = validate
-        super(ClassSystemClass, self).__init__(data or {})
+        super(ClassificationSystemClass, self).__init__(data or {})
 
     @property
     def id(self):
@@ -42,7 +44,7 @@ class ClassSystemClass(dict):
         return self['code']
 
 
-class ClassSystemClasses(dict):
+class ClassificationSystemClasses(dict):
     """Classifications System Classes."""
 
     def __init__(self, data, validate=False):
@@ -50,11 +52,12 @@ class ClassSystemClasses(dict):
 
         :param data: Dict with Classes metadata.
         :param validate: true if the Classes should be validate using its jsonschema. Default is False.
+        :type bool
         """
         self._validate = validate
-        super(ClassSystemClasses, self).__init__(data or {})
+        super(ClassificationSystemClasses, self).__init__(data or {})
 
     @property
     def get_class(self):
         """:return: list of classes."""
-        return [ClassSystemClass(Utils._get(i['href'], self._validate), self._validate) for i in self['links'] if (i['rel'] == 'child')]
+        return [ClassificationSystemClass(Utils._get(i['href'], self._validate), self._validate) for i in self['links'] if (i['rel'] == 'child')]
