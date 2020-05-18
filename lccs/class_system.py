@@ -36,6 +36,11 @@ class ClassificationSystem(dict):
         return self['description']
 
     @property
+    def version(self):
+        """:return: version of class system."""
+        return self['version']
+
+    @property
     def name(self):
         """:return: name of class system."""
         return self['name']

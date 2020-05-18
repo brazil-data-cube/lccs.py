@@ -1,0 +1,9 @@
+{
+    "links":[
+        {
+          "href": "http://localhost:5000/lccs/classification_systems/PRODES",
+          "rel": "child",
+          "title": "PRODES"
+        }
+    ]
+}

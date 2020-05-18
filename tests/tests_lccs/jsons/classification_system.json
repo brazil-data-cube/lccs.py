@@ -1,0 +1,32 @@
+{
+    "links": [
+        {
+            "href": "http://localhost:5000/lccs/classification_systems/PRODES",
+            "rel": "self"
+        },
+        {
+            "href": "http://localhost:5000/lccs/classification_systems/PRODES/classes",
+            "rel": "classes"
+        },
+        {
+            "href": "http://localhost:5000/lccs/classification_systems",
+            "rel": "parent"
+        },
+        {
+            "href": "http://localhost:5000/lccs/",
+            "rel": "root"
+        }
+    ],
+    "styles": [
+        {
+            "href": "http://localhost:5000/lccs/classification_systems/PRODES/styles/",
+            "title": "Styles",
+            "rel": "child"
+        }
+    ],
+    "description": "Projeto de monitoramento ambiental anual. ",
+    "authority_name": "INPE",
+    "name": "PRODES",
+    "version": "1.0",
+    "id": 23
+}

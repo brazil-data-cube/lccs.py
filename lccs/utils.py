@@ -43,7 +43,7 @@ class Utils:
 
     @staticmethod
     def validate(lccs_object):
-        """Validate a lucc Object using its jsonschema.
+        """Validate a lucc Object using its jsonschemas.
 
         :raise ValidationError: raise a ValidationError if the lucc Object couldn't be validated.
         """
