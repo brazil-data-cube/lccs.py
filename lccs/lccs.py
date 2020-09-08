@@ -37,8 +37,9 @@ class lccs:
         url = '{}/classification_systems'.format(self._url)
 
         for i in (ClassificationSystem(Utils._get(url), self._validate)).links:
-            if i.rel == 'child':
-                self._classification_systems[i.href.split('/')[-1]] = None
+            self._classification_systems[i['name']] = None
+            # if i.rel == 'child':
+            #     self._classification_systems[i.href.split('/')[-1]] = None
 
         return self._classification_systems.keys()
 
@@ -65,7 +66,7 @@ class lccs:
         if system_id in self._classification_systems.keys() and self._classification_systems[system_id] is not None:
             return self._classification_systems[system_id]
         try:
-            data = Utils._get('{}/classification_systems/{}'.format(self._url, system_id))
+            data = Utils._get('{}/classification_system/{}'.format(self._url, system_id))
             self._classification_systems[system_id] = ClassificationSystem(data, self._validate)
         except Exception:
             raise KeyError('Could not retrieve information for classification_system: {}'.format(system_id))
@@ -88,7 +89,7 @@ class lccs:
         except Exception:
             raise KeyError('Could not retrieve mappings for {} and {}'.format(system_id_source, system_id_target))
 
-        [result.append(Mappings(i, self._validate)) for i in data]
+        [result.append(Mappings(i, self._validate)) for i in data['mappings']]
 
         return result
 
@@ -108,7 +109,7 @@ class lccs:
         except Exception:
             raise KeyError('Could not retrieve any avaliable mapping for {}'.format(system_id_source))
 
-        [result.append(i['rel']) for i in data]
+        [result.append(i['title']) for i in data['links'] if i['rel'] == 'child']
 
         return result
 
