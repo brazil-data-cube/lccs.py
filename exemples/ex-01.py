@@ -1,6 +1,6 @@
 #
 # This file is part of Python Client Library for the LCCS Web Service.
-# Copyright (C) 2019 INPE.
+# Copyright (C) 2020 INPE.
 #
 # Python Client Library for the LCCS Web Service is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -8,7 +8,6 @@
 """LCCS Python Client Samples."""
 
 import os
-
 import lccs
 
 print(lccs.__version__)
@@ -19,6 +18,8 @@ service = lccs.lccs(url)
 
 print("Classificatom System Avaliable on Service:")
 print(service.classification_systems)
+
+# The examples presented in this code vary depending on the database used. Check the parameters informed.
 
 print("\nInformations about TerraClass_AMZ Classification System:")
 class_system = service.classification_system(system_id='TerraClass_AMZ')
@@ -42,5 +43,14 @@ if all_mapping:
 
         for mp in mapping:
             print("Source Class: {} | Target Class: {}".format(mp.source_class, mp.target_class))
-#
-# styles = service.styles(system_id='TerraClass_AMZ')
+
+# Get all styles avaliable for MapBiomas4
+styles = service.styles(system_id='MapBiomas4')
+
+print(styles)
+
+# Save Style File
+service.get_styles(system_id='MapBiomas4', format_id='QGIS')
+
+# Save Style File passing the path directory
+service.get_styles(system_id='MapBiomas4', format_id='QGIS', path='/home/fabiana/Downloads/')

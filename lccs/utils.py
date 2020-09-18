@@ -7,6 +7,7 @@
 #
 """Python Client Library for the LCCS Web Service."""
 import requests
+import re
 from jsonschema import RefResolver, validate
 from pkg_resources import resource_filename, resource_string
 
@@ -35,11 +36,21 @@ class Utils:
 
         content_type = response.headers.get('content-type')
 
-        if content_type not in ('application/json', 'application/geo+json'):
+        if content_type == 'application/octet-stream':
+
+            content = response.headers.get('content-disposition')
+
+            try:
+                file_name = re.findall('filename=(.+)', content)[0]
+            except:
+                raise ValueError('Error while download file')
+
+            return file_name, response.content
+
+        elif content_type not in ('application/json', 'application/geo+json'):
             raise ValueError('HTTP response is not JSON: Content-Type: {}'.format(content_type))
 
         return response.json()
-
 
     @staticmethod
     def validate(lccs_object):

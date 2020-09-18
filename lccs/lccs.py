@@ -38,8 +38,6 @@ class lccs:
 
         for i in (ClassificationSystem(Utils._get(url), self._validate)).links:
             self._classification_systems[i['name']] = None
-            # if i.rel == 'child':
-            #     self._classification_systems[i.href.split('/')[-1]] = None
 
         return self._classification_systems.keys()
 
@@ -122,13 +120,40 @@ class lccs:
         :returns: Avaliable Classification Systems Styles.
         :rtype: list
         """
+        result = list()
         try:
-            data = Utils._get('{}/classification_systems/{}/styles'.format(self._url, system_id))
-            return data
+            data = Utils._get('{}/classification_system/{}/styles'.format(self._url, system_id))
         except Exception:
             raise KeyError('Could not retrieve any style for {}'.format(system_id))
 
+        [result.append(i['title']) for i in data['links'] if i['rel'] == 'child']
 
+        return result
+
+    def get_styles(self, system_id, format_id, path=None):
+        """Fetch styles of the a giving classification system.
+
+        :param system_id: A classification system identification (name).
+        :type system_id: str
+
+        :param format_id: A classification system format identification (name).
+        :type format_id: str
+
+        :param path: Directory path to save fale
+        :type format_id: str
+
+        :returns: Style File
+        :rtype: File
+        """
+        try:
+            file_name, data = Utils._get('{}/classification_system/{}/styles/{}'.format(self._url, system_id,format_id))
+        except Exception:
+            raise KeyError('Could not retrieve any style for {}'.format(system_id))
+
+        if path is not None:
+            full_path = path + file_name
+            return open(full_path, 'wb').write(data)
+        return open(file_name, 'wb').write(data)
 
     @property
     def url(self):
