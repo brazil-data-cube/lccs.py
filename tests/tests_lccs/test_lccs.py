@@ -18,13 +18,15 @@ from pkg_resources import resource_filename, resource_string
 
 import lccs
 
-url =  os.environ.get('LCCS_SERVER_URL', 'http://localhost:5000/lccs')
+url = os.environ.get('LCCS_SERVER_URL', 'http://localhost:5000')
 match_url = re.compile(url)
+
 
 @pytest.fixture
 def requests_mock(requests_mock):
     requests_mock.get(re.compile('https://geojson.org/'), real_http=True)
     yield requests_mock
+
 
 @pytest.fixture(scope='session')
 def lccs_object():
@@ -47,6 +49,7 @@ def lccs_object():
 
     return files
 
+
 class TestLCCS:
 
     def test_lccs(self):
@@ -57,7 +60,6 @@ class TestLCCS:
 
     def test_classification_systems(self, lccs_object, requests_mock):
         for k in lccs_object:
-
             service = lccs.lccs(url, True)
 
             requests_mock.get(match_url, json=lccs_object[k]['classification_systems.json'],
@@ -70,7 +72,6 @@ class TestLCCS:
 
     def test_class_system(self, lccs_object, requests_mock):
         for k in lccs_object:
-
             service = lccs.lccs(url, True)
 
             requests_mock.get(match_url, json=lccs_object[k]['classification_system.json'],
@@ -87,6 +88,7 @@ class TestLCCS:
             assert class_system.version
             assert class_system.links[0].href
             assert class_system.links[0].rel
+
 
 if __name__ == '__main__':
     pytest.main(['--color=auto', '--no-cov'])
