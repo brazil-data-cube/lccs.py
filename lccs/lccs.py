@@ -36,8 +36,10 @@ class lccs:
 
         url = '{}/classification_systems'.format(self._url)
 
-        for i in (ClassificationSystem(Utils._get(url), self._validate)).links:
-            self._classification_systems[i['name']] = None
+        data = Utils._get(url)
+
+        for i in data['classification_systems']:
+            self._classification_systems[i['name']] = ClassificationSystem(i, self._validate)
 
         return self._classification_systems.keys()
 

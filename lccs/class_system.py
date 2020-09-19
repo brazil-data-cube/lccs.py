@@ -28,7 +28,7 @@ class ClassificationSystem(dict):
     @property
     def links(self):
         """:return: a list of link in the class system."""
-        return [Link(link) for link in self['classification_systems']]
+        return [Link(link) for link in self['links']]
 
     @property
     def description(self):

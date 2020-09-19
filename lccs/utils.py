@@ -6,10 +6,11 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 """Python Client Library for the LCCS Web Service."""
-import requests
 import re
+import requests
+
 from jsonschema import RefResolver, validate
-from pkg_resources import resource_filename, resource_string
+from pkg_resources import resource_filename
 
 base_schemas_path = resource_filename(__name__, 'jsonschemas/')
 
