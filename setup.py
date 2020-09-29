@@ -9,6 +9,7 @@
 """Python Client Library for the LCCS Web Service."""
 
 import os
+
 from setuptools import find_packages, setup
 
 readme = open('README.rst').read()
@@ -27,7 +28,8 @@ tests_require = [
     'pytest-pep8>=1.0',
     'pydocstyle>=4.0',
     'isort>4.3',
-    'check-manifest>=0.40'
+    'check-manifest>=0.40',
+    'requests-mock>=1.7.0',
 ]
 
 extras_require = {
@@ -46,7 +48,6 @@ install_requires = [
     'Click>=7.0',
     'jsonschema>=3.2',
     'requests>=2.20',
-
 ]
 
 packages = find_packages()

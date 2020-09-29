@@ -1,0 +1,39 @@
+{
+  "authority_name": "INPE",
+  "description": "Sistema de Classificação Anual de Desmatamento",
+  "id": 1,
+  "links": [
+    {
+      "href": "http://localhost:5000/classification_system",
+      "rel": "parent",
+      "title": "Link to this document",
+      "type": "application/json"
+    },
+    {
+      "href": "http://localhost:5000/classification_system/PRODES",
+      "rel": "self",
+      "title": "The classification_system",
+      "type": "application/json"
+    },
+    {
+      "href": "http://localhost:5000/classification_system/PRODES/classes",
+      "rel": "classes",
+      "title": "The classes related to this item",
+      "type": "application/json"
+    },
+    {
+      "href": "http://localhost:5000/classification_system/PRODES/styles",
+      "rel": "styles",
+      "title": "The styles related to this item",
+      "type": "application/json"
+    },
+    {
+      "href": "http://localhost:5000/",
+      "rel": "root",
+      "title": "API landing page.",
+      "type": "application/json"
+    }
+  ],
+  "name": "PRODES",
+  "version": "1.0"
+}

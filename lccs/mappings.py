@@ -40,15 +40,9 @@ class Mappings(dict):
     @property
     def source_class(self):
         """:return: the Class code."""
-        for i in self['links']:
-            if i['rel'] == 'source_class':
-                return ClassificationSystemClass(Utils._get(i['href']), self._validate)
-
-
+        return self['source']
 
     @property
     def target_class(self):
         """:return: the Class code."""
-        for i in self['links']:
-            if i['rel'] == 'target_class':
-                return ClassificationSystemClass(Utils._get(i['href']), self._validate)
+        return self['target']

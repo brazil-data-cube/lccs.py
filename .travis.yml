@@ -20,7 +20,7 @@ install:
     - pip install -e .[tests,docs]
 
 script:
-    - ./run-test.sh
+    - ./run-tests.sh
 
 after_success:
     - coveralls
