@@ -14,7 +14,7 @@ print(lccs.__version__)
 
 url = os.environ.get('LCCS_SERVER_URL', 'http://0.0.0.0:5000/')
 
-service = lccs.lccs(url)
+service = lccs.LCCS(url)
 
 print("Classificatom System Avaliable on Service:")
 print(service.classification_systems)
