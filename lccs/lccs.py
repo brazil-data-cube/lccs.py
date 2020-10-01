@@ -12,7 +12,7 @@ from .mappings import Mappings
 from .utils import Utils
 
 
-class lccs:
+class LCCS:
     """This class implements a Python API client wrapper for LCCS-WS.
 
     See https://github.com/brazil-data-cube/lccs-ws for more

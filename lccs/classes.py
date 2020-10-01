@@ -18,7 +18,6 @@ class ClassificationSystemClass(dict):
         :param data: Dict with Class metadata.
 
         :param validate: true if the Class should be validate using its jsonschema. Default is False.
-        :type bool
         """
         self._validate = validate
         super(ClassificationSystemClass, self).__init__(data or {})

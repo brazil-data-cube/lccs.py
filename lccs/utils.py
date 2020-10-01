@@ -14,6 +14,7 @@ from pkg_resources import resource_filename
 
 base_schemas_path = resource_filename(__name__, 'jsonschemas/')
 
+
 class Utils:
     """Utils class."""
 

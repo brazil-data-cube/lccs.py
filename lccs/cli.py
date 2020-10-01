@@ -11,7 +11,7 @@ from pprint import pprint
 
 import click
 
-from .lccs import lccs
+from .lccs import LCCS
 
 
 class Config:
@@ -33,36 +33,38 @@ def cli(config, url):
     """LCCS on command line."""
     config.url = url
 
+
 @cli.command()
 @pass_config
 def classification_systems(config):
     """Return the list of available classification systems in the service provider."""
-    service = lccs(config.url)
+    service = LCCS(config.url)
 
     retval = service.classification_systems
 
     pprint(retval)
+
 
 @cli.command()
 @click.option('--system_id', type=click.STRING, required=True, help='The classification system id (name).')
 @pass_config
 def classification_systems_describe(config, system_id):
     """Return information for a given classification system."""
-    service = lccs(config.url)
+    service = LCCS(config.url)
 
     retval = service.classification_system(system_id=system_id)
 
     pprint(retval)
+
 
 @cli.command()
 @click.option('--system_id', type=click.STRING, required=True, help='The classification system id (name).')
 @pass_config
 def classes(config, system_id):
     """Return the list of available classes given a classification system in the service provider."""
-    service = lccs(config.url)
+    service = LCCS(config.url)
 
     class_system = service.classification_system(system_id=system_id)
-
 
     retval = class_system.classes()
 
@@ -73,13 +75,14 @@ def classes(config, system_id):
 
     pprint(result)
 
+
 @cli.command()
 @click.option('--system_id', type=click.STRING, required=True, help='The classification system id (name).')
 @click.option('--class_id', type=click.STRING, required=True, help='The Class id (name).')
 @pass_config
 def class_describe(config, system_id, class_id):
     """Return information for a classes given a classification system in the service provider."""
-    service = lccs(config.url)
+    service = LCCS(config.url)
 
     class_system = service.classification_system(system_id=system_id)
 
@@ -87,24 +90,27 @@ def class_describe(config, system_id, class_id):
 
     pprint(retval)
 
+
 @cli.command()
 @click.option('--system_id_source', type=click.STRING, required=True, help='The classification system source (name).')
 @pass_config
 def avaliable_mappings(config, system_id_source):
     """Return the list of available mappings."""
-    service = lccs(config.url)
+    service = LCCS(config.url)
 
     retval = service.avaliable_mappings(system_id_source=system_id_source)
 
     pprint(retval)
 
+
 @cli.command()
 @click.option('--system_id_source', type=click.STRING, required=True, help='The classification system source (name).')
-@click.option('--system_id_target', type=click.STRING, required=True, default=None, help='The classification system source (name)..')
+@click.option('--system_id_target', type=click.STRING, required=True, default=None,
+              help='The classification system source (name)..')
 @pass_config
 def mappings(config, system_id_source, system_id_target):
     """Return the classes mappings."""
-    service = lccs(config.url)
+    service = LCCS(config.url)
 
     retval = service.mappings(system_id_source=system_id_source, system_id_target=system_id_target)
 
