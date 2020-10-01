@@ -1,6 +1,6 @@
 #
 # This file is part of Python Client Library for the LCCS Web Service.
-# Copyright (C) 2019 INPE.
+# Copyright (C) 2019-2020 INPE.
 #
 # Python Client Library for the LCCS Web Service is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -13,6 +13,7 @@ from jsonschema import RefResolver, validate
 from pkg_resources import resource_filename
 
 base_schemas_path = resource_filename(__name__, 'jsonschemas/')
+
 
 class Utils:
     """Utils class."""

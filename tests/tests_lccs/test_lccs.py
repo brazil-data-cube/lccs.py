@@ -1,6 +1,6 @@
 #
 # This file is part of Python Client Library for the LCCS Web Service.
-# Copyright (C) 2019 INPE.
+# Copyright (C) 2019-2020 INPE.
 #
 # Python Client Library for the LCCS Web Service. is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -53,14 +53,14 @@ def lccs_object():
 class TestLCCS:
 
     def test_lccs(self):
-        service = lccs.lccs(url)
+        service = lccs.LCCS(url)
         assert service.url == url
         assert repr(service) == 'lccs("{}")'.format(url)
         assert str(service) == '<LCCS [{}]>'.format(url)
 
     def test_classification_systems(self, lccs_object, requests_mock):
         for k in lccs_object:
-            service = lccs.lccs(url, True)
+            service = lccs.LCCS(url, True)
 
             requests_mock.get(match_url, json=lccs_object[k]['classification_systems.json'],
                               status_code=200,
@@ -72,7 +72,7 @@ class TestLCCS:
 
     def test_class_system(self, lccs_object, requests_mock):
         for k in lccs_object:
-            service = lccs.lccs(url, True)
+            service = lccs.LCCS(url, True)
 
             requests_mock.get(match_url, json=lccs_object[k]['classification_system.json'],
                               status_code=200,

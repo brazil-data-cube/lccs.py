@@ -1,6 +1,6 @@
 #
 # This file is part of Python Client Library for the LCCS Web Service.
-# Copyright (C) 2019 INPE.
+# Copyright (C) 2019-2020 INPE.
 #
 # Python Client Library for the LCCS Web Service is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -18,7 +18,6 @@ class ClassificationSystemClass(dict):
         :param data: Dict with Class metadata.
 
         :param validate: true if the Class should be validate using its jsonschema. Default is False.
-        :type bool
         """
         self._validate = validate
         super(ClassificationSystemClass, self).__init__(data or {})
@@ -51,8 +50,8 @@ class ClassificationSystemClasses(dict):
         """Initialize instance with dictionary data.
 
         :param data: Dict with Classes metadata.
+
         :param validate: true if the Classes should be validate using its jsonschema. Default is False.
-        :type bool
         """
         self._validate = validate
         super(ClassificationSystemClasses, self).__init__(data or {})

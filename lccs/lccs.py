@@ -1,6 +1,6 @@
 #
 # This file is part of Land Cover Classification System Web Service.
-# Copyright (C) 2019 INPE.
+# Copyright (C) 2019-2020 INPE.
 #
 # Land Cover Classification System Web Service is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -12,7 +12,7 @@ from .mappings import Mappings
 from .utils import Utils
 
 
-class lccs:
+class LCCS:
     """This class implements a Python API client wrapper for LCCS-WS.
 
     See https://github.com/brazil-data-cube/lccs-ws for more
