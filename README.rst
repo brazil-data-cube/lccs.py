@@ -42,8 +42,7 @@ Currently, there are several data sets on regional, national and global scales w
 
 In this context, the **LCCS-WS** (**L**\ and **C**\ over **C**\ lassification **S**\ystem **W**\eb **S**\ ervice) aims to provide a simple interface to access the various classification systems in use and their respective classes. Therefore, this service proposes a representation for the classification systems and provides an API to access the classes and their symbolizations. It is also possible to stablish mappings between classes of different systems.
 
-If you want to know more about LCCS service, please, take a look at its `specification <https://github.com/brazil-data-cube/lccs-ws-spec>`_:
-.
+If you want to know more about LCCS service, please, take a look at its `specification <https://github.com/brazil-data-cube/lccs-ws-spec>`_.
 
 Installation
 ============
