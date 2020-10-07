@@ -8,11 +8,14 @@
 """Python Client Library for the LCCS Web Service."""
 import re
 import requests
+import jinja2
 
 from jsonschema import RefResolver, validate
 from pkg_resources import resource_filename
 
 base_schemas_path = resource_filename(__name__, 'jsonschemas/')
+templateLoader = jinja2.FileSystemLoader(searchpath=resource_filename(__name__, 'templates/'))
+templateEnv = jinja2.Environment(loader=templateLoader)
 
 
 class Utils:
@@ -63,3 +66,9 @@ class Utils:
         resolver = RefResolver("file://{}{}/".format(base_schemas_path, lccs_object))
 
         validate(lccs_object, lccs_object._schema, resolver=resolver)
+
+    @staticmethod
+    def render_html(template_name, **kwargs):
+        """Render Jinja2 HTML template."""
+        template = templateEnv.get_template(template_name)
+        return template.render(**kwargs)

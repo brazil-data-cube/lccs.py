@@ -7,6 +7,12 @@
 #
 """Python Client Library for the LCCS Web Service."""
 from .lccs import LCCS
+from .class_system import ClassificationSystem
+from .classes import ClassificationSystemClass
+from .mappings import Mapping, MappingGroup
+from .utils import Utils
 from .version import __version__
+from .lccs import LCCS
 
-__all__ = ('__version__', 'LCCS', )
+__all__ = ('__version__',
+           'lccs', )

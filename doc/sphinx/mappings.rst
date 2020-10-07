@@ -9,7 +9,7 @@ Mappings
 --------
 
 
-.. autoclass:: lccs.mappings::Mappings
+.. autoclass:: lccs.mappings::Mapping
     :members:
     :special-members: __init__
     :member-order: bysource
