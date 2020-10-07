@@ -35,14 +35,12 @@ print(class_desflorestamento)
 
 all_mapping = service.avaliable_mappings(system_id_source='TerraClass_AMZ')
 
-if all_mapping:
-    for target in all_mapping:
-        mapping = service.mappings(system_id_source='TerraClass_AMZ', system_id_target=target)
+mapping = service.mappings(system_id_source='TerraClass_AMZ', system_id_target='PRODES')
 
-        print("Mapping TerraClass to {}: \n".format(target))
+print("\nMapping {} to {}: \n".format(mapping.source_classification_system, mapping.target_classification_system))
 
-        for mp in mapping:
-            print("Source Class: {} | Target Class: {}".format(mp.source_class, mp.target_class))
+for mp in mapping.mapping:
+    print("Source Class: {} | Target Class: {}".format(mp.source_class, mp.target_class))
 
 # Get all styles avaliable for MapBiomas4
 styles = service.styles(system_id='MapBiomas4')
