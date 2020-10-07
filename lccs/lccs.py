@@ -8,7 +8,7 @@
 """Python API client wrapper for LCCS-WS."""
 
 from .class_system import ClassificationSystem
-from .mappings import Mapping, MappingGroup
+from .mappings import MappingGroup
 from .utils import Utils
 
 
@@ -89,9 +89,6 @@ class LCCS:
             data = Utils._get('{}/mappings/{}/{}'.format(self._url, system_id_source, system_id_target))
         except Exception:
             raise KeyError('Could not retrieve mappings for {} and {}'.format(system_id_source, system_id_target))
-
-        # [result.append(Mappings(i, self._validate)) for i in data['mappings']]
-        #return result
 
         data['source_classification_system'] = system_id_source
 

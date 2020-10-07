@@ -14,6 +14,7 @@ class MappingGroup(dict):
 
     def __init__(self, data, validate=False):
         """Initialize instance with dictionary data.
+
         :param data: Dict with Item Collection metadata.
         :param validate: true if the Item Collection should be validate using its jsonschema. Default is False.
         """
@@ -22,7 +23,7 @@ class MappingGroup(dict):
 
     @property
     def mapping(self):
-        """:return: the Item Collection list of GeoJSON Features."""
+        """:return: the Mapping."""
         return [Mapping(i, self._validate) for i in self['mappings']]
 
     @property
