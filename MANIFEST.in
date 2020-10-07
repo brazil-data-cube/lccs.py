@@ -23,3 +23,5 @@ recursive-include tests *.json
 recursive-include exemples *.py
 recursive-include lccs/jsonschemas *.json
 recursive-include lccs *.html
+recursive-include exemples *.ipynb
+recursive-include exemples *.png
