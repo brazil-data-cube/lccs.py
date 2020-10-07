@@ -8,7 +8,7 @@
 """Python API client wrapper for LCCS-WS."""
 
 from .class_system import ClassificationSystem
-from .mappings import Mappings
+from .mappings import Mapping, MappingGroup
 from .utils import Utils
 
 
@@ -52,7 +52,7 @@ class LCCS:
         """
         if self.get_classification_systems:
             pass
-        return self._classification_systems.keys()
+        return list(self._classification_systems.keys())
 
     def classification_system(self, system_id):
         """Return information about the given classification system.
@@ -84,14 +84,20 @@ class LCCS:
         :rtype: list
         """
         result = list()
+
         try:
             data = Utils._get('{}/mappings/{}/{}'.format(self._url, system_id_source, system_id_target))
         except Exception:
             raise KeyError('Could not retrieve mappings for {} and {}'.format(system_id_source, system_id_target))
 
-        [result.append(Mappings(i, self._validate)) for i in data['mappings']]
+        # [result.append(Mappings(i, self._validate)) for i in data['mappings']]
+        #return result
 
-        return result
+        data['source_classification_system'] = system_id_source
+
+        data['target_classification_system'] = system_id_target
+
+        return MappingGroup(data, self._validate)
 
     def avaliable_mappings(self, system_id_source):
         """Return the avaliable mappings of classification system.
@@ -170,3 +176,18 @@ class LCCS:
     def __str__(self):
         """Return the string representation of a lccs object."""
         return '<LCCS [{}]>'.format(self.url)
+
+    def _repr_html_(self):
+        """HTML repr."""
+        classification_systems = str()
+        for classification_sys in self.classification_systems:
+            classification_systems += f"<li>{classification_sys}</li>"
+        return f"""<p>LCCS-WS</p>
+                    <ul>
+                     <li><b>URL:</b> {self._url}</li>
+                     <li><b>Classification Systems:</b></li>
+                     <ul>
+                     {classification_systems}
+                     </ul>
+                   </ul>
+               """

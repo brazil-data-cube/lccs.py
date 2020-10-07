@@ -6,12 +6,47 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 """Python Client Library for the LCCS Web Service."""
-from .class_system import ClassificationSystemClass
 from .utils import Utils
 
 
-class Mappings(dict):
-    """Mappings."""
+class MappingGroup(dict):
+    """Group of classes mappings."""
+
+    def __init__(self, data, validate=False):
+        """Initialize instance with dictionary data.
+        :param data: Dict with Item Collection metadata.
+        :param validate: true if the Item Collection should be validate using its jsonschema. Default is False.
+        """
+        self._validate = validate
+        super(MappingGroup, self).__init__(data or {})
+
+    @property
+    def mapping(self):
+        """:return: the Item Collection list of GeoJSON Features."""
+        return [Mapping(i, self._validate) for i in self['mappings']]
+
+    @property
+    def source_classification_system(self):
+        """:return: the Class code."""
+        return self['source_classification_system']
+
+    @property
+    def target_classification_system(self):
+        """:return: the Class code."""
+        return self['target_classification_system']
+
+    @property
+    def mapping(self):
+        """:return: Classes from the class system."""
+        return [Mapping(mapping, self._validate) for mapping in self['mappings']]
+
+    def _repr_html_(self):
+        """HTML repr."""
+        return Utils.render_html('mapping.html', mappings=self)
+
+
+class Mapping(dict):
+    """Mapping."""
 
     def __init__(self, data, validate=False):
         """Initialize instance with dictionary data.
@@ -20,7 +55,7 @@ class Mappings(dict):
         :param validate: true if the Classes should be validate using its jsonschema. Default is False.
         """
         self._validate = validate
-        super(Mappings, self).__init__(data or {})
+        super(Mapping, self).__init__(data or {})
 
     @property
     def degree_of_similarity(self):

@@ -60,3 +60,8 @@ class ClassificationSystem(dict):
                 data = Utils._get(link['href'], params=filter)
                 return ClassificationSystemClasses(data).get_class
         return ClassificationSystemClasses({})
+
+    def _repr_html_(self):
+        """HTML repr."""
+        return Utils.render_html('classification_system.html', classification_system=self)
+
