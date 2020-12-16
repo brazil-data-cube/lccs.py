@@ -16,8 +16,9 @@ Production installation
 
 **Under Development!**
 
-Development installation
-------------------------
+Development Installation - GitHub
+---------------------------------
+
 
 Clone the software repository:
 
@@ -37,11 +38,18 @@ Install in development mode:
 
         $ pip3 install -e .[all]
 
+Run the Tests
++++++++++++++
+
 Run the tests:
 
 .. code-block:: shell
 
-        $ ./run-test.sh
+        $ ./run-tests.sh
+
+
+Build the Documentation
++++++++++++++++++++++++
 
 Generate the documentation:
 
@@ -53,4 +61,10 @@ The above command will generate the documentation in HTML and it will place it u
 
 .. code-block:: shell
 
-    doc/sphinx/_build/html/
+    docs/sphinx/_build/html/
+
+You can open the above documentation in your favorite browser, as:
+
+.. code-block:: shell
+
+    firefox docs/sphinx/_build/html/index.html

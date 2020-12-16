@@ -19,7 +19,6 @@ class ClassificationSystem(dict):
         """Initialize instance with dictionary data.
 
         :param data: Dict with class system metadata.
-
         :param validate: true if the Class System should be validate using its jsonschema. Default is False.
         """
         self._validate = validate
@@ -27,28 +26,33 @@ class ClassificationSystem(dict):
 
     @property
     def links(self):
-        """:return: a list of link in the class system."""
+        """:return: a list of link in the classification system."""
         return [Link(link) for link in self['links']]
 
     @property
     def description(self):
-        """:return: description of class system."""
+        """:return: description of classification system."""
         return self['description']
 
     @property
     def version(self):
-        """:return: version of class system."""
+        """:return: version of classification system."""
         return self['version']
 
     @property
     def name(self):
-        """:return: name of class system."""
+        """:return: name of classification system."""
         return self['name']
 
     @property
     def id(self):
-        """:return: id of class system."""
+        """:return: id of classification system."""
         return self['id']
+
+    @property
+    def authority_name(self):
+        """:return: authority_name of classification system."""
+        return self['authority_name']
 
     def classes(self, class_id=None, filter=None):
         """:return: Classes from the class system."""

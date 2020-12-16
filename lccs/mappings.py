@@ -82,3 +82,13 @@ class Mapping(dict):
     def target_class(self):
         """:return: the Class code."""
         return self['target']
+
+    @property
+    def source_class_id(self):
+        """:return: the Class code."""
+        return self['source_id']
+
+    @property
+    def target_class_id(self):
+        """:return: the Class code."""
+        return self['target_id']
