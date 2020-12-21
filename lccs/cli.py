@@ -94,11 +94,11 @@ def class_describe(config, system_id, class_id):
 @cli.command()
 @click.option('--system_id_source', type=click.STRING, required=True, help='The classification system source (name).')
 @pass_config
-def avaliable_mappings(config, system_id_source):
+def available_mappings(config, system_id_source):
     """Return the list of available mappings."""
     service = LCCS(config.url)
 
-    retval = service.avaliable_mappings(system_id_source=system_id_source)
+    retval = service.available_mappings(system_id_source=system_id_source)
 
     pprint(retval)
 

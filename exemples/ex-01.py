@@ -33,7 +33,7 @@ print("\nTerraClass_AMZ Desflorestamento informations: \n")
 class_desflorestamento = class_system.classes(class_id='Desflorestamento')
 print(class_desflorestamento)
 
-all_mapping = service.avaliable_mappings(system_id_source='TerraClass_AMZ')
+all_mapping = service.available_mappings(system_id_source='TerraClass_AMZ')
 
 mapping = service.mappings(system_id_source='TerraClass_AMZ', system_id_target='PRODES')
 
