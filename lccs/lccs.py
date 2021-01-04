@@ -6,7 +6,6 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 """Python API client wrapper for LCCS-WS."""
-
 from .class_system import ClassificationSystem
 from .mappings import MappingGroup
 from .utils import Utils
@@ -34,7 +33,7 @@ class LCCS:
         if len(self._classification_systems) > 0:
             return self._classification_systems.keys()
 
-        url = '{}/classification_systems'.format(self._url)
+        url = f'{self._url}/classification_systems'
 
         data = Utils._get(url)
 
@@ -66,7 +65,7 @@ class LCCS:
         if system_id in self._classification_systems.keys() and self._classification_systems[system_id] is not None:
             return self._classification_systems[system_id]
         try:
-            data = Utils._get('{}/classification_system/{}'.format(self._url, system_id))
+            data = Utils._get(f'{self._url}/classification_system/{system_id}')
             self._classification_systems[system_id] = ClassificationSystem(data, self._validate)
         except Exception:
             raise KeyError('Could not retrieve information for classification_system: {}'.format(system_id))
@@ -86,7 +85,7 @@ class LCCS:
         result = list()
 
         try:
-            data = Utils._get('{}/mappings/{}/{}'.format(self._url, system_id_source, system_id_target))
+            data = Utils._get(f'{self._url}/mappings/{system_id_source}/{system_id_target}')
         except Exception:
             raise KeyError('Could not retrieve mappings for {} and {}'.format(system_id_source, system_id_target))
 
@@ -96,8 +95,8 @@ class LCCS:
 
         return MappingGroup(data, self._validate)
 
-    def avaliable_mappings(self, system_id_source):
-        """Return the avaliable mappings of classification system.
+    def available_mappings(self, system_id_source):
+        """Return the available mappings of classification system.
 
         :param system_id_source: A str for a given system_id_source.
         :type system_id_source: str
@@ -108,7 +107,7 @@ class LCCS:
         result = list()
 
         try:
-            data = Utils._get('{}/mappings/{}'.format(self._url, system_id_source))
+            data = Utils._get(f'{self._url}/mappings/{system_id_source}')
         except Exception:
             raise KeyError('Could not retrieve any avaliable mapping for {}'.format(system_id_source))
 
@@ -127,7 +126,7 @@ class LCCS:
         """
         result = list()
         try:
-            data = Utils._get('{}/classification_system/{}/styles'.format(self._url, system_id))
+            data = Utils._get(f'{self._url}/classification_system/{system_id}/styles')
         except Exception:
             raise KeyError('Could not retrieve any style for {}'.format(system_id))
 
@@ -151,14 +150,72 @@ class LCCS:
         :rtype: File
         """
         try:
-            file_name, data = Utils._get('{}/classification_system/{}/styles/{}'.format(self._url, system_id,format_id))
+            file_name, data = Utils._get(f'{self._url}/classification_system/{system_id}/styles/{format_id}')
         except Exception:
-            raise KeyError('Could not retrieve any style for {}'.format(system_id))
+            raise KeyError(f'Could not retrieve any style for {system_id}')
 
         if path is not None:
             full_path = path + file_name
             return open(full_path, 'wb').write(data)
         return open(file_name, 'wb').write(data)
+
+    def add_classification_system(self, name: str, authority_name: str, description: str, version: float, file_path: str):
+        """Add a new classification system."""
+        url = f'{self._url}/classification_systems'
+
+        try:
+            file = {'classes': ('classes.json', open(file_path, 'rb'), 'application/json')}
+        except RuntimeError:
+            raise ValueError(f'Could not open classes file {file_path}. It is a json file ?')
+
+        data = dict()
+        data["name"] = name
+        data["authority_name"] = authority_name
+        data["description"] = description
+        data["version"] = version
+
+        try:
+            retval = Utils._post(url, data=data, files=file)
+        except RuntimeError:
+            raise ValueError(f'Could not insert classification system {name}!')
+
+        return ClassificationSystem(retval, self._validate)
+
+    def add_style(self, system_id: str, style_format: str, style_path: str, extension: str):
+        """Add a new style format system."""
+        url = f'{self._url}/classification_system/{system_id}/styles'
+
+        try:
+            style = {'style': (f'style_{system_id}_{style_format}.{extension}', open(style_path, 'rb'),
+                               'application/octet-stream')}
+        except RuntimeError:
+            raise ValueError(f'Could not open style file {style_path}.')
+
+        data = dict()
+        data["style_format"] = style_format
+
+        try:
+            retval = Utils._post(url, data=data, files=style)
+        except RuntimeError:
+            raise ValueError('Could not insert style!')
+
+        return retval['message']
+
+    def add_new_mapping(self, system_id_source: str, system_id_target: str, mappings_path: str):
+        """Add new classification system mapping."""
+        url = f'{self._url}/mappings/{system_id_source}/{system_id_target}'
+
+        try:
+            mapping = {'mappings': ('mappings.json', open(mappings_path, 'rb'), 'application/json')}
+        except RuntimeError:
+            raise ValueError(f'Could not open mapping file {mappings_path}. It is a json file ?')
+
+        try:
+            retval = Utils._post(url, files=mapping)
+        except RuntimeError:
+            raise ValueError('Could not insert mappings!')
+
+        return MappingGroup(retval, self._validate)
 
     @property
     def url(self):
@@ -167,12 +224,12 @@ class LCCS:
 
     def __repr__(self):
         """Return the string representation of a lccs object."""
-        text = 'lccs("{}")'.format(self.url)
+        text = f'lccs("{self.url}")'
         return text
 
     def __str__(self):
         """Return the string representation of a lccs object."""
-        return '<LCCS [{}]>'.format(self.url)
+        return f'<LCCS [{self.url}]>'
 
     def _repr_html_(self):
         """HTML repr."""

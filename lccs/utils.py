@@ -47,13 +47,21 @@ class Utils:
 
             try:
                 file_name = re.findall('filename=(.+)', content)[0]
-            except:
+            except RuntimeError:
                 raise ValueError('Error while download file')
 
             return file_name, response.content
 
         elif content_type not in ('application/json', 'application/geo+json'):
             raise ValueError('HTTP response is not JSON: Content-Type: {}'.format(content_type))
+
+        return response.json()
+
+    @staticmethod
+    def _post(url, data=None, json=None, files=None):
+        response = requests.post(url, data=data, files=files, json=json)
+
+        response.raise_for_status()
 
         return response.json()
 
