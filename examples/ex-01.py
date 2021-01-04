@@ -5,7 +5,7 @@
 # Python Client Library for the LCCS Web Service is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 #
-"""LCCS Python Client Samples."""
+"""LCCS Python Client examples."""
 
 import os
 import lccs
@@ -51,4 +51,4 @@ print(styles)
 service.get_styles(system_id='MapBiomas4', format_id='QGIS')
 
 # Save Style File passing the path directory
-service.get_styles(system_id='MapBiomas4', format_id='QGIS', path='/home/fabiana/Downloads/')
+service.get_styles(system_id='MapBiomas4', format_id='QGIS', path='/home/user/Downloads/')

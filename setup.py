@@ -18,6 +18,8 @@ history = open('CHANGES.rst').read()
 
 docs_require = [
     'Sphinx>=2.2',
+    'sphinx_rtd_theme',
+    'sphinx-copybutton',
 ]
 
 tests_require = [
@@ -66,7 +68,7 @@ setup(
     keywords=['Land Use and Land Cover', 'GIS'],
     license='MIT',
     author='INPE',
-    author_email='gribeiro@dpi.inpe.br',
+    author_email='brazildatacube@dpi.inpe.br',
     url='https://github.com/brazil-data-cube/lccs.py',
     packages=packages,
     zip_safe=False,
