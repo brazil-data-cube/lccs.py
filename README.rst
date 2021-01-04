@@ -26,9 +26,13 @@ Python Client Library for Land Cover Classification System Web Service
         :target: https://lccs.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-.. image:: https://img.shields.io/badge/lifecycle-experimental-orange.svg
-        :target: https://www.tidyverse.org/lifecycle/#experimental
+.. image:: https://img.shields.io/badge/lifecycle-maturing-blue.svg
+        :target: https://www.tidyverse.org/lifecycle/#maturing
         :alt: Software Life Cycle
+
+.. image:: https://img.shields.io/github/tag/brazil-data-cube/lccs.py.svg
+        :target: https://github.com/brazil-data-cube/lccs.py/releases
+        :alt: Release
 
 .. image:: https://img.shields.io/discord/689541907621085198?logo=discord&logoColor=ffffff&color=7389D8
         :target: https://discord.com/channels/689541907621085198#
