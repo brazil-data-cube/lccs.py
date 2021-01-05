@@ -11,4 +11,4 @@ pydocstyle lccs && \
 isort --check-only --diff tests setup.py && \
 check-manifest --ignore ".travis-*" --ignore ".readthedocs.*" && \
 pytest && \
-sphinx-build -qnW --color -b doctest docs/sphinx/ doc/sphinx/_build/doctest
+sphinx-build -qnW --color -b doctest docs/sphinx/ docs/sphinx/_build/doctest

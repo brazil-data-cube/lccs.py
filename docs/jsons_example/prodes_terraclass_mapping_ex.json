@@ -1,0 +1,22 @@
+{
+	"mappings":[
+		{"class_source":"Floresta", "class_target":"Floresta", "description":"", "degree_of_similarity":1.0},
+		{"class_source":"Agricultura Anual", "class_target":"Desflorestamento", "description":"", "degree_of_similarity":1.0},
+        {"class_source":"Área Não Observada", "class_target":"Nuvem", "description":"", "degree_of_similarity":1.0},
+        {"class_source":"Área sem Informação", "class_target":"Nuvem", "description":"", "degree_of_similarity":1.0},
+        {"class_source":"Área Urbana", "class_target":"Não Floresta", "description":"", "degree_of_similarity":1.0},
+        {"class_source":"Desflorestamento", "class_target":"Desflorestamento", "description":"", "degree_of_similarity":1.0},
+        {"class_source":"Mosaico de Ocupações", "class_target":"Desflorestamento", "description":"", "degree_of_similarity":1.0},
+        {"class_source":"Outros", "class_target":"Desflorestamento", "description":"", "degree_of_similarity":1.0},
+        {"class_source":"Pasto com Solo Exposto", "class_target":"Desflorestamento", "description":"", "degree_of_similarity":1.0},
+        {"class_source":"Pasto Limpo", "class_target":"Desflorestamento", "description":"", "degree_of_similarity":1.0},
+        {"class_source":"Pasto Sujo", "class_target":"Desflorestamento", "description":"", "degree_of_similarity":1.0},
+        {"class_source":"Reflorestamento", "class_target":"Desflorestamento", "description":"", "degree_of_similarity":1.0},
+        {"class_source":"Regeneração com Pasto", "class_target":"Desflorestamento", "description":"", "degree_of_similarity":1.0},
+        {"class_source":"Vegetação Secundária", "class_target":"Desflorestamento", "description":"", "degree_of_similarity":1.0},
+        {"class_source":"Mineração", "class_target":"Desflorestamento", "description":"", "degree_of_similarity":1.0},
+        {"class_source":"Floresta", "class_target":"Floresta", "description":"", "degree_of_similarity":1.0},
+        {"class_source":"Hidrografia", "class_target":"Hidrografia", "description":"", "degree_of_similarity":1.0},
+        {"class_source":"Não Floresta", "class_target":"Não Floresta", "description":"", "degree_of_similarity":1.0}
+    ]
+}

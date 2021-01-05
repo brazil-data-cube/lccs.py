@@ -82,8 +82,6 @@ class LCCS:
         :returns: Mappings of classification Systems.
         :rtype: list
         """
-        result = list()
-
         try:
             data = Utils._get(f'{self._url}/mappings/{system_id_source}/{system_id_target}')
         except Exception:
@@ -159,7 +157,8 @@ class LCCS:
             return open(full_path, 'wb').write(data)
         return open(file_name, 'wb').write(data)
 
-    def add_classification_system(self, name: str, authority_name: str, description: str, version: float, file_path: str):
+    def add_classification_system(self, name: str, authority_name: str, description: str,
+                                  version: float, file_path: str):
         """Add a new classification system."""
         url = f'{self._url}/classification_systems'
 
@@ -201,7 +200,7 @@ class LCCS:
 
         return retval['message']
 
-    def add_new_mapping(self, system_id_source: str, system_id_target: str, mappings_path: str):
+    def add_mapping(self, system_id_source: str, system_id_target: str, mappings_path: str):
         """Add new classification system mapping."""
         url = f'{self._url}/mappings/{system_id_source}/{system_id_target}'
 
@@ -214,6 +213,10 @@ class LCCS:
             retval = Utils._post(url, files=mapping)
         except RuntimeError:
             raise ValueError('Could not insert mappings!')
+
+        retval['source_classification_system'] = system_id_source
+
+        retval['target_classification_system'] = system_id_target
 
         return MappingGroup(retval, self._validate)
 
