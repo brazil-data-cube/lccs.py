@@ -22,11 +22,6 @@ class MappingGroup(dict):
         super(MappingGroup, self).__init__(data or {})
 
     @property
-    def mapping(self):
-        """:return: the Mapping."""
-        return [Mapping(i, self._validate) for i in self['mappings']]
-
-    @property
     def source_classification_system(self):
         """:return: the Class code."""
         return self['source_classification_system']
@@ -38,7 +33,7 @@ class MappingGroup(dict):
 
     @property
     def mapping(self):
-        """:return: Classes from the class system."""
+        """:return: Mapping."""
         return [Mapping(mapping, self._validate) for mapping in self['mappings']]
 
     def _repr_html_(self):

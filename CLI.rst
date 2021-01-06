@@ -8,113 +8,133 @@
 Running LCCS Client in the Command Line
 =======================================
 
-List the available classification systems:
+If you want to know the LCCS version, use the option ``--version`` as in::
 
-.. code-block:: shell
-
-        lccs --url 'http://localhost:5000/lccs' classification-systems
-
-The above command will return a list of classification system names as:
-
-.. code-block:: shell
-
-    dict_keys(['Deter-A', 'DETER-B', 'PRODES', 'TerraClass_AMZ', 'MapBiomas3.1'])
+    lccs --version
 
 
-Retrieve the information given a classification system name (system_id):
+Output::
 
-.. code-block:: shell
-
-        lccs --url 'http://localhost:5000/lccs' classification-systems-describe --system_id 'PRODES'
-
-The above command will return a JSON document as:
-
-.. code-block:: shell
-
-        {'authority_name': 'INPE',
-         'description': 'Sistema de Classificação Anual de Desmatamento',
-         'id': 3,
-         'links': [{'href': 'http://localhost/lccs_ws/classification_systems/PRODES',
-                    'rel': 'self'},
-                   {'href': 'http://localhost/lccs_ws/classification_systems/PRODES/classes',
-                    'rel': 'classes'},
-                   {'href': 'http://localhost/lccs_ws/classification_systems',
-                    'rel': 'parent'},
-                   {'href': 'http://localhost:/lccs_ws/', 'rel': 'root'}],
-         'name': 'PRODES',
-         'style': [],
-         'version': '1.0'}
-
-List the available classes of a classification system given a classification system name (system_id):
-
-.. code-block:: shell
-
-    lccs --url 'http://localhost:5000/lccs' classes --system_id 'PRODES'
-
-The above command will return a list of classes of PRODES as:
-
-.. code-block:: shell
-
-    ['Desflorestamento',
-     'Floresta',
-     'Hidrografia',
-     'Não Floresta',
-     'Nuvem',
-     'Resíduo']
-
-Retrieve the information of a class given a classification system name (system_id) and class name (class_id):
-
-.. code-block:: shell
-
-    lccs --url 'http://localhost:5000/lccs' class-describe --system_id 'PRODES' --class_id 'Desflorestamento'
+    lccs, version 0.4.0.post0
 
 
-The above command will return a JSON document as:
+To list the available classification systems in a service, use the ``classification-systems`` command and provides a URL to the ``--url`` option::
 
-.. code-block:: shell
+    lccs --url 'http://localhost:5000/' classification-systems
 
-    {'code': 'DESFLORESTAMENTO',
-     'description': '',
-     'id': 380,
-     'links': [{'href': 'http://localhost:5000/lccs/classification_systems/PRODES/classes/Desflorestamento',
-                'rel': 'self'},
-               {'href': 'http://localhost:5000/lccs/classification_systems/PRODES/classes',
-                'rel': 'parent'},
-               {'href': 'http://localhost:5000/lccs/classification_systems/PRODES',
-                'rel': 'PRODES'},
-               {'href': 'http://localhost:5000/lccs/classification_systems',
-                'rel': 'classification_systems'},
-               {'href': 'http://localhost:5000/lccs/', 'rel': 'root'}],
-     'name': 'Desflorestamento',
-     'parent': {}}
 
-Retrieve all avaliable classification system for mappings of a given a classification system name (system_id_source)
+The above command will return a list of classification system names as::
 
-.. code-block:: shell
+    PRODES
+    TerraClass_AMZ
+    DETER
+    IBGE
+    Mapbiomas5
 
-    lccs --url 'http://localhost:5000/lccs' avaliable-mappings --system_id_source 'TerraClass_AMZ'
+To get more information about a specific classification system, use the ``classification-systems-describe`` command::
 
-The above command will return a list of classification systems as:
+    lccs --url 'http://localhost:5000/' classification-systems-describe --system_id 'PRODES'
 
-.. code-block:: shell
+Output::
 
-    ['PRODES']
+        - authority_name: Projeto de Mapeamento Anual da Cobertura e Uso do Solo no Brasil (MapBiomas)
+        - description: O Projeto de Mapeamento Anual da Cobertura e Uso do Solo do Brasil é uma iniciativa que envolve uma rede colaborativa com especialistas nos biomas, usos da terra, sensoriamento remoto, SIG e ciência da computação que utiliza processamento em nuvem e classificadores automatizados desenvolvidos e operados a partir da plataforma Google Earth Engine para gerar uma série histórica de mapas anuais de cobertura e uso da terra do Brasil.
+        - id: 7
+        - links: [{'href': 'http://localhost:5000/classification_system', 'rel': 'parent', 'title': 'Link to this document', 'type': 'application/json'}, {'href': 'http://localhost:5000/classification_system/Mapbiomas5', 'rel': 'self', 'title': 'The classification_system', 'type': 'application/json'}, {'href': 'http://localhost:5000/classification_system/Mapbiomas5/classes', 'rel': 'classes', 'title': 'The classes related to this item', 'type': 'application/json'}, {'href': 'http://localhost:5000/classification_system/Mapbiomas5/styles', 'rel': 'styles', 'title': 'The styles related to this item', 'type': 'application/json'}, {'href': 'http://localhost:5000/', 'rel': 'root', 'title': 'API landing page.', 'type': 'application/json'}]
+        - name: Mapbiomas5
+        - version: 5
 
-.. code-block:: shell
 
-    lccs --url 'http://localhost:5000/lccs' mappings --system_id_source 'TerraClass_AMZ' --system_id_target 'PRODES'
+List the available classes of a classification system, use the ``classes`` command::
 
-The above command will return a list with classification systems mappings:
+    lccs --url 'http://localhost:5000/' classes --system_id 'PRODES'
 
-.. code-block:: shell
+The above command will return a list of classes of PRODES as::
 
-    [{'degree_of_similarity': None,
-      'description': None,
-      'links': [{'href': 'http://localhost:5000/lccs/classification_systems/TerraClass_AMZ/classes/Agricultura '
-                         'Anual',
-                 'rel': 'source_class',
-                 'title': 'Agricultura Anual'},
-                {'href': 'http://localhost:5000/lccs/classification_systems/PRODES/classes/Desflorestamento',
-                 'rel': 'target_class',
-                 'title': 'Desflorestamento'},
-                {'href': 'http://localhost:5000/lccs/', 'rel': 'root'}]}]
+    Desflorestamento
+    Floresta
+    Hidrografia
+    Não Floresta
+    Nuvem
+    Resíduo
+
+To get more information about a specific class, use the ``class-describe`` command::
+
+    lccs --url 'http://localhost:5000/' class-describe --system_id 'PRODES' --class_id 'Desflorestamento'
+
+The above command will return a::
+
+    - class_parent: None
+    - classification_system_id: 1
+    - classification_system_name: PRODES
+    - code: DESFLORESTAMENTO
+    - description:
+    - id: 1
+    - links: [{'href': 'http://localhost:5000/classification_system/PRODES/classes/Desflorestamento', 'rel': 'self', 'title': 'Link to this document', 'type': 'application/json'}, {'href': 'http://localhost:5000/classification_systemPRODES/classes', 'rel': 'parent', 'title': 'Link to this document', 'type': 'application/json'}, {'href': 'http://localhost:5000/classification_systems', 'rel': 'parent', 'title': 'Link to classification systems', 'type': 'application/json'}, {'href': 'http://localhost:5000/', 'rel': 'root', 'title': 'API landing page', 'type': 'application/json'}]
+    - name: Desflorestamento
+
+
+Retrieve all available classification system mappings, use the ``available-mappings`` command::
+
+    lccs --url 'http://localhost:5000/' available-mappings --system_id_source 'TerraClass_AMZ'
+
+The above command will return a list of classification systems as::
+
+    PRODES
+
+
+To get a mapping between classification systems, use the ``mappings`` command::
+
+    lccs --url 'http://localhost:5000/' mappings --system_id_source 'TerraClass_AMZ' --system_id_target 'PRODES'
+
+
+Output::
+
+    - Class Source: Floresta
+    - Class Target: Desflorestamento
+            Degree of similarity: 1.0
+            Description: teste
+            Class Source id: 36
+            Class Target id: 1
+            Links: [{'href': 'http://localhost:5000/classification_system/TerraClass_AMZ/classes/Floresta',
+             'rel': 'item', 'title': 'Link to the source class', 'type': 'application/json'},..]
+    - Class Source: Floresta
+    - Class Target: Floresta
+            Degree of similarity: 1.0
+            Description: teste
+            Class Source id: 36
+            Class Target id: 2
+            Links: [{'href': 'http://localhost:5000/classification_system/TerraClass_AMZ/classes/Floresta',
+            'rel': 'item', 'title': 'Link to the source class', 'type': 'application/json'},..]
+
+To add a new classification system, use the ``add-classification-system`` command::
+
+     lccs --url 'http://localhost:5000/' add-classification-system --name 'MapBiomas5' \
+    --authority_name 'Projeto de Mapeamento Anual da Cobertura e Uso do Solo do Brasil' \
+    --description 'O Projeto de Mapeamento Anual da Cobertura e Uso do Solo do Brasil é uma iniciativa que envolve uma rede colaborativa com especialistas nos biomas, usos da terra, sensoriamento remoto, SIG e ciência da computação que utiliza processamento em nuvem e classificadores automatizados desenvolvidos e operados a partir da plataforma Google Earth Engine para gerar uma série histórica de mapas anuais de cobertura e uso da terra do Brasil.' \
+    --version '1' \
+    --file_path '/path_to_file/mapbiomas_legenda.json'
+
+To add a new style to a classification system, use the ``add-style`` command::
+
+    lccs --url 'http://localhost:5000/' add-style --system_id 'MapBiomas5' \
+    --style_format 'QGIS' \
+    --style_path '/path_to_file/mapbiomas_colecao_5_qgis.qml' \
+    --extension 'qml'
+
+
+To add a new mapping between classification systems, use the ``add-mapping`` command::
+
+    lccs --url 'http://localhost:5000/' add-mapping --system_id_source 'TerraClass_AMZ' \
+    --system_id_target 'PRODES' \
+    --mappings_path '/path_to_file/mapping_sample.json'
+
+.. note::
+
+    For more information, type in the command line::
+
+        lccs --help
+
+.. note::
+
+    Examples of mapping, style and classes can be found in directory `lccs.py/docs/jsons_example <https://github.com/brazil-data-cube/lccs.py/blob/master/docs/jsons_example/>`_
