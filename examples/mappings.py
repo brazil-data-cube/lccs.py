@@ -13,6 +13,6 @@ from lccs import LCCS
 service = LCCS("http://brazildatacube.dpi.inpe.br/dev/lccs/")
 
 # Return the list of available clasification system for mapping
-available_mappings = service.avaliable_mappings(system_id_source='TerraClass_AMZ')
+available_mappings = service.available_mappings(system_id_source='TerraClass_AMZ')
 
 print(available_mappings)
