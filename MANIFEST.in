@@ -19,6 +19,8 @@ recursive-include docs *.py
 recursive-include docs *.rst
 recursive-include docs *.ico
 recursive-include docs *.png
+recursive-include docs *.json
+recursive-include docs *.qml
 recursive-include docs Makefile
 recursive-include tests *.py
 recursive-include tests *.json

@@ -19,12 +19,17 @@ Production installation
 Development Installation - GitHub
 ---------------------------------
 
+Clone the Software Repository
++++++++++++++++++++++++++++++
 
-Clone the software repository:
+Use ``git`` to clone the software repository:
 
 .. code-block:: shell
 
         $ git clone https://github.com/brazil-data-cube/lccs.py.git
+
+Install lccs.py in Development Mode
++++++++++++++++++++++++++++++++++++
 
 Go to the source code folder:
 
@@ -37,6 +42,27 @@ Install in development mode:
 .. code-block:: shell
 
         $ pip3 install -e .[all]
+
+.. note::
+
+    If you want to create a new *Python Virtual Environment*, please, follow this instruction:
+
+    *1.* Create a new virtual environment linked to Python 3.7::
+
+        python3.7 -m venv venv
+
+
+    **2.** Activate the new environment::
+
+        source venv/bin/activate
+
+
+    **3.** Update pip and setuptools::
+
+        pip3 install --upgrade pip
+
+        pip3 install --upgrade setuptools
+
 
 Run the Tests
 +++++++++++++
