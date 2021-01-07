@@ -19,6 +19,7 @@ from pkg_resources import resource_filename, resource_string
 import lccs
 
 url = os.environ.get('LCCS_SERVER_URL', 'http://localhost:5000')
+
 match_url = re.compile(url)
 
 
@@ -70,7 +71,7 @@ class TestLCCS:
 
             assert list(response) == ['PRODES']
 
-    def test_class_system(self, lccs_object, requests_mock):
+    def test_classification_system(self, lccs_object, requests_mock):
         for k in lccs_object:
             service = lccs.LCCS(url, True)
 
@@ -88,6 +89,38 @@ class TestLCCS:
             assert class_system.version
             assert class_system.links[0].href
             assert class_system.links[0].rel
+
+    def teste_mappings(self, lccs_object, requests_mock):
+        for k in lccs_object:
+            service = lccs.LCCS(url, True)
+
+            requests_mock.get(match_url, json=lccs_object[k]['mappings.json'],
+                              status_code=200,
+                              headers={'content-type': 'application/json'})
+
+            available_mappings = service.available_mappings(system_id_source='TerraClass_AMZ')
+
+            assert list(available_mappings) == ['PRODES']
+
+    def teste_mapping(self, lccs_object, requests_mock):
+        for k in lccs_object:
+            service = lccs.LCCS(url, True)
+
+            requests_mock.get(match_url, json=lccs_object[k]['mapping.json'],
+                              status_code=200,
+                              headers={'content-type': 'application/json'})
+
+            mp = service.mappings(system_id_source='TerraClass_AMZ', system_id_target='PRODES')
+
+            assert 'TerraClass_AMZ' == mp.source_classification_system
+            assert 'PRODES' == mp.target_classification_system
+            assert 'degree_of_similarity' in mp.mapping[0]
+            assert 'description' in mp.mapping[0]
+            assert 'links' in mp.mapping[0]
+            assert 'source' in mp.mapping[0]
+            assert 'source_id' in mp.mapping[0]
+            assert 'target' in mp.mapping[0]
+            assert 'target_id' in mp.mapping[0]
 
 
 if __name__ == '__main__':

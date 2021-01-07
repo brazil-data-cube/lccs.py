@@ -54,11 +54,6 @@ Installation
 See `INSTALL.rst <./INSTALL.rst>`_.
 
 
-Using LCCS in the Command Line
-==============================
-
-See `CLI.rst <./CLI.rst>`_.
-
 Developer Documentation
 =======================
 

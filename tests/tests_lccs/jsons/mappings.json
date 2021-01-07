@@ -1,0 +1,22 @@
+{
+  "links": [
+    {
+      "href": "http://localhost:5000/classification_systems",
+      "rel": "parent",
+      "title": "Link to classification systems",
+      "type": "application/json"
+    },
+    {
+      "href": "http://localhost:5000/",
+      "rel": "root",
+      "title": "API landing page",
+      "type": "application/json"
+    },
+    {
+      "href": "http://localhost:5000/mappings/TerraClass_AMZ/PRODES",
+      "rel": "child",
+      "title": "PRODES",
+      "type": "application/json"
+    }
+  ]
+}

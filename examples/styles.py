@@ -10,7 +10,7 @@
 from lccs import LCCS
 
 # Change to the LCCS-WS URL you want to use.
-service = LCCS("http://0.0.0.0:5000/")
+service = LCCS("http://brazildatacube.dpi.inpe.br/dev/lccs/")
 
 # Get all styles available for a specific classification system
 styles = service.styles(system_id='MapBiomas5')

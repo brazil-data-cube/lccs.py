@@ -12,7 +12,7 @@ import lccs
 
 print(lccs.__version__)
 
-url = os.environ.get('LCCS_SERVER_URL', 'http://0.0.0.0:5000/')
+url = os.environ.get('LCCS_SERVER_URL', 'http://brazildatacube.dpi.inpe.br/dev/lccs/')
 
 service = lccs.LCCS(url)
 
@@ -43,12 +43,12 @@ for mp in mapping.mapping:
     print("Source Class: {} | Target Class: {}".format(mp.source_class, mp.target_class))
 
 # Get all styles avaliable for MapBiomas4
-styles = service.styles(system_id='MapBiomas4')
+styles = service.styles(system_id='MapBiomas5')
 
 print(styles)
 
 # Save Style File
-service.get_styles(system_id='MapBiomas4', format_id='QGIS')
+service.get_styles(system_id='MapBiomas5', format_id='QGIS')
 
 # Save Style File passing the path directory
-service.get_styles(system_id='MapBiomas4', format_id='QGIS', path='/home/user/Downloads/')
+service.get_styles(system_id='MapBiomas5', format_id='QGIS', path='/home/user/Downloads/')
