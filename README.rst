@@ -14,12 +14,12 @@ Python Client Library for Land Cover Classification System Web Service
         :target: https://github.com//brazil-data-cube/lccs.py/blob/master/LICENSE
         :alt: Software License
 
-.. image:: https://travis-ci.org/brazil-data-cube/lccs.py.svg?branch=master
-        :target: https://travis-ci.org/brazil-data-cube/lccs.py
+.. image:: https://drone.dpi.inpe.br/api/badges/brazil-data-cube/lccs.py/status.svg
+        :target: https://drone.dpi.inpe.br/brazil-data-cube/lccs.py
         :alt: Build Status
 
-.. image:: https://coveralls.io/repos/github/brazil-data-cube/lccs.py/badge.svg?branch=master
-        :target: https://coveralls.io/github/brazil-data-cube/lccs.py?branch=master
+.. image:: https://codecov.io/gh/brazil-data-cube/lccs.py/branch/master/graph/badge.svg?token=F88NQY6FNA
+        :target: https://codecov.io/gh/brazil-data-cube/lccs.py
         :alt: Code Coverage Test
 
 .. image:: https://readthedocs.org/projects/lccs/badge/?version=latest
