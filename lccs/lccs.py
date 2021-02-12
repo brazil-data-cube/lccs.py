@@ -27,6 +27,7 @@ class LCCS:
         self._url = url if url[-1] != '/' else url[0:-1]
         self._classification_systems = {}
         self._validate = validate
+        self.get_classification_systems()
     
     def _get_identifier(self, name, version):
         url = f'{self._url}/classification_systems/search/{name}/{version}'
@@ -85,8 +86,9 @@ class LCCS:
         if system_name in self._classification_systems.keys() and self._classification_systems[system_name] is not None:
             return self._classification_systems[system_name]
 
-        system = system_name.split("-")
-        _system_id = self._get_identifier(name=system[0], version=system[1])
+        #system = system_name.split("-")
+        #_system_id = self._get_identifier(name=system[0], version=system[1])
+        _system_id = self._id(system_name)
 
         try:
             data = Utils._get(f'{self._url}/classification_systems/{_system_id["id"]}')

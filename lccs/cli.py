@@ -17,7 +17,6 @@ class Config:
     def __init__(self):
         """Initialize of Config decorator."""
         self.url = None
-        self.service = None
 
 
 pass_config = click.make_pass_decorator(Config, ensure=True)
@@ -31,7 +30,6 @@ pass_config = click.make_pass_decorator(Config, ensure=True)
 def cli(config, url):
     """LCCS on command line."""
     config.url = url
-    config.service = LCCS(config.url)
 
 
 @cli.command()
@@ -39,17 +37,18 @@ def cli(config, url):
 @pass_config
 def classification_systems(config, verbose):
     """Return the list of available classification systems in the service provider."""
-    
     if verbose:
         click.secho(f'Server: {config.url}', bold=True, fg='black')
         click.secho('\tRetrieving the list of available classification systems... ',
                     bold=False, fg='black')
 
+    service = LCCS(config.url)
+
     if verbose:
-        for cs in config.service.classification_systems:
+        for cs in service.classification_systems:
             click.secho(f'\t\t- {cs}', bold=True, fg='green')
     else:
-        for cs in config.service.classification_systems:
+        for cs in service.classification_systems:
             click.secho(f'{cs}', bold=True, fg='green')
 
     if verbose:
@@ -67,7 +66,9 @@ def classification_systems_description(config, system_name, verbose):
         click.secho('\tRetrieving the classification system metadata... ',
                     bold=False, fg='black')
 
-    retval = config.service.classification_system(system_name=system_name)
+    service = LCCS(config.url)
+
+    retval = service.classification_system(system_name=system_name)
 
     for ds_key, ds_value in retval.items():
         click.secho(f'\t- {ds_key}: {ds_value}', bold=True, fg='green')
@@ -87,7 +88,9 @@ def classes(config, system_name, verbose):
         click.secho('\tRetrieving the the list of classes for a given classification system.... ',
                     bold=False, fg='black')
 
-    class_system = config.service.classification_system(system_name=system_name)
+    service = LCCS(config.url)
+
+    class_system = service.classification_system(system_name=system_name)
 
     if verbose:
         for cv in class_system.classes:
@@ -112,7 +115,9 @@ def class_describe(config, system_name, class_name, verbose):
         click.secho('\tRetrieving the class metadata... ',
                     bold=False, fg='black')
 
-    class_system = config.service.classification_system(system_name=system_name)
+    service = LCCS(config.url)
+
+    class_system = service.classification_system(system_name=system_name)
 
     retval = class_system.get_class(class_name=class_name)
 
@@ -133,8 +138,8 @@ def available_mappings(config, system_name, verbose):
         click.secho(f'Server: {config.url}', bold=True, fg='black')
         click.secho('\tRetrieving the list of available for a given classification system ... ',
                     bold=False, fg='black')
-    
-    retval = config.service.available_mappings(system_source_name=system_name)
+    service = LCCS(config.url)
+    retval = service.available_mappings(system_source_name=system_name)
 
     if verbose:
         for mp in retval:
@@ -160,7 +165,9 @@ def mappings(config, system_id_source, system_id_target, verbose):
         click.secho('\tRetrieving the mapping ... ',
                     bold=False, fg='black')
 
-    retval = config.mappings(system_id_source=system_id_source, system_id_target=system_id_target)
+    service = LCCS(config.url)
+    
+    retval = service.mappings(system_id_source=system_id_source, system_id_target=system_id_target)
 
     if verbose:
         click.secho(f'\t- Classification System Source: {retval["source_classification_system"]}', bold=True, fg='green')
