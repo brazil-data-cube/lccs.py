@@ -81,15 +81,16 @@ class LCCS:
         :returns: A ClassificationSystem.
         :rtype: dict
         """
-        system = system_name.split("-")
-        
-        _system_id = self._id(system_name)
-        
+
         if system_name in self._classification_systems.keys() and self._classification_systems[system_name] is not None:
             return self._classification_systems[system_name]
+
+        system = system_name.split("-")
+        _system_id = self._get_identifier(name=system[0], version=system[1])
+
         try:
-            data = Utils._get(f'{self._url}/classification_systems/{_system_id.id}')
-            self._classification_systems[system] = ClassificationSystem(data, self._validate)
+            data = Utils._get(f'{self._url}/classification_systems/{_system_id["id"]}')
+            self._classification_systems[system_name] = ClassificationSystem(data, self._validate)
         except Exception:
             raise KeyError('Could not retrieve information for classification_system: {}'.format(system_name))
         return self._classification_systems[system_name]
@@ -120,7 +121,7 @@ class LCCS:
 
         return result
     
-    def available_mappings(self, system_source_name):
+    def available_mappings(self, system_source_name: str) -> list:
         """Return the available mappings of classification system.
 
         :param system_source_name: A classification system name.
@@ -145,7 +146,7 @@ class LCCS:
  
         return result
     
-    def style_formats(self, system_source_name):
+    def style_formats(self, system_source_name) -> list:
         """Fetch styles of the a giving classification system.
 
         :param system_source_name: classification system name.
@@ -172,13 +173,13 @@ class LCCS:
     def get_style(self, system_name, format_name, path=None):
         """Fetch styles of the a giving classification system.
 
-        :param system_name: A classification system identification (name).
+        :param system_name: A classification system name.
         :type system_name: str
 
-        :param format_name: A classification system format identification (name).
+        :param format_name: A style system format name.
         :type format_name: str
 
-        :param path: Directory path to save fale
+        :param path: Directory path to save the file
         :type path: str
 
         :returns: Style File
@@ -198,14 +199,9 @@ class LCCS:
         return open(file_name, 'wb').write(data)
     
     def add_classification_system(self, name: str, authority_name: str, description: str,
-                                  version: float, file_path: str):
+                                  version: str):
         """Add a new classification system."""
         url = f'{self._url}/classification_systems'
-        
-        try:
-            file = {'classes': ('classes.json', open(file_path, 'rb'), 'application/json')}
-        except RuntimeError:
-            raise ValueError(f'Could not open classes file {file_path}. It is a json file ?')
         
         data = dict()
         data["name"] = name
@@ -214,7 +210,7 @@ class LCCS:
         data["version"] = version
         
         try:
-            retval = Utils._post(url, data=data, files=file)
+            retval = Utils._post(url, data=data)
         except RuntimeError:
             raise ValueError(f'Could not insert classification system {name}!')
         
