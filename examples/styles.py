@@ -10,9 +10,9 @@
 from lccs import LCCS
 
 # Change to the LCCS-WS URL you want to use.
-service = LCCS("http://brazildatacube.dpi.inpe.br/dev/lccs/")
+service = LCCS("https://brazildatacube.dpi.inpe.br/lccs/")
 
 # Get all styles available for a specific classification system
-styles = service.styles(system_id='MapBiomas5')
+styles = service.style_formats('PRODES-1.0')
 
 print(styles)

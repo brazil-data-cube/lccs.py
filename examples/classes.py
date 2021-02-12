@@ -10,12 +10,13 @@
 from lccs import LCCS
 
 # Change to the LCCS-WS URL you want to use.
-service = LCCS("http://brazildatacube.dpi.inpe.br/dev/lccs/")
+service = LCCS("https://brazildatacube.dpi.inpe.br/lccs/")
 
 # Get a specific classification system
 # Make sure the classification system is available in service
-classification_system = service.classification_system(system_id='TerraClass_AMZ')
+classification_system = service.classification_system('PRODES-1.0')
 
 # Returns all classes belonging to a specific classification system.
-classes = classification_system.classes()
+classes = classification_system.classes
 print(classes)
+
