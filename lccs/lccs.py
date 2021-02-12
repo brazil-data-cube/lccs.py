@@ -122,7 +122,7 @@ class LCCS:
  
         return result
 
-    def mappings(self, system_name_source: str, system_name_target: str) -> list:
+    def mappings(self, system_name_source: str, system_name_target: str) -> MappingGroup:
         """Return the given classification_system.
 
         :param system_name_source: A classification system name.
@@ -135,18 +135,17 @@ class LCCS:
         """
         _system_source_id = self._id(system_name_source)
         _system_target_id = self._id(system_name_target)
-    
-        result = list()
-    
+        
         try:
             data = Utils._get(f'{self._url}/mappings/{_system_source_id.id}/{_system_target_id.id}')
         except Exception:
             raise KeyError('Could not retrieve mappings for {} and {}'.format(system_name_source, system_name_target))
     
-        [result.append(Mapping(mapping, self._validate)) for mapping in data]
-    
-        return result
-    
+        data_result = dict()
+        data_result['mappings'] = data
+        
+        return MappingGroup(data_result, self._validate)
+ 
     def style_formats(self, system_source_name) -> list:
         """Fetch styles of the a giving classification system.
 

@@ -36,6 +36,20 @@ class MappingGroup(dict):
         """HTML repr."""
         return Utils.render_html('mapping.html', mappings=self)
 
+    def __repr__(self):
+        """Return the string representation of a mapping group object."""
+        text = ''
+        for i in self.mapping:
+            text += f'\n\t{i}'
+        return text
+
+    def __str__(self):
+        """Return the string representation of a mapping group object."""
+        text = ''
+        for i in self.mapping:
+            text += f'\n\t{i}'
+        return text
+
 
 class Mapping(dict):
     """Mapping."""

@@ -1,28 +1,20 @@
 <b>Classes Mappings</b>
 <div>
-    <b>Classification System Source: </b>{{mappings.source_classification_system}}
-    <b>Classification System Target: </b>{{mappings.target_classification_system}}
-</div>
-<div>
     <table>
         <tr>
         </tr>
         <tr>
             <th>source_class</th>
-            <th>source_id</th>
             <th>target_class</th>
-            <th>target_id</th>
             <th>description</th>
             <th>degree_of_similarity</th>
         </tr>
         {% for mp in mappings.mapping%}
         <tr>
-            <td>{{mp['source_class']}}</td>
-            <td>{{mp['source_id']}}</td>
-            <td>{{mp['target_class']}}</td>
-            <td>{{mp['target_id']}}</td>
-            <td>{{mp['description']}}</td>
-            <td>{{mp['degree_of_similarity']}}</td>
+            <td>{{mp.source_class.name}}</td>
+            <td>{{mp.source_class.name}}</td>
+            <td>{{mp.description}}</td>
+            <td>{{mp.degree_of_similarity}}</td>
         </tr>
         {% endfor %}
     </table>
