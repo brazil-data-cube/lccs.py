@@ -12,43 +12,48 @@ import lccs
 
 print(lccs.__version__)
 
-url = os.environ.get('LCCS_SERVER_URL', 'http://brazildatacube.dpi.inpe.br/dev/lccs/')
+url = os.environ.get('LCCS_SERVER_URL', 'https://brazildatacube.dpi.inpe.br/dev/lccs/')
 
-service = lccs.LCCS(url)
+service = lccs.LCCS('http://127.0.0.1:5000/')
 
-print("Classificatom System Avaliable on Service:")
+print("Return all classificaton systems available in service")
 print(service.classification_systems)
 
 # The examples presented in this code vary depending on the database used. Check the parameters informed.
 
-print("\nInformations about TerraClass_AMZ Classification System:")
-class_system = service.classification_system(system_id='TerraClass_AMZ')
+# Return a specific classification system
+class_system = service.classification_system('PRODES-1.0')
 print(class_system.description)
+print(class_system.name)
 
-print("\nTerraClass_AMZ Classes: \n")
-classes = class_system.classes()
-print(classes)
+# Return a classes of a classification system
+classes = class_system.classes
+for i in classes:
+    print(i.name)
 
-print("\nTerraClass_AMZ Desflorestamento informations: \n")
-class_desflorestamento = class_system.classes(class_id='Desflorestamento')
-print(class_desflorestamento)
+# Return a specific class of a classification system
+prodes_desflorestamento = class_system.get_class('Desflorestamento')
+print(prodes_desflorestamento.name)
 
-all_mapping = service.available_mappings(system_id_source='TerraClass_AMZ')
+# Get all available mappings for a specific classification system
+all_mapping = service.available_mappings(system_source_name='PRODES-1.0')
+print(all_mapping)
 
-mapping = service.mappings(system_id_source='TerraClass_AMZ', system_id_target='PRODES')
+# Get mapping
+mapping = service.mappings(system_name_source='PRODES-1.0', system_name_target='TerraClass_AMZ-1.0')
 
-print("\nMapping {} to {}: \n".format(mapping.source_classification_system, mapping.target_classification_system))
+print(f"\nMapping PRODES-1.0 to TerraClass_AMZ-1.0: \n")
 
-for mp in mapping.mapping:
-    print("Source Class: {} | Target Class: {}".format(mp.source_class, mp.target_class))
+for mp in mapping:
+    print(mp)
 
-# Get all styles avaliable for MapBiomas4
-styles = service.styles(system_id='MapBiomas5')
+# Get all styles available for a specific classification system
+style_formats = service.style_formats(system_source_name='PRODES-1.0')
+for style_f in style_formats:
+    print(style_f.name)
 
-print(styles)
-
-# Save Style File
-service.get_styles(system_id='MapBiomas5', format_id='QGIS')
+# Save a style file of a specific classification system and style format
+service.get_style(system_name='PRODES-1.0', format_name='QGIS')
 
 # Save Style File passing the path directory
-service.get_styles(system_id='MapBiomas5', format_id='QGIS', path='/home/user/Downloads/')
+service.get_style(system_name='PRODES-1.0', format_name='QGIS', path='/home/user/Downloads/')

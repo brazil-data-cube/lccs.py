@@ -7,7 +7,7 @@
 #
 """Python Client Library for the LCCS Web Service."""
 
-from .classes import ClassificationSystemClass, ClassificationSystemClasses
+from .classes import ClassificationSystemClass
 from .link import Link
 from .utils import Utils
 
@@ -23,6 +23,7 @@ class ClassificationSystem(dict):
         """
         self._validate = validate
         super(ClassificationSystem, self).__init__(data or {})
+        self._get_classes()
 
     @property
     def links(self):
@@ -54,18 +55,38 @@ class ClassificationSystem(dict):
         """:return: authority_name of classification system."""
         return self['authority_name']
 
-    def classes(self, class_id=None, filter=None):
-        """:return: Classes from the class system."""
+    @property
+    def classes(self):
+        """:return: classes of the classification system."""
+        return self['classes']
+
+    def get_class(self, class_name):
+        """:return: a specif class of of the classification system."""
+        for i in self.classes:
+            if i.name == class_name:
+                return ClassificationSystemClass(i, self._validate)
+
+    def _get_classes(self, filter=None):
+        """:return: get classes of the classification system.."""
+        classes = list()
         for link in self['links']:
             if link['rel'] == 'classes':
-                if class_id is not None:
-                    data = Utils._get('{}/{}'.format(link["href"], class_id))
-                    return ClassificationSystemClass(data, self._validate)
                 data = Utils._get(link['href'], params=filter)
-                return ClassificationSystemClasses(data).get_class
-        return ClassificationSystemClasses({})
+                [classes.append(ClassificationSystemClass(Utils._get(i['href'], self._validate), self._validate)) for i in data if i['rel'] == 'child']
+                self['classes'] = classes
+        return ClassificationSystemClass({})
 
     def _repr_html_(self):
         """HTML repr."""
         return Utils.render_html('classification_system.html', classification_system=self)
+
+    def __repr__(self):
+        """Return the string representation of a classification system object."""
+        text = f'{self.id}:{self.name}- Version {self.version}'
+        return text
+
+    def __str__(self):
+        """Return the string representation of a classification system object."""
+        return f'<Classification System [{self.id}:{self.name}- Version {self.version}]>'
+
 
