@@ -9,7 +9,7 @@ Classes
 -------
 
 
-.. autoclass:: lccs.classes::ClassificationSystemClasses
+.. autoclass:: lccs.classes::ClassificationSystemClass
     :members:
     :special-members: __init__
     :member-order: bysource

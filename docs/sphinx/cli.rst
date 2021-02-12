@@ -15,7 +15,7 @@ If you want to know the LCCS version, use the option ``--version`` as in::
 
 Output::
 
-    lccs, version 0.4.0.post0
+    lccs, version 0.6.0
 
 
 To list the available classification systems in a service, use the ``classification-systems`` command and provides a URL to the ``--url`` option::
@@ -32,7 +32,7 @@ The above command will return a list of classification system names as::
 
 To get more information about a specific classification system, use the ``classification-systems-describe`` command::
 
-    lccs --url 'http://brazildatacube.dpi.inpe.br/dev/lccs/' classification-systems-describe --system_id 'PRODES'
+    lccs --url 'http://brazildatacube.dpi.inpe.br/dev/lccs/' classification-systems-describe --system_name 'PRODES-1.0'
 
 Output::
 
@@ -46,7 +46,7 @@ Output::
 
 List the available classes of a classification system, use the ``classes`` command::
 
-    lccs --url 'http://brazildatacube.dpi.inpe.br/dev/lccs/' classes --system_id 'PRODES'
+    lccs --url 'http://brazildatacube.dpi.inpe.br/dev/lccs/' classes --system_name 'PRODES-1.0'
 
 The above command will return a list of classes of PRODES as::
 
@@ -59,23 +59,21 @@ The above command will return a list of classes of PRODES as::
 
 To get more information about a specific class, use the ``class-describe`` command::
 
-    lccs --url 'http://brazildatacube.dpi.inpe.br/dev/lccs/' class-describe --system_id 'PRODES' --class_id 'Desmatamento'
+    lccs --url 'http://brazildatacube.dpi.inpe.br/dev/lccs/' class-describe --system_name 'PRODES-1.0' --class_name 'Desflorestamento'
 
 The above command will return a::
 
-    - class_parent: None
-    - classification_system_id: 4
-    - classification_system_name: PRODES
-    - code: DESMATAMENTO
+    - classification_system_id: 1
+    - code: DESFLORESTAMENTO
     - description:
     - id: 1
-    - links: [[{'href': 'http://brazildatacube.dpi.inpe.br/dev/lccs/classification_system/PRODES/classes/Desmatamento', 'rel': 'self', 'title': 'Link to this document', 'type': 'application/json'},...]
-    - name: Desmatamento
+    - links: [[{'href': 'http://brazildatacube.dpi.inpe.br/dev/lccs/classification_system/1/classes/1', 'rel': 'self', 'title': 'Link to this document', 'type': 'application/json'},...]
+    - name: Desflorestamento
 
 
 Retrieve all available classification system mappings, use the ``available-mappings`` command::
 
-    lccs --url 'http://brazildatacube.dpi.inpe.br/dev/lccs/' available-mappings --system_id_source 'TerraClass_AMZ'
+    lccs --url 'http://brazildatacube.dpi.inpe.br/dev/lccs/' available-mappings --system_name_source 'TerraClass_AMZ'
 
 The above command will return a list of classification systems as::
 

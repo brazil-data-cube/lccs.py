@@ -7,6 +7,7 @@
 #
 """Python Client Library for the LCCS Web Service."""
 from .utils import Utils
+from .classes import ClassificationSystemClass
 
 
 class MappingGroup(dict):
@@ -22,20 +23,15 @@ class MappingGroup(dict):
         super(MappingGroup, self).__init__(data or {})
 
     @property
-    def source_classification_system(self):
-        """:return: the Class code."""
-        return self['source_classification_system']
-
-    @property
-    def target_classification_system(self):
-        """:return: the Class code."""
-        return self['target_classification_system']
-
-    @property
     def mapping(self):
         """:return: Mapping."""
         return [Mapping(mapping, self._validate) for mapping in self['mappings']]
 
+    @property
+    def mappings(self):
+        """:return: Mappings."""
+        return [Mapping(link) for link in self['links']]
+    
     def _repr_html_(self):
         """HTML repr."""
         return Utils.render_html('mapping.html', mappings=self)
@@ -47,11 +43,13 @@ class Mapping(dict):
     def __init__(self, data, validate=False):
         """Initialize instance with dictionary data.
 
-        :param data: Dict with Classes metadata.
+        :param data: Dict with Mapping metadata.
         :param validate: true if the Classes should be validate using its jsonschema. Default is False.
         """
         self._validate = validate
         super(Mapping, self).__init__(data or {})
+        self._source_class()
+        self._target_class()
 
     @property
     def degree_of_similarity(self):
@@ -60,30 +58,47 @@ class Mapping(dict):
 
     @property
     def description(self):
-        """:return: the Class description."""
+        """:return: the description."""
         return self['description']
 
     @property
     def link(self):
-        """:return: the Class identifier (name)."""
+        """:return: the links."""
         return self['links']
+
+    def _source_class(self):
+        """:return: get the source_class."""
+        for i in self['links']:
+            if i['rel'] == 'item' and i['title'] == 'Link to source class':
+                self['source_class'] = ClassificationSystemClass(Utils._get(i['href']))
+
+    def _target_class(self):
+        """:return: get the target_class."""
+        for i in self['links']:
+            if i['rel'] == 'item' and i['title'] == 'Link to target class':
+                self['target_class'] = ClassificationSystemClass(Utils._get(i['href']))
 
     @property
     def source_class(self):
-        """:return: the Class code."""
-        return self['source']
+        """:return: the source class."""
+        return self['source_class']
 
     @property
     def target_class(self):
-        """:return: the Class code."""
-        return self['target']
+        """:return: the source class."""
+        return self['target_class']
 
-    @property
-    def source_class_id(self):
-        """:return: the Class code."""
-        return self['source_id']
+    def __repr__(self):
+        """Return the string representation of a mapping object."""
+        text = f'{self.source_class.name} -> {self.target_class.name} -' \
+               f' Degree_of_similarity {self.degree_of_similarity}'
+        return text
+    
+    def __str__(self):
+        """Return the string representation of a mapping object."""
+        text = f'{self.source_class.name} -> Target Class{self.target_class.name} -' \
+               f' Degree_of_similarity {self.degree_of_similarity}'
+        return text
 
-    @property
-    def target_class_id(self):
-        """:return: the Class code."""
-        return self['target_id']
+
+
