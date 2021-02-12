@@ -84,7 +84,6 @@ class LCCS:
         :returns: A ClassificationSystem.
         :rtype: dict
         """
-
         if system_name in self._classification_systems.keys() and self._classification_systems[system_name] is not None:
             return self._classification_systems[system_name]
 
