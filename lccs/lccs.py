@@ -22,11 +22,12 @@ class LCCS:
     :type url: str
     """
     
-    def __init__(self, url, validate=False):
+    def __init__(self, url, validate=False, access_token=None):
         """Create a LCCS-WS client attached to the given host address (an URL)."""
         self._url = url if url[-1] != '/' else url[0:-1]
         self._classification_systems = {}
         self._validate = validate
+        self._access_token = f'?access_token={access_token}' if access_token else ''
         self.get_classification_systems()
     
     def _get_identifier(self, name, version):
@@ -69,8 +70,8 @@ class LCCS:
         :returns: List of Classification Systems.
         :rtype: dict
         """
-        if self.get_classification_systems():
-            pass
+        self.get_classification_systems()
+
         return list(self._classification_systems.keys())
     
     def classification_system(self, system_name: str) -> ClassificationSystem:
@@ -86,8 +87,6 @@ class LCCS:
         if system_name in self._classification_systems.keys() and self._classification_systems[system_name] is not None:
             return self._classification_systems[system_name]
 
-        #system = system_name.split("-")
-        #_system_id = self._get_identifier(name=system[0], version=system[1])
         _system_id = self._id(system_name)
 
         try:
@@ -96,33 +95,7 @@ class LCCS:
         except Exception:
             raise KeyError('Could not retrieve information for classification_system: {}'.format(system_name))
         return self._classification_systems[system_name]
-    
-    def mappings(self, system_name_source, system_name_target) -> list:
-        """Return the given classification_system.
 
-        :param system_name_source: A classification system name.
-        :type system_name_source: str
-        :param system_name_target: A classification system name.
-        :type system_name_target: str
-
-        :returns: Mappings of classification Systems.
-        :rtype: list
-        """
-        _system_source_id = self._id(system_name_source)
-        
-        _system_target_id = self._id(system_name_target)
-        
-        result = list()
-
-        try:
-            data = Utils._get(f'{self._url}/mappings/{_system_source_id.id}/{_system_target_id.id}')
-        except Exception:
-            raise KeyError('Could not retrieve mappings for {} and {}'.format(system_name_source, system_name_target))
-        
-        [result.append(Mapping(mapping, self._validate)) for mapping in data]
-
-        return result
-    
     def available_mappings(self, system_source_name: str) -> list:
         """Return the available mappings of classification system.
 
@@ -146,6 +119,31 @@ class LCCS:
                 system_target_name = self._name(i['href'].split("/")[-1])
                 result.append(system_target_name)
  
+        return result
+
+    def mappings(self, system_name_source: str, system_name_target: str) -> list:
+        """Return the given classification_system.
+
+        :param system_name_source: A classification system name.
+        :type system_name_source: str
+        :param system_name_target: A classification system name.
+        :type system_name_target: str
+
+        :returns: Mappings of classification Systems.
+        :rtype: list
+        """
+        _system_source_id = self._id(system_name_source)
+        _system_target_id = self._id(system_name_target)
+    
+        result = list()
+    
+        try:
+            data = Utils._get(f'{self._url}/mappings/{_system_source_id.id}/{_system_target_id.id}')
+        except Exception:
+            raise KeyError('Could not retrieve mappings for {} and {}'.format(system_name_source, system_name_target))
+    
+        [result.append(Mapping(mapping, self._validate)) for mapping in data]
+    
         return result
     
     def style_formats(self, system_source_name) -> list:
@@ -203,7 +201,7 @@ class LCCS:
     def add_classification_system(self, name: str, authority_name: str, description: str,
                                   version: str):
         """Add a new classification system."""
-        url = f'{self._url}/classification_systems'
+        url = f'{self._url}/classification_systems{self._access_token}'
         
         data = dict()
         data["name"] = name
@@ -212,15 +210,15 @@ class LCCS:
         data["version"] = version
         
         try:
-            retval = Utils._post(url, data=data)
+            retval = Utils._post(url, json=data)
         except RuntimeError:
             raise ValueError(f'Could not insert classification system {name}!')
         
-        return ClassificationSystem(retval, self._validate)
+        return retval
     
     def add_style(self, system_id: str, style_format: str, style_path: str, extension: str):
         """Add a new style format system."""
-        url = f'{self._url}/classification_system/{system_id}/styles'
+        url = f'{self._url}/classification_system/{system_id}/styles{self._access_token}'
         
         try:
             style = {'style': (f'style_{system_id}_{style_format}.{extension}', open(style_path, 'rb'),
@@ -240,7 +238,7 @@ class LCCS:
     
     def add_mapping(self, system_id_source: str, system_id_target: str, mappings_path: str):
         """Add new classification system mapping."""
-        url = f'{self._url}/mappings/{system_id_source}/{system_id_target}'
+        url = f'{self._url}/mappings/{system_id_source}/{system_id_target}{self._access_token}'
         
         try:
             mapping = {'mappings': ('mappings.json', open(mappings_path, 'rb'), 'application/json')}
@@ -248,7 +246,7 @@ class LCCS:
             raise ValueError(f'Could not open mapping file {mappings_path}. It is a json file ?')
         
         try:
-            retval = Utils._post(url, files=mapping)
+            retval = Utils._post(url, json=mapping)
         except RuntimeError:
             raise ValueError('Could not insert mappings!')
         
