@@ -12,9 +12,9 @@ import lccs
 
 print(lccs.__version__)
 
-url = os.environ.get('LCCS_SERVER_URL', 'https://brazildatacube.dpi.inpe.br/lccs/')
+server_url = os.environ.get('LCCS_SERVER_URL', 'https://brazildatacube.dpi.inpe.br/lccs/')
 
-service = lccs.LCCS(url)
+service = lccs.LCCS(server_url)
 
 print("Return all classification systems available in service")
 print(service.classification_systems)
