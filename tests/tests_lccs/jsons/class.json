@@ -10,7 +10,7 @@
       "type": "application/json"
     },
     {
-      "href": "http://localhost:5000/classification_systems1/classes",
+      "href": "http://localhost:5000/classification_systems/1/classes",
       "rel": "parent",
       "title": "Link to this document",
       "type": "application/json"
