@@ -1,19 +1,16 @@
 {
-  "class_parent": null,
-  "classification_system_id": 4,
-  "classification_system_name": "PRODES",
   "code": "FLORESTA",
   "description": "",
-  "id": 176,
+  "id": 2,
   "links": [
     {
-      "href": "http://localhost:5000/classification_system/PRODES/classes/Floresta",
+      "href": "http://localhost:5000/classification_systems/1/classes/2",
       "rel": "self",
       "title": "Link to this document",
       "type": "application/json"
     },
     {
-      "href": "http://localhost:5000/classification_systemPRODES/classes",
+      "href": "http://localhost:5000/classification_systems1/classes",
       "rel": "parent",
       "title": "Link to this document",
       "type": "application/json"

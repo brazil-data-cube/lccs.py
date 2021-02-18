@@ -1,37 +1,41 @@
-{
-  "classification_systems": [
-    {
-      "authority_name": "INPE",
-      "description": "Sistema de Classificação Anual de Desmatamento",
-      "id": 1,
-      "links": [
-        {
-          "href": "http://localhost:5000/classification_system/PRODES",
-          "rel": "child",
-          "title": "Link to Classification System",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/classification_system/PRODES/classes",
-          "rel": "child",
-          "title": "Link to Classification System Classes",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/mappings/PRODES",
-          "rel": "child",
-          "title": "Link to Classification Mappings",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/classification_systems",
-          "rel": "self",
-          "title": "Link to this document",
-          "type": "application/json"
-        }
-      ],
-      "name": "PRODES",
-      "version": "1.0"
-    }
-  ]
-}
+[
+  {
+    "authority_name": "INPE",
+    "description": "Sistema de Classificação Anual de Desmatamento",
+    "id": 1,
+    "links": [
+      {
+        "href": "http://localhost:5000/classification_systems/1",
+        "rel": "classification_system",
+        "title": "Link to Classification System",
+        "type": "application/json"
+      },
+      {
+        "href": "http://localhost:5000/classification_systems/1/classes",
+        "rel": "classes",
+        "title": "Link to Classification System Classes",
+        "type": "application/json"
+      },
+      {
+        "href": "http://localhost:5000/classification_systems/1/style_formats",
+        "rel": "style_formats",
+        "title": "Link to Available Style Formats",
+        "type": "application/json"
+      },
+      {
+        "href": "http://localhost:5000/mappings/1",
+        "rel": "mappings",
+        "title": "Link to Classification Mappings",
+        "type": "application/json"
+      },
+      {
+        "href": "http://localhost:5000/classification_systems",
+        "rel": "self",
+        "title": "Link to this document",
+        "type": "application/json"
+      }
+    ],
+    "name": "PRODES",
+    "version": "1.0"
+  }
+]

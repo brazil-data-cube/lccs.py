@@ -72,9 +72,10 @@ class ClassificationSystem(dict):
         for link in self['links']:
             if link['rel'] == 'classes':
                 data = Utils._get(link['href'], params=filter)
-                [classes.append(ClassificationSystemClass(Utils._get(i['href'], self._validate), self._validate)) for i in data if i['rel'] == 'child']
-                self['classes'] = classes
-        return ClassificationSystemClass({})
+                for i in data:
+                    if 'rel' in i and i['rel'] == 'child':
+                        classes.append(ClassificationSystemClass(Utils._get(i['href'], self._validate), self._validate))
+        self['classes'] = classes
 
     def _repr_html_(self):
         """HTML repr."""
