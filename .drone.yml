@@ -7,10 +7,8 @@ steps:
   commands:
   - pip install --upgrade pip
   - pip install --upgrade setuptools
-  - pip install -e .[tests,docs]
+  - pip install -e .[all]
   - ./run-tests.sh
-  environment:
-    LCCS_SERVER_URL: http://brazildatacube.dpi.inpe.br/dev/lccs
 
 - name: coverage
   image: plugins/codecov
