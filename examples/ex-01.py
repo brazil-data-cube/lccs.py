@@ -12,11 +12,11 @@ import lccs
 
 print(lccs.__version__)
 
-url = os.environ.get('LCCS_SERVER_URL', 'https://brazildatacube.dpi.inpe.br/dev/lccs/')
+server_url = os.environ.get('LCCS_SERVER_URL', 'https://brazildatacube.dpi.inpe.br/lccs/')
 
-service = lccs.LCCS('http://127.0.0.1:5000/')
+service = lccs.LCCS(server_url)
 
-print("Return all classificaton systems available in service")
+print("Return all classification systems available in service")
 print(service.classification_systems)
 
 # The examples presented in this code vary depending on the database used. Check the parameters informed.
@@ -42,10 +42,9 @@ print(all_mapping)
 # Get mapping
 mapping = service.mappings(system_name_source='PRODES-1.0', system_name_target='TerraClass_AMZ-1.0')
 
-print(f"\nMapping PRODES-1.0 to TerraClass_AMZ-1.0: \n")
+print(f"\nMapping PRODES-1.0 to TerraClass_AMZ-1.0:")
 
-for mp in mapping:
-    print(mp)
+print(mapping)
 
 # Get all styles available for a specific classification system
 style_formats = service.style_formats(system_source_name='PRODES-1.0')

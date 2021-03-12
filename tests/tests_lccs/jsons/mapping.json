@@ -1,378 +1,122 @@
-{
-  "mappings": [
-    {
-      "degree_of_similarity": 1,
-      "description": "",
-      "links": [
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Agricultura Anual",
-          "rel": "item",
-          "title": "Link to the source class",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Desmatamento",
-          "rel": "item",
-          "title": "Link to target class",
-          "type": "application/json"
-        }
-      ],
-      "source": "Agricultura Anual",
-      "source_id": 85,
-      "target": "Desmatamento",
-      "target_id": 175
-    },
-    {
-      "degree_of_similarity": 1,
-      "description": "",
-      "links": [
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Área Não Observada",
-          "rel": "item",
-          "title": "Link to the source class",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Nuvem",
-          "rel": "item",
-          "title": "Link to target class",
-          "type": "application/json"
-        }
-      ],
-      "source": "Área Não Observada",
-      "source_id": 86,
-      "target": "Nuvem",
-      "target_id": 179
-    },
-    {
-      "degree_of_similarity": 1,
-      "description": "",
-      "links": [
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Área sem Informação",
-          "rel": "item",
-          "title": "Link to the source class",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Desmatamento",
-          "rel": "item",
-          "title": "Link to target class",
-          "type": "application/json"
-        }
-      ],
-      "source": "Área sem Informação",
-      "source_id": 87,
-      "target": "Desmatamento",
-      "target_id": 175
-    },
-    {
-      "degree_of_similarity": 1,
-      "description": "",
-      "links": [
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Área Urbana",
-          "rel": "item",
-          "title": "Link to the source class",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Não Floresta",
-          "rel": "item",
-          "title": "Link to target class",
-          "type": "application/json"
-        }
-      ],
-      "source": "Área Urbana",
-      "source_id": 88,
-      "target": "Não Floresta",
-      "target_id": 178
-    },
-    {
-      "degree_of_similarity": 1,
-      "description": "",
-      "links": [
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Desflorestamento",
-          "rel": "item",
-          "title": "Link to the source class",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Desmatamento",
-          "rel": "item",
-          "title": "Link to target class",
-          "type": "application/json"
-        }
-      ],
-      "source": "Desflorestamento",
-      "source_id": 89,
-      "target": "Desmatamento",
-      "target_id": 175
-    },
-    {
-      "degree_of_similarity": 1,
-      "description": "",
-      "links": [
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Mosaico de Ocupações",
-          "rel": "item",
-          "title": "Link to the source class",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Desmatamento",
-          "rel": "item",
-          "title": "Link to target class",
-          "type": "application/json"
-        }
-      ],
-      "source": "Mosaico de Ocupações",
-      "source_id": 90,
-      "target": "Desmatamento",
-      "target_id": 175
-    },
-    {
-      "degree_of_similarity": 1,
-      "description": "",
-      "links": [
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Outros",
-          "rel": "item",
-          "title": "Link to the source class",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Desmatamento",
-          "rel": "item",
-          "title": "Link to target class",
-          "type": "application/json"
-        }
-      ],
-      "source": "Outros",
-      "source_id": 91,
-      "target": "Desmatamento",
-      "target_id": 175
-    },
-    {
-      "degree_of_similarity": 1,
-      "description": "",
-      "links": [
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Pasto com Solo Exposto",
-          "rel": "item",
-          "title": "Link to the source class",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Desmatamento",
-          "rel": "item",
-          "title": "Link to target class",
-          "type": "application/json"
-        }
-      ],
-      "source": "Pasto com Solo Exposto",
-      "source_id": 92,
-      "target": "Desmatamento",
-      "target_id": 175
-    },
-    {
-      "degree_of_similarity": 1,
-      "description": "",
-      "links": [
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Pasto Limpo",
-          "rel": "item",
-          "title": "Link to the source class",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Desmatamento",
-          "rel": "item",
-          "title": "Link to target class",
-          "type": "application/json"
-        }
-      ],
-      "source": "Pasto Limpo",
-      "source_id": 93,
-      "target": "Desmatamento",
-      "target_id": 175
-    },
-    {
-      "degree_of_similarity": 1,
-      "description": "",
-      "links": [
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Pasto Sujo",
-          "rel": "item",
-          "title": "Link to the source class",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Desmatamento",
-          "rel": "item",
-          "title": "Link to target class",
-          "type": "application/json"
-        }
-      ],
-      "source": "Pasto Sujo",
-      "source_id": 94,
-      "target": "Desmatamento",
-      "target_id": 175
-    },
-    {
-      "degree_of_similarity": 1,
-      "description": "",
-      "links": [
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Reflorestamento",
-          "rel": "item",
-          "title": "Link to the source class",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Desmatamento",
-          "rel": "item",
-          "title": "Link to target class",
-          "type": "application/json"
-        }
-      ],
-      "source": "Reflorestamento",
-      "source_id": 95,
-      "target": "Desmatamento",
-      "target_id": 175
-    },
-    {
-      "degree_of_similarity": 1,
-      "description": "",
-      "links": [
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Regeneração com Pasto",
-          "rel": "item",
-          "title": "Link to the source class",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Desmatamento",
-          "rel": "item",
-          "title": "Link to target class",
-          "type": "application/json"
-        }
-      ],
-      "source": "Regeneração com Pasto",
-      "source_id": 96,
-      "target": "Desmatamento",
-      "target_id": 175
-    },
-    {
-      "degree_of_similarity": 1,
-      "description": "",
-      "links": [
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Vegetação Secundária",
-          "rel": "item",
-          "title": "Link to the source class",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Desmatamento",
-          "rel": "item",
-          "title": "Link to target class",
-          "type": "application/json"
-        }
-      ],
-      "source": "Vegetação Secundária",
-      "source_id": 97,
-      "target": "Desmatamento",
-      "target_id": 175
-    },
-    {
-      "degree_of_similarity": 1,
-      "description": "",
-      "links": [
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Floresta",
-          "rel": "item",
-          "title": "Link to the source class",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Floresta",
-          "rel": "item",
-          "title": "Link to target class",
-          "type": "application/json"
-        }
-      ],
-      "source": "Floresta",
-      "source_id": 125,
-      "target": "Floresta",
-      "target_id": 176
-    },
-    {
-      "degree_of_similarity": 1,
-      "description": "",
-      "links": [
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Hidrografia",
-          "rel": "item",
-          "title": "Link to the source class",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Hidrografia",
-          "rel": "item",
-          "title": "Link to target class",
-          "type": "application/json"
-        }
-      ],
-      "source": "Hidrografia",
-      "source_id": 126,
-      "target": "Hidrografia",
-      "target_id": 177
-    },
-    {
-      "degree_of_similarity": 1,
-      "description": "",
-      "links": [
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Mineração",
-          "rel": "item",
-          "title": "Link to the source class",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Desmatamento",
-          "rel": "item",
-          "title": "Link to target class",
-          "type": "application/json"
-        }
-      ],
-      "source": "Mineração",
-      "source_id": 127,
-      "target": "Desmatamento",
-      "target_id": 175
-    },
-    {
-      "degree_of_similarity": 1,
-      "description": "",
-      "links": [
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Não Floresta",
-          "rel": "item",
-          "title": "Link to the source class",
-          "type": "application/json"
-        },
-        {
-          "href": "http://localhost:5000/classification_system/TerraClass_AMZ/classes/Não Floresta",
-          "rel": "item",
-          "title": "Link to target class",
-          "type": "application/json"
-        }
-      ],
-      "source": "Não Floresta",
-      "source_id": 128,
-      "target": "Não Floresta",
-      "target_id": 178
-    }
-  ]
-}
+[
+  {
+    "degree_of_similarity": 0,
+    "description": "alguma descricao",
+    "links": [
+      {
+        "href": "http://localhost:5000/classification_systems/1/classes/3",
+        "rel": "item",
+        "title": "Link to source class",
+        "type": "application/json"
+      },
+      {
+        "href": "http://localhost:5000/classification_systems/3/classes/31",
+        "rel": "item",
+        "title": "Link to target class",
+        "type": "application/json"
+      }
+    ],
+    "source_class_id": 3,
+    "target_class_id": 31
+  },
+  {
+    "degree_of_similarity": 0,
+    "description": "alguma descricaong",
+    "links": [
+      {
+        "href": "http://localhost:5000/classification_systems/1/classes/4",
+        "rel": "item",
+        "title": "Link to source class",
+        "type": "application/json"
+      },
+      {
+        "href": "http://localhost:5000/classification_systems/3/classes/32",
+        "rel": "item",
+        "title": "Link to target class",
+        "type": "application/json"
+      }
+    ],
+    "source_class_id": 4,
+    "target_class_id": 32
+  },
+  {
+    "degree_of_similarity": 0,
+    "description": "alguma descricao",
+    "links": [
+      {
+        "href": "http://localhost:5000/classification_systems/1/classes/1",
+        "rel": "item",
+        "title": "Link to source class",
+        "type": "application/json"
+      },
+      {
+        "href": "http://localhost:5000/classification_systems/3/classes/33",
+        "rel": "item",
+        "title": "Link to target class",
+        "type": "application/json"
+      }
+    ],
+    "source_class_id": 1,
+    "target_class_id": 33
+  },
+  {
+    "degree_of_similarity": 0,
+    "description": "alguma descricao",
+    "links": [
+      {
+        "href": "http://localhost:5000/classification_systems/1/classes/2",
+        "rel": "item",
+        "title": "Link to source class",
+        "type": "application/json"
+      },
+      {
+        "href": "http://localhost:5000/classification_systems/3/classes/34",
+        "rel": "item",
+        "title": "Link to target class",
+        "type": "application/json"
+      }
+    ],
+    "source_class_id": 2,
+    "target_class_id": 34
+  },
+  {
+    "degree_of_similarity": 0,
+    "description": "alguma descricao",
+    "links": [
+      {
+        "href": "http://localhost:5000/classification_systems/1/classes/3",
+        "rel": "item",
+        "title": "Link to source class",
+        "type": "application/json"
+      },
+      {
+        "href": "http://localhost:5000/classification_systems/3/classes/35",
+        "rel": "item",
+        "title": "Link to target class",
+        "type": "application/json"
+      }
+    ],
+    "source_class_id": 3,
+    "target_class_id": 35
+  },
+  {
+    "degree_of_similarity": 0,
+    "description": "alguma descricao",
+    "links": [
+      {
+        "href": "http://localhost:5000/classification_systems/1/classes/3",
+        "rel": "item",
+        "title": "Link to source class",
+        "type": "application/json"
+      },
+      {
+        "href": "http://localhost:5000/classification_systems/3/classes/36",
+        "rel": "item",
+        "title": "Link to target class",
+        "type": "application/json"
+      }
+    ],
+    "source_class_id": 3,
+    "target_class_id": 36
+  }
+]

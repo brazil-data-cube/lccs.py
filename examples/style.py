@@ -10,10 +10,10 @@
 from lccs import LCCS
 
 # Change to the LCCS-WS URL you want to use.
-service = LCCS("http://brazildatacube.dpi.inpe.br/dev/lccs/")
+service = LCCS("https://brazildatacube.dpi.inpe.br/dev/lccs/")
 
 # Save Style File
-service.get_styles(system_id='MapBiomas5', format_id='QGIS')
+service.get_style(system_name='PRODES-1.0', format_name='QGIS')
 
 # Save Style File passing the path directory
-service.get_styles(system_id='MapBiomas5', format_id='QGIS', path='/home/user/Downloads/')
+service.get_style(system_name='PRODES-1.0', format_name='QGIS', path='/home/user/Downloads/')

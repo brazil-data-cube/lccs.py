@@ -4,27 +4,33 @@
   "id": 1,
   "links": [
     {
-      "href": "http://localhost:5000/classification_system",
+      "href": "http://localhost:5000/classification_systems",
       "rel": "parent",
       "title": "Link to this document",
       "type": "application/json"
     },
     {
-      "href": "http://localhost:5000/classification_system/PRODES",
+      "href": "http://localhost:5000/classification_systems/1",
       "rel": "self",
       "title": "The classification_system",
       "type": "application/json"
     },
     {
-      "href": "http://localhost:5000/classification_system/PRODES/classes",
+      "href": "http://localhost:5000/classification_systems/1/classes",
       "rel": "classes",
       "title": "The classes related to this item",
       "type": "application/json"
     },
     {
-      "href": "http://localhost:5000/classification_system/PRODES/styles",
-      "rel": "styles",
-      "title": "The styles related to this item",
+      "href": "http://localhost:5000/classification_systems/1/style_formats",
+      "rel": "styles_formats",
+      "title": "The styles formats related to this item",
+      "type": "application/json"
+    },
+    {
+      "href": "http://localhost:5000/mappings/1",
+      "rel": "mappings",
+      "title": "The classification system mappings",
       "type": "application/json"
     },
     {

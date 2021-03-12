@@ -53,7 +53,7 @@ Mappings
 
 This example shows the list of available mappings in service of a specific classification system:
 
-.. literalinclude:: ../../examples/mappings.py
+.. literalinclude:: ../../examples/available_mappings.py
    :language: python
    :lines: 10-
 

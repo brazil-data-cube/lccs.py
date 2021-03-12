@@ -10,6 +10,7 @@ from .class_system import ClassificationSystem
 from .mappings import MappingGroup, Mapping
 from .style_formats import StyleFormats
 from .utils import Utils
+import json
 
 
 class LCCS:
@@ -83,7 +84,6 @@ class LCCS:
         :returns: A ClassificationSystem.
         :rtype: dict
         """
-
         if system_name in self._classification_systems.keys() and self._classification_systems[system_name] is not None:
             return self._classification_systems[system_name]
 
@@ -121,7 +121,7 @@ class LCCS:
  
         return result
 
-    def mappings(self, system_name_source: str, system_name_target: str) -> list:
+    def mappings(self, system_name_source: str, system_name_target: str) -> MappingGroup:
         """Return the given classification_system.
 
         :param system_name_source: A classification system name.
@@ -134,18 +134,17 @@ class LCCS:
         """
         _system_source_id = self._id(system_name_source)
         _system_target_id = self._id(system_name_target)
-    
-        result = list()
-    
+        
         try:
             data = Utils._get(f'{self._url}/mappings/{_system_source_id.id}/{_system_target_id.id}')
         except Exception:
             raise KeyError('Could not retrieve mappings for {} and {}'.format(system_name_source, system_name_target))
     
-        [result.append(Mapping(mapping, self._validate)) for mapping in data]
-    
-        return result
-    
+        data_result = dict()
+        data_result['mappings'] = data
+        
+        return MappingGroup(data_result, self._validate)
+ 
     def style_formats(self, system_source_name) -> list:
         """Fetch styles of the a giving classification system.
 
@@ -216,45 +215,56 @@ class LCCS:
         
         return retval
     
-    def add_style(self, system_id: str, style_format: str, style_path: str, extension: str):
+    def add_style(self, system_name: str, format_name: str, style_path: str):
         """Add a new style format system."""
-        url = f'{self._url}/classification_system/{system_id}/styles{self._access_token}'
+        _format_id = self._get_format_identifier(format_name)
+
+        _system_source_id = self._id(system_name)
+        
+        url = f'{self._url}/classification_systems/{_system_source_id.id}/styles{self._access_token}'
         
         try:
-            style = {'style': (f'style_{system_id}_{style_format}.{extension}', open(style_path, 'rb'),
-                               'application/octet-stream')}
+            style = {'style': open(style_path, 'rb')}
         except RuntimeError:
             raise ValueError(f'Could not open style file {style_path}.')
         
         data = dict()
-        data["style_format"] = style_format
-        
+        data["style_format_id"] = _format_id['id']
+
         try:
             retval = Utils._post(url, data=data, files=style)
         except RuntimeError:
             raise ValueError('Could not insert style!')
         
-        return retval['message']
+        return retval
     
-    def add_mapping(self, system_id_source: str, system_id_target: str, mappings_path: str):
+    def add_mapping(self, system_name_source: str, system_name_target: str, mappings):
         """Add new classification system mapping."""
-        url = f'{self._url}/mappings/{system_id_source}/{system_id_target}{self._access_token}'
+        def get_id_by_name(name, classes):
+            """Get id of class."""
+            return list(filter(lambda x: x.name == name, classes))[0]['id']
+            
+        _system_source_id = self._id(system_name_source)
+        _system_target_id = self._id(system_name_target)
         
+        url = f'{self._url}/mappings/{_system_source_id.id}/{_system_target_id.id}{self._access_token}'
+
+        if type(mappings) == str:
+            with open(mappings) as file:
+                mappings = json.load(file)
+
+        for i in mappings:
+            if type(i['source_class_id']) != str:
+                break
+            i['source_class_id'] = get_id_by_name(i['source_class_id'], _system_source_id.classes)
+            i['target_class_id'] = get_id_by_name(i['target_class_id'], _system_target_id.classes)
+
         try:
-            mapping = {'mappings': ('mappings.json', open(mappings_path, 'rb'), 'application/json')}
-        except RuntimeError:
-            raise ValueError(f'Could not open mapping file {mappings_path}. It is a json file ?')
-        
-        try:
-            retval = Utils._post(url, json=mapping)
+            retval = Utils._post(url, json=mappings)
         except RuntimeError:
             raise ValueError('Could not insert mappings!')
-        
-        retval['source_classification_system'] = system_id_source
-        
-        retval['target_classification_system'] = system_id_target
-        
-        return MappingGroup(retval, self._validate)
+
+        return retval
     
     @property
     def url(self):

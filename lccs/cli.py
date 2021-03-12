@@ -174,46 +174,45 @@ def mappings(config: Config, system_name_source, system_name_target, verbose):
 
 
 @cli.command()
-@click.option('--system_id_source', type=click.STRING, required=True, help='The classification system source.')
-@click.option('--system_id_target', type=click.STRING, required=True, default=None,
+@click.option('--system_name_source', type=click.STRING, required=True, help='The classification system source.')
+@click.option('--system_name_target', type=click.STRING, required=True, default=None,
               help='The classification system target.')
 @click.option('--mappings_path', type=click.Path(exists=True), required=True,  help='File path with the mapping')
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @pass_config
-def add_mapping(config: Config, system_id_source, system_id_target, mappings_path, verbose):
+def add_mapping(config: Config, system_name_source, system_name_target, mappings_path, verbose):
     """Add a mapping between classification systems."""
     if verbose:
         click.secho(f'Server: {config.url}', bold=True, fg='black')
         click.secho('\tAdding new mapping ... ', bold=False, fg='black')
 
-    retval = config.service.add_mapping(system_id_source=system_id_source, system_id_target=system_id_target,
-                                 mappings_path=mappings_path)
+    config.service.add_mapping(system_name_source=system_name_source,
+                                        system_name_target=system_name_target,
+                                        mappings=mappings_path)
 
-    click.secho(f'Added Mapping between {retval["source_classification_system"]} and '
-                f'{retval["target_classification_system"]}', bold=True, fg='green')
+    click.secho(f'Added Mapping between {system_name_source} and '
+                f'{system_name_target}', bold=True, fg='green')
 
     if verbose:
         click.secho('\tFinished!', bold=False, fg='black')
 
 
 @cli.command()
-@click.option('--system_id', type=click.STRING, required=True, help='The classification system source.')
-@click.option('--style_format', type=click.STRING, required=True, default=None,
+@click.option('--system_name', type=click.STRING, required=True, help='The classification system source.')
+@click.option('--style_format_name', type=click.STRING, required=True, default=None,
               help='The style file format.')
 @click.option('--style_path', type=click.Path(exists=True), required=True,  help='The style file path.')
-@click.option('--extension', type=click.STRING, required=True, help='The style extension type.')
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @pass_config
-def add_style(config: Config, system_id, style_format, style_path, extension, verbose):
+def add_style(config: Config, system_name, style_format_name, style_path, verbose):
     """Add a classification system style."""
     if verbose:
         click.secho(f'Server: {config.url}', bold=True, fg='black')
         click.secho('\tAdding new classification system style ... ', bold=False, fg='black')
 
-    retval = config.service.add_style(system_id=system_id, style_format=style_format, style_path=style_path,
-                               extension=extension)
-
-    click.secho(f'{retval}', bold=True, fg='green')
+    config.service.add_style(system_name=system_name,
+                             format_name=style_format_name,
+                             style_path=style_path)
 
     if verbose:
         click.secho('\tFinished!', bold=False, fg='black')

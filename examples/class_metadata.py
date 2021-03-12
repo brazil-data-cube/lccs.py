@@ -14,10 +14,10 @@ service = LCCS("http://brazildatacube.dpi.inpe.br/dev/lccs/")
 
 # Get a specific classification system
 # Make sure the classification system is available in service
-classification_system = service.classification_system(system_id='TerraClass_AMZ')
+classification_system = service.classification_system('PRODES-1.0')
 
 # Return the metadata of a specific class
-class_metadata = classification_system.classes(class_id='Desflorestamento')
+class_metadata = classification_system.get_class('Desflorestamento')
 print(class_metadata)
 
 # You can access specific attributes
