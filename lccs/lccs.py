@@ -214,6 +214,30 @@ class LCCS:
             raise ValueError(f'Could not insert classification system {name}!')
         
         return retval
+
+    def add_classes(self, system_name, classes: str):
+        """Add new classes to an classification system."""
+        _system_id = self._id(system_name)
+
+        url = f'{self._url}/classification_systems/{_system_id.id}/classes{self._access_token}'
+
+        if type(classes) == str:
+            with open(classes) as file:
+                classes = json.load(file)
+
+        for i in classes:
+            if 'class_parent_id' not in i:
+                break
+            if type(i['class_parent_id']) != str:
+                break
+            i['class_parent_id'] = Utils.get_id_by_name(name=i['class_parent_id'], classes=_system_id.classes)
+
+        try:
+            retval = Utils._post(url, json=classes)
+        except RuntimeError:
+            raise ValueError('Could not insert classes!')
+
+        return retval
     
     def add_style(self, system_name: str, format_name: str, style_path: str):
         """Add a new style format system."""
@@ -240,10 +264,6 @@ class LCCS:
     
     def add_mapping(self, system_name_source: str, system_name_target: str, mappings):
         """Add new classification system mapping."""
-        def get_id_by_name(name, classes):
-            """Get id of class."""
-            return list(filter(lambda x: x.name == name, classes))[0]['id']
-            
         _system_source_id = self._id(system_name_source)
         _system_target_id = self._id(system_name_target)
         
@@ -256,8 +276,8 @@ class LCCS:
         for i in mappings:
             if type(i['source_class_id']) != str:
                 break
-            i['source_class_id'] = get_id_by_name(i['source_class_id'], _system_source_id.classes)
-            i['target_class_id'] = get_id_by_name(i['target_class_id'], _system_target_id.classes)
+            i['source_class_id'] = Utils.get_id_by_name(i['source_class_id'], _system_source_id.classes)
+            i['target_class_id'] = Utils.get_id_by_name(i['target_class_id'], _system_target_id.classes)
 
         try:
             retval = Utils._post(url, json=mappings)

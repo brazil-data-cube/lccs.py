@@ -177,7 +177,7 @@ def mappings(config: Config, system_name_source, system_name_target, verbose):
 @click.option('--system_name_source', type=click.STRING, required=True, help='The classification system source.')
 @click.option('--system_name_target', type=click.STRING, required=True, default=None,
               help='The classification system target.')
-@click.option('--mappings_path', type=click.Path(exists=True), required=True,  help='File path with the mapping')
+@click.option('--mappings_path', type=click.Path(exists=True), required=True,  help='Json file with the mapping')
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @pass_config
 def add_mapping(config: Config, system_name_source, system_name_target, mappings_path, verbose):
@@ -187,8 +187,8 @@ def add_mapping(config: Config, system_name_source, system_name_target, mappings
         click.secho('\tAdding new mapping ... ', bold=False, fg='black')
 
     config.service.add_mapping(system_name_source=system_name_source,
-                                        system_name_target=system_name_target,
-                                        mappings=mappings_path)
+                               system_name_target=system_name_target,
+                               mappings=mappings_path)
 
     click.secho(f'Added Mapping between {system_name_source} and '
                 f'{system_name_target}', bold=True, fg='green')
@@ -240,6 +240,25 @@ def add_classification_system(config: Config, name, authority_name, description,
                                                   version=version)
 
     click.secho(f' Classification System {cs["name"]} added!', bold=True, fg='green')
+
+    if verbose:
+        click.secho('\tFinished!', bold=False, fg='black')
+
+
+@cli.command()
+@click.option('--system_name', type=click.STRING, required=True, help='The classification system.')
+@click.option('--classes_path', type=click.Path(exists=True), required=True,  help='Json file with classes')
+@click.option('-v', '--verbose', is_flag=True, default=False)
+@pass_config
+def add_classes(config: Config, system_name, classes_path, verbose):
+    """Add a mapping between classification systems."""
+    if verbose:
+        click.secho(f'Server: {config.url}', bold=True, fg='black')
+        click.secho('\tAdding new mapping ... ', bold=False, fg='black')
+
+    config.service.add_classes(system_name=system_name, classes=classes_path)
+
+    click.secho(f'Added classes for {system_name}', bold=True, fg='green')
 
     if verbose:
         click.secho('\tFinished!', bold=False, fg='black')
