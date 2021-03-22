@@ -1,6 +1,6 @@
 #
 # This file is part of Python Client Library for the LCCS Web Service.
-# Copyright (C) 2019-2020 INPE.
+# Copyright (C) 2020-2021 INPE.
 #
 # Python Client Library for the LCCS Web Service is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -59,11 +59,21 @@ class Utils:
 
     @staticmethod
     def _post(url, data=None, json=None, files=None):
+        """Request post method."""
         response = requests.post(url, data=data, files=files, json=json)
 
         response.raise_for_status()
 
         return response.json()
+
+    @staticmethod
+    def _delete(url, params=None):
+        """Request delete method."""
+        response = requests.delete(url, params=params)
+
+        response.raise_for_status()
+
+        return response
 
     @staticmethod
     def validate(lccs_object):

@@ -1,6 +1,6 @@
 #
 # This file is part of Land Cover Classification System Web Service.
-# Copyright (C) 2019-2020 INPE.
+# Copyright (C) 2020-2021 INPE.
 #
 # Land Cover Classification System Web Service is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -285,7 +285,86 @@ class LCCS:
             raise ValueError('Could not insert mappings!')
 
         return retval
-    
+
+    def add_style_format(self, name: str):
+        """Add a new style format."""
+        url = f'{self._url}/style_formats{self._access_token}'
+
+        data = {"name": name}
+
+        try:
+            retval = Utils._post(url, json=data)
+        except RuntimeError:
+            raise ValueError(f'Could not insert style format {name}!')
+
+        return retval
+
+    def delete_classification_system(self, system_name: str):
+        """Delete a specific classification system."""
+        if system_name in self._classification_systems.keys() and self._classification_systems[system_name] is not None:
+            return self._classification_systems[system_name]
+
+        _system_id = self._id(system_name)
+
+        try:
+            retval = Utils._delete(f'{self._url}/classification_systems/{_system_id["id"]}{self._access_token}')
+        except RuntimeError:
+            raise ValueError(f'Could not remove classification system {system_name}!')
+
+        return retval
+
+    def delete_class(self, system_name: str, class_name: str):
+        """Delete a specific class."""
+        if system_name in self._classification_systems.keys() and self._classification_systems[system_name] is not None:
+            return self._classification_systems[system_name]
+
+        _system_id = self._id(system_name)
+
+        class_id = Utils.get_id_by_name(class_name, _system_id.classes)
+
+        try:
+            retval = Utils._delete(f'{self._url}/classification_systems/{_system_id["id"]}/classes/{class_id}{self._access_token}')
+        except RuntimeError:
+            raise ValueError(f'Could not remove class {class_name} of classification system {system_name}!')
+
+        return retval
+
+    def delete_style_format(self, format_name: str):
+        """Delete a specific style format."""
+        _format_id = self._get_format_identifier(format_name)
+
+        try:
+            retval = Utils._delete(f'{self._url}/style_formats/{_format_id["id"]}{self._access_token}')
+        except RuntimeError:
+            raise ValueError(f'Could not remove style format {format_name} !')
+
+        return retval
+
+    def delete_style(self, system_name, format_name):
+        """Delete the style of a classification system."""
+        _format_id = self._get_format_identifier(format_name)
+
+        _system_id = self._id(system_name)
+
+        try:
+            retval = Utils._delete(f'{self._url}/classification_systems/{_system_id.id}/styles/{_format_id["id"]}{self._access_token}')
+        except RuntimeError:
+            raise ValueError(f'Could not remove style {format_name} of classification system {system_name}!')
+
+        return retval
+
+    def delete_mapping(self, system_name_source: str, system_name_target: str):
+        """Delete the mapping."""
+        _system_source_id = self._id(system_name_source)
+        _system_target_id = self._id(system_name_target)
+
+        try:
+            retval = Utils._delete(f'{self._url}/mappings/{_system_source_id.id}/{_system_target_id.id}{self._access_token}')
+        except RuntimeError:
+            raise ValueError(f'Could not remove mapping of {system_name_source} and {system_name_target}!')
+
+        return retval
+
     @property
     def url(self):
         """Return the LCSS server instance URL."""
