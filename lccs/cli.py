@@ -179,6 +179,77 @@ def mappings(config: Config, system_name_source, system_name_target, verbose):
 
 
 @cli.command()
+@click.option('-v', '--verbose', is_flag=True, default=False)
+@pass_config
+def style_formats(config: Config, verbose):
+    """Return the list of available style formats in the service provider."""
+    if verbose:
+        click.secho(f'Server: {config.url}', bold=True, fg='black')
+        click.secho('\tRetrieving the list of available styles formats... ',
+                    bold=False, fg='black')
+
+    if verbose:
+        for style in config.service.available_style_formats():
+            click.secho(f'\t\t- {style.name}', bold=True, fg='green')
+    else:
+        for style in config.service.available_style_formats():
+            click.secho(f'{style.name}', bold=True, fg='green')
+
+    if verbose:
+        click.secho('\tFinished!', bold=False, fg='black')
+
+
+@cli.command()
+@click.option('--system_name', type=click.STRING, required=True,
+              help='The classification system (Identifier by name-version).')
+@click.option('-v', '--verbose', is_flag=True, default=False)
+@pass_config
+def styles(config: Config, system_name, verbose):
+    """Return the style format available for a specific classification system in the service provider."""
+    if verbose:
+        click.secho(f'Server: {config.url}', bold=True, fg='black')
+        click.secho('\tRetrieving the list of available styles formats... ',
+                    bold=False, fg='black')
+
+    if verbose:
+        for style in config.service.style_formats(system_source_name=system_name):
+            click.secho(f'\t\t- {style.name}', bold=True, fg='green')
+    else:
+        for style in config.service.style_formats(system_source_name=system_name):
+            click.secho(f'{style.name}', bold=True, fg='green')
+
+    if verbose:
+        click.secho('\tFinished!', bold=False, fg='black')
+
+
+@cli.command()
+@click.option('--system_name', type=click.STRING, required=True,
+              help='The classification system (Identifier by name-version).')
+@click.option('--style_format_name', type=click.STRING, required=True, default=None,
+              help='The style format name.')
+@click.option('-o', '--output', help='Output to a file', type=click.Path(dir_okay=True), required=False)
+@click.option('-v', '--verbose', is_flag=True, default=False)
+@pass_config
+def style_file(config: Config, system_name, style_format_name, output, verbose):
+    """Return and save the style for a specific classification system and style format in the service provider."""
+    if verbose:
+        click.secho(f'Server: {config.url}', bold=True, fg='black')
+        click.secho('\tRetrieving the list of available styles formats... ',
+                    bold=False, fg='black')
+
+    if output:
+        config.service.get_style(system_name=system_name, format_name=style_format_name, path=output)
+        click.secho(f'Style file save in {output}', bold=True, fg='green')
+
+    config.service.get_style(system_name=system_name, format_name=style_format_name)
+
+    click.secho(f'Style file save', bold=True, fg='green')
+
+    if verbose:
+        click.secho('\tFinished!', bold=False, fg='black')
+
+
+@cli.command()
 @click.option('--system_name_source', type=click.STRING, required=True,
               help='The classification system source (Identifier by name-version).')
 @click.option('--system_name_target', type=click.STRING, required=True, default=None,

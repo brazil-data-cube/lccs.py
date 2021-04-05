@@ -144,6 +144,26 @@ class LCCS:
         data_result['mappings'] = data
         
         return MappingGroup(data_result, self._validate)
+
+    def available_style_formats(self) -> list:
+        """Fetch the available style formats.
+
+        :returns: Available style formats.
+        :rtype: list
+        """
+        result = list()
+
+        try:
+            data = Utils._get(f'{self._url}/style_formats')
+        except Exception:
+            raise KeyError('Could not retrieve any style format')
+
+        for i in data:
+            if i['rel'] == 'items':
+                data = Utils._get(f"{i['href']}")
+                result.append(StyleFormats(data))
+
+        return result
  
     def style_formats(self, system_source_name) -> list:
         """Fetch styles of the a giving classification system.
@@ -160,7 +180,7 @@ class LCCS:
         try:
             data = Utils._get(f'{self._url}/classification_systems/{_system_source_id.id}/style_formats')
         except Exception:
-            raise KeyError('Could not retrieve any style for {}'.format(system_source_name))
+            raise KeyError('Could not retrieve any style format for {}'.format(system_source_name))
         
         for i in data:
             if i['rel'] == 'style':
