@@ -61,7 +61,7 @@ class ClassificationSystem(dict):
         return self['classes']
 
     def get_class(self, class_name):
-        """:return: a specif class of of the classification system."""
+        """:return: a specific class of of the classification system."""
         for i in self.classes:
             if i.name == class_name:
                 return ClassificationSystemClass(i, self._validate)
@@ -74,7 +74,11 @@ class ClassificationSystem(dict):
                 data = Utils._get(link['href'], params=filter)
                 for i in data:
                     if 'rel' in i and i['rel'] == 'child':
-                        classes.append(ClassificationSystemClass(Utils._get(i['href'], self._validate), self._validate))
+                        class_data = ClassificationSystemClass(Utils._get(i['href'], self._validate), self._validate)
+                        if 'class_parent_id' in class_data:
+                            parent_class_uri = i['href'].rsplit('/', maxsplit=1)[0] + f'/{class_data.class_parent_id}'
+                            class_data['class_parent_name'] = ClassificationSystemClass(Utils._get(parent_class_uri, self._validate), self._validate).name
+                        classes.append(class_data)
         self['classes'] = classes
 
     def _repr_html_(self):

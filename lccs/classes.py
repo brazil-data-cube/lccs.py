@@ -43,5 +43,10 @@ class ClassificationSystemClass(dict):
 
     @property
     def class_parent_id(self):
-        """:return: the class code."""
-        return self['class_parent_id']
+        """:return: the class parent id."""
+        return self['class_parent_id'] if 'class_parent_id' in self else None
+
+    @property
+    def class_parent_name(self):
+        """:return: the class parent name."""
+        return self['class_parent_name'] if 'class_parent_name' in self else None
