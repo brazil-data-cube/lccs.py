@@ -93,10 +93,10 @@ def classes(config: Config, system_name, verbose):
     class_system = config.service.classification_system(system_name=system_name)
 
     if verbose:
-        for cv in class_system.classes:
+        for cv in class_system.classes():
             click.secho(f'\t\t- {cv.name}', bold=True, fg='green')
     else:
-        for cv in class_system.classes:
+        for cv in class_system.classes():
             click.secho(f'{cv.name}', bold=True, fg='green')
 
     if verbose:
@@ -118,7 +118,7 @@ def class_describe(config: Config, system_name, class_name, verbose):
 
     class_system = config.service.classification_system(system_name=system_name)
 
-    retval = class_system.get_class(class_name=class_name)
+    retval = class_system.classes(class_name=class_name)
 
     for ds_key, ds_value in retval.items():
         click.secho(f'\t- {ds_key}: {ds_value}', bold=True, fg='green')

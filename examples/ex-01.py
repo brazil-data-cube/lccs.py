@@ -27,12 +27,12 @@ print(class_system.description)
 print(class_system.name)
 
 # Return a classes of a classification system
-classes = class_system.classes
+classes = class_system.classes()
 for i in classes:
     print(i.name)
 
 # Return a specific class of a classification system
-prodes_desflorestamento = class_system.get_class('Desflorestamento')
+prodes_desflorestamento = class_system.classes('Desmatamento')
 print(prodes_desflorestamento.name)
 
 # Get all available mappings for a specific classification system

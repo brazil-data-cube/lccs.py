@@ -29,7 +29,7 @@ class LCCS:
         self._classification_systems = {}
         self._validate = validate
         self._access_token = f'?access_token={access_token}' if access_token else ''
-        self.get_classification_systems()
+        self._get_classification_systems()
     
     def _get_identifier(self, name, version):
         url = f'{self._url}/classification_systems/search/{name}/{version}'
@@ -41,7 +41,7 @@ class LCCS:
         data = Utils._get(url)
         return data
     
-    def get_classification_systems(self):
+    def _get_classification_systems(self):
         """Return the Classification Systems available in service."""
         if len(self._classification_systems) > 0:
             return self._classification_systems.keys()
@@ -71,7 +71,7 @@ class LCCS:
         :returns: List of Classification Systems.
         :rtype: dict
         """
-        self.get_classification_systems()
+        self._get_classification_systems()
 
         return list(self._classification_systems.keys())
     

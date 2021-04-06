@@ -27,7 +27,7 @@
             <th>class_parent_id</th>
             <th>class_parent_name</th>
         </tr>
-        {% for class in classification_system.classes%}
+        {% for class in classification_system.classes()%}
         <tr>
             <td>{{class['id']}}</td>
             <td>{{class['name']}}</td>

@@ -17,8 +17,7 @@ service = LCCS("http://brazildatacube.dpi.inpe.br/dev/lccs/")
 classification_system = service.classification_system('PRODES-1.0')
 
 # Return the metadata of a specific class
-class_metadata = classification_system.get_class('Desflorestamento')
-print(class_metadata)
+class_metadata = classification_system.classes('Desmatamento')
 
 # You can access specific attributes
 print(class_metadata.id)
