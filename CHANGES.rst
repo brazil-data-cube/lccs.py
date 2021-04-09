@@ -10,8 +10,21 @@
 Changes
 =======
 
-Version 0.4.0-0 (2021-01-07)
-----------------------------
+
+Version 0.6.0 (2021-04-09)
+--------------------------
+
+- Add integration with Drone CI (`#34 <https://github.com/brazil-data-cube/lccs.py/pull/34>`_).
+
+- Support for the `LCCS-WS specification version 0.6.0 <https://github.com/brazil-data-cube/lccs-ws-spec>`_.
+
+- Add CRUD support for: ``Classification System``, ``Classes``, ``StyleFormats`` and ``Styles`` (`#40 <https://github.com/brazil-data-cube/lccs.py/pull/40>`_).
+
+- Improve Unittests
+
+
+Version 0.4.0 (2021-01-07)
+--------------------------
 
 - Command Line Interface (CLI).
 
