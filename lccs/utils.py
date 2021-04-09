@@ -80,3 +80,8 @@ class Utils:
         """Render Jinja2 HTML template."""
         template = templateEnv.get_template(template_name)
         return template.render(**kwargs)
+
+    @staticmethod
+    def get_id_by_name(name, classes):
+        """Get id of class."""
+        return list(filter(lambda x: x.name == name, classes))[0]['id']
