@@ -17,6 +17,6 @@ service = LCCS("https://brazildatacube.dpi.inpe.br/lccs/")
 classification_system = service.classification_system('PRODES-1.0')
 
 # Returns all classes belonging to a specific classification system.
-classes = classification_system.classes
+classes = classification_system.classes()
 print(classes)
 
