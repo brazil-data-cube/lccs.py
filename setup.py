@@ -50,8 +50,8 @@ install_requires = [
     'jsonschema>=3.2',
     'requests>=2.20',
     'Jinja2>=2.11.1',
-    'lxml==4.6.2',
-    'python-sld @ git+https://github.com/fabianazioti/python-sld',
+    'lxml==4.6.2'
+    'python-sld==1.0.10',
 ]
 
 packages = find_packages()

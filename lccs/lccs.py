@@ -393,7 +393,7 @@ class LCCS:
 
     def create_style(self, system_name: str, options: dict, rules: list):
         """Create style sld."""
-        sld = SldGenerator().create_sld(options=options, rules=rules, layer_name=system_name)
+        sld = SldGenerator.create_sld(options=options, rules=rules, layer_name=system_name)
 
         self.add_style(system_name, 'GeoServer', style_tex=sld.decode("utf-8"), style_name='lccs-style', style_extension='sld')
 

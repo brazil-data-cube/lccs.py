@@ -6,6 +6,7 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 """Python API client wrapper for LCCS-WS."""
+from lxml.etree import tostring
 import sld
 import os
 
@@ -47,4 +48,4 @@ class SldGenerator:
         localschema_backup_path = './StyledLayerDescriptor-backup.xsd'
         os.remove(localschema_backup_path)
 
-        return mysld.as_sld()
+        return tostring(mysld._node, pretty_print=False, encoding="utf-8")
