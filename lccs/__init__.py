@@ -12,6 +12,7 @@ from . import cli
 from .classes import ClassificationSystemClass
 from .mappings import Mapping, MappingGroup
 from .utils import Utils
+from .style_utils import SldGenerator
 from .version import __version__
 from .lccs import LCCS
 

@@ -10,6 +10,7 @@ from .class_system import ClassificationSystem
 from .mappings import MappingGroup, Mapping
 from .style_formats import StyleFormats
 from .utils import Utils
+from .style_utils import SldGenerator
 import json
 
 
@@ -22,7 +23,7 @@ class LCCS:
     :param url: The LCCS-WS server URL.
     :type url: str
     """
-    
+
     def __init__(self, url, validate=False, access_token=None):
         """Create a LCCS-WS client attached to the given host address (an URL)."""
         self._url = url if url[-1] != '/' else url[0:-1]
@@ -30,35 +31,35 @@ class LCCS:
         self._validate = validate
         self._access_token = f'?access_token={access_token}' if access_token else ''
         self._get_classification_systems()
-    
+
     def _get_identifier(self, name, version):
         url = f'{self._url}/classification_systems/search/{name}/{version}'
         data = Utils._get(url)
         return data
-    
+
     def _get_format_identifier(self, name):
         url = f'{self._url}/style_formats/search/{name}'
         data = Utils._get(url)
         return data
-    
+
     def _get_classification_systems(self):
         """Return the Classification Systems available in service."""
         if len(self._classification_systems) > 0:
             return self._classification_systems.keys()
-        
+
         url = f'{self._url}/classification_systems'
-        
+
         data = Utils._get(url)
-        
+
         for i in data:
             self._classification_systems[f"{i['name']}-{i['version']}"] = ClassificationSystem(i, self._validate)
         return self._classification_systems.keys()
-    
+
     def _id(self, system_name: str):
         for k, v in self._classification_systems.items():
             if k == system_name:
                 return v
-    
+
     def _name(self, system_id: int):
         for k, v in self._classification_systems.items():
             if v.id == int(system_id):
@@ -74,7 +75,7 @@ class LCCS:
         self._get_classification_systems()
 
         return list(self._classification_systems.keys())
-    
+
     def classification_system(self, system_name: str) -> ClassificationSystem:
         """Return information about the given classification system.
 
@@ -106,9 +107,9 @@ class LCCS:
         :rtype: list
         """
         _system_source_id = self._id(system_source_name)
-        
+
         result = list()
-        
+
         try:
             data = Utils._get(f'{self._url}/mappings/{_system_source_id["id"]}')
         except Exception:
@@ -118,7 +119,7 @@ class LCCS:
             if i['rel'] == 'child':
                 system_target_name = self._name(i['href'].split("/")[-1])
                 result.append(system_target_name)
- 
+
         return result
 
     def mappings(self, system_name_source: str, system_name_target: str) -> MappingGroup:
@@ -134,15 +135,15 @@ class LCCS:
         """
         _system_source_id = self._id(system_name_source)
         _system_target_id = self._id(system_name_target)
-        
+
         try:
             data = Utils._get(f'{self._url}/mappings/{_system_source_id.id}/{_system_target_id.id}')
         except Exception:
             raise KeyError('Could not retrieve mappings for {} and {}'.format(system_name_source, system_name_target))
-    
+
         data_result = dict()
         data_result['mappings'] = data
-        
+
         return MappingGroup(data_result, self._validate)
 
     def available_style_formats(self) -> list:
@@ -164,7 +165,7 @@ class LCCS:
                 result.append(StyleFormats(data))
 
         return result
- 
+
     def style_formats(self, system_source_name) -> list:
         """Fetch styles of the a giving classification system.
 
@@ -175,20 +176,20 @@ class LCCS:
         :rtype: list
         """
         _system_source_id = self._id(system_source_name)
-        
+
         result = list()
         try:
             data = Utils._get(f'{self._url}/classification_systems/{_system_source_id.id}/style_formats')
         except Exception:
             raise KeyError('Could not retrieve any style format for {}'.format(system_source_name))
-        
+
         for i in data:
             if i['rel'] == 'style':
                 data = Utils._get(f'{self._url}/style_formats/{i["href"].split("/")[-1]}')
                 result.append(StyleFormats(data))
 
         return result
-    
+
     def get_style(self, system_name, format_name, path=None):
         """Fetch styles of the a giving classification system.
 
@@ -211,28 +212,28 @@ class LCCS:
             file_name, data = Utils._get(f'{self._url}/classification_systems/{_system_source_id.id}/styles/{_format_id["id"]}')
         except Exception:
             raise KeyError(f'Could not retrieve any style for {system_name}')
-        
+
         if path is not None:
             full_path = path + file_name
             return open(full_path, 'wb').write(data)
         return open(file_name, 'wb').write(data)
-    
+
     def add_classification_system(self, name: str, authority_name: str, description: str,
                                   version: str):
         """Add a new classification system."""
         url = f'{self._url}/classification_systems{self._access_token}'
-        
+
         data = dict()
         data["name"] = name
         data["authority_name"] = authority_name
         data["description"] = description
         data["version"] = version
-        
+
         try:
             retval = Utils._post(url, json=data)
         except RuntimeError:
             raise ValueError(f'Could not insert classification system {name}!')
-        
+
         return retval
 
     def add_classes(self, system_name, classes: str):
@@ -258,35 +259,40 @@ class LCCS:
             raise ValueError('Could not insert classes!')
 
         return retval
-    
-    def add_style(self, system_name: str, format_name: str, style_path: str):
-        """Add a new style format system."""
+
+    def add_style(self, system_name: str, format_name: str, style_path: str = None, style_tex: str = None,
+                  style_name: str = None, style_extension: str = None):
+        """Add a new style to a system."""
         _format_id = self._get_format_identifier(format_name)
 
         _system_source_id = self._id(system_name)
-        
+
         url = f'{self._url}/classification_systems/{_system_source_id.id}/styles{self._access_token}'
-        
-        try:
-            style = {'style': open(style_path, 'rb')}
-        except RuntimeError:
-            raise ValueError(f'Could not open style file {style_path}.')
-        
-        data = dict()
-        data["style_format_id"] = _format_id['id']
+
+        if style_path:
+            try:
+                style = {'style': open(style_path, 'rb')}
+            except RuntimeError:
+                raise ValueError(f'Could not open style file {style_path}.')
+        elif style_tex:
+            style = {'style': (f'{style_name}.{style_extension}', f'{style_tex}')}
+        else:
+            raise ValueError('You must provide a file path or a string with the style!')
+
+        data = dict(style_format_id=_format_id['id'])
 
         try:
             retval = Utils._post(url, data=data, files=style)
         except RuntimeError:
             raise ValueError('Could not insert style!')
-        
+
         return retval
-    
+
     def add_mapping(self, system_name_source: str, system_name_target: str, mappings):
         """Add new classification system mapping."""
         _system_source_id = self._id(system_name_source)
         _system_target_id = self._id(system_name_target)
-        
+
         url = f'{self._url}/mappings/{_system_source_id.id}/{_system_target_id.id}{self._access_token}'
 
         if type(mappings) == str:
@@ -385,20 +391,28 @@ class LCCS:
 
         return retval
 
+    def create_style(self, system_name: str, options: dict, rules: list):
+        """Create style sld."""
+        sld = SldGenerator.create_sld(options=options, rules=rules, layer_name=system_name)
+
+        self.add_style(system_name, 'GeoServer', style_tex=sld.decode("utf-8"), style_name='lccs-style', style_extension='sld')
+
+        return
+
     @property
     def url(self):
         """Return the LCSS server instance URL."""
         return self._url
-    
+
     def __repr__(self):
         """Return the string representation of a lccs object."""
         text = f'lccs("{self.url}")'
         return text
-    
+
     def __str__(self):
         """Return the string representation of a lccs object."""
         return f'<LCCS [{self.url}]>'
-    
+
     def _repr_html_(self):
         """HTML repr."""
         classification_systems = str()
