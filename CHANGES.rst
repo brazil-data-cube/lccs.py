@@ -13,7 +13,7 @@ Changes
 Version 0.8.0 (2021-08-11)
 --------------------------
 
-- Add support for create and save style file: (`#41 <https://github.com/brazil-data-cube/lccs.py/pull/#41>`_).
+- Add support for create and save style file: (`#41 <https://github.com/brazil-data-cube/lccs.py/pull/41>`_).
 
 
 Version 0.6.0 (2021-04-09)
