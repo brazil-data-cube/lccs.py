@@ -5,7 +5,7 @@
 # Land Cover Classification System Web Service is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 #
-"""Command line interface for the LCCS client."""
+"""Command line interface for the LCCS-WS client."""
 import click
 
 from .lccs import LCCS
@@ -19,6 +19,7 @@ class Config:
         self.url = None
         self.service = None
         self.access_token = None
+        self.language = None
 
 
 pass_config = click.make_pass_decorator(Config, ensure=True)
@@ -30,10 +31,10 @@ pass_config = click.make_pass_decorator(Config, ensure=True)
 @click.option('--access-token', default=None, help='Personal Access Token of the BDC Auth')
 @click.version_option()
 @pass_config
-def cli(config, url, access_token=None):
-    """LCCS on command line."""
+def cli(config, url, access_token=None, language=None):
+    """LCCS-WS Client on command line."""
     config.url = url
-    config.service = LCCS(url, access_token=access_token)
+    config.service = LCCS(url=url, access_token=access_token, language=language)
 
 
 @cli.command()
@@ -58,18 +59,18 @@ def classification_systems(config: Config, verbose):
 
 
 @cli.command()
-@click.option('--system_name', type=click.STRING, required=True,
-              help='The classification system (Identifier by name-version).')
+@click.option('--system', type=click.STRING, required=True,
+              help='The classification system (Identifier by name-version or the ID).')
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @pass_config
-def classification_systems_description(config: Config, system_name, verbose):
+def classification_system_description(config: Config, system, verbose):
     """Return information for a given classification system."""
     if verbose:
         click.secho(f'Server: {config.url}', bold=True, fg='black')
         click.secho('\tRetrieving the classification system metadata... ',
                     bold=False, fg='black')
 
-    retval = config.service.classification_system(system_name=system_name)
+    retval = config.service.classification_system(system=system)
 
     for ds_key, ds_value in retval.items():
         click.secho(f'\t- {ds_key}: {ds_value}', bold=True, fg='green')
@@ -79,18 +80,18 @@ def classification_systems_description(config: Config, system_name, verbose):
 
 
 @cli.command()
-@click.option('--system_name', type=click.STRING, required=True,
-              help='The classification system (Identifier by name-version).')
+@click.option('--system', type=click.STRING, required=True,
+              help='The classification system (Identifier by name-version or the ID).')
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @pass_config
-def classes(config: Config, system_name, verbose):
+def classes(config: Config, system, verbose):
     """Return the list of available classes given a classification system in the service provider."""
     if verbose:
         click.secho(f'Server: {config.url}', bold=True, fg='black')
         click.secho('\tRetrieving the the list of classes for a given classification system.... ',
                     bold=False, fg='black')
 
-    class_system = config.service.classification_system(system_name=system_name)
+    class_system = config.service.classification_system(system=system)
 
     if verbose:
         for cv in class_system.classes():
@@ -104,21 +105,21 @@ def classes(config: Config, system_name, verbose):
 
 
 @cli.command()
-@click.option('--system_name', type=click.STRING, required=True,
-              help='The classification system (Identifier by name-version).')
-@click.option('--class_name', type=click.STRING, required=True, help='The class name.')
+@click.option('--system', type=click.STRING, required=True,
+              help='The classification system (Identifier by name-version or the ID).')
+@click.option('--system_class', type=click.STRING, required=True, help='The class name or id.')
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @pass_config
-def class_describe(config: Config, system_name, class_name, verbose):
+def class_describe(config: Config, system, system_class, verbose):
     """Return information for a classes given a classification system in the service provider."""
     if verbose:
         click.secho(f'Server: {config.url}', bold=True, fg='black')
         click.secho('\tRetrieving the class metadata... ',
                     bold=False, fg='black')
 
-    class_system = config.service.classification_system(system_name=system_name)
+    classification_system = config.service.classification_system(system=system)
 
-    retval = class_system.classes(class_name=class_name)
+    retval = classification_system.classes(system_class)
 
     for ds_key, ds_value in retval.items():
         click.secho(f'\t- {ds_key}: {ds_value}', bold=True, fg='green')
@@ -128,18 +129,18 @@ def class_describe(config: Config, system_name, class_name, verbose):
 
 
 @cli.command()
-@click.option('--system_name', type=click.STRING, required=True,
-              help='The classification system (Identifier by name-version).')
+@click.option('--system', type=click.STRING, required=True,
+              help='The classification system (Identifier by name-version or the ID).')
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @pass_config
-def available_mappings(config: Config, system_name, verbose):
+def available_mappings(config: Config, system, verbose):
     """Return the list of available mappings."""
     if verbose:
         click.secho(f'Server: {config.url}', bold=True, fg='black')
         click.secho('\tRetrieving the list of available for a given classification system ... ',
                     bold=False, fg='black')
     
-    retval = config.service.available_mappings(system_source_name=system_name)
+    retval = config.service.available_mappings(system_source=system)
 
     if verbose:
         for mp in retval:
@@ -153,29 +154,26 @@ def available_mappings(config: Config, system_name, verbose):
 
 
 @cli.command()
-@click.option('--system_name_source', type=click.STRING, required=True,
-              help='The classification system source (Identifier by name-version).')
-@click.option('--system_name_target', type=click.STRING, required=True, default=None,
-              help='The classification system target (Identifier by name-version).')
+@click.option('--system-source', type=click.STRING, required=True,
+              help='The classification system source (Identifier by name-version or the ID).')
+@click.option('--system-target', type=click.STRING, required=True, default=None,
+              help='The classification system target (Identifier by name-version or the ID).')
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @pass_config
-def mappings(config: Config, system_name_source, system_name_target, verbose):
+def mappings(config: Config, system_source, system_target, verbose):
     """Return the mapping."""
     if verbose:
         click.secho(f'Server: {config.url}', bold=True, fg='black')
         click.secho('\tRetrieving the mapping ... ',
                     bold=False, fg='black')
     
-    retval = config.service.mappings(system_name_source=system_name_source, system_name_target=system_name_target)
+    retval = config.service.mappings(system_source=system_source, system_target=system_target)
 
     if verbose:
         click.secho(f'\t- {retval}', bold=True, fg='green')
-
+        click.secho('\tFinished!', bold=False, fg='black')
     else:
         click.secho(f'\t- {retval}', bold=True, fg='green')
-
-    if verbose:
-        click.secho('\tFinished!', bold=False, fg='black')
 
 
 @cli.command()

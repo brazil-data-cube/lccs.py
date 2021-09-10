@@ -104,13 +104,13 @@ class Mapping(dict):
 
     def __repr__(self):
         """Return the string representation of a mapping object."""
-        text = f'{self.source_class.name} -> {self.target_class.name} -' \
+        text = f'{self.source_class.title} -> {self.target_class.title} -' \
                f' Degree_of_similarity {self.degree_of_similarity}'
         return text
     
     def __str__(self):
         """Return the string representation of a mapping object."""
-        text = f'{self.source_class.name} -> Target Class{self.target_class.name} -' \
+        text = f'{self.source_class.title} -> {self.target_class.title} -' \
                f' Degree_of_similarity {self.degree_of_similarity}'
         return text
 

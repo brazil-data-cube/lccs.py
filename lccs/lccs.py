@@ -6,7 +6,8 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 """Python API client wrapper for LCCS-WS."""
-from .class_system import ClassificationSystem
+from typing import List
+from .classification_system import ClassificationSystem
 from .mappings import MappingGroup, Mapping
 from .style_formats import StyleFormats
 from .utils import Utils
@@ -23,19 +24,14 @@ class LCCS:
     :type url: str
     """
     
-    def __init__(self, url, validate=False, access_token=None):
+    def __init__(self, url, validate=False, access_token=None, language=None):
         """Create a LCCS-WS client attached to the given host address (an URL)."""
-        self._url = url if url[-1] != '/' else url[0:-1]
-        self._classification_systems = {}
+        self._url = url.rstrip('/')
         self._validate = validate
+        self._classification_systems = {}
         self._access_token = f'?access_token={access_token}' if access_token else ''
-        self._get_classification_systems()
-    
-    def _get_identifier(self, name, version):
-        url = f'{self._url}/classification_systems/search/{name}/{version}'
-        data = Utils._get(url)
-        return data
-    
+        self._language = f'&language={language}' if language else ''
+
     def _get_format_identifier(self, name):
         url = f'{self._url}/style_formats/search/{name}'
         data = Utils._get(url)
@@ -43,17 +39,14 @@ class LCCS:
     
     def _get_classification_systems(self):
         """Return the Classification Systems available in service."""
-        if len(self._classification_systems) > 0:
-            return self._classification_systems.keys()
-        
-        url = f'{self._url}/classification_systems'
-        
+        url = f'{self._url}/classification_systems{self._access_token}{self._language}'
         data = Utils._get(url)
-        
-        for i in data:
-            self._classification_systems[f"{i['name']}-{i['version']}"] = ClassificationSystem(i, self._validate)
-        return self._classification_systems.keys()
-    
+        result = list()
+
+        [result.append(i['identifier']) for i in data]
+
+        return result
+
     def _id(self, system_name: str):
         for k, v in self._classification_systems.items():
             if k == system_name:
@@ -71,80 +64,69 @@ class LCCS:
         :returns: List of Classification Systems.
         :rtype: dict
         """
-        self._get_classification_systems()
-
-        return list(self._classification_systems.keys())
+        return self._get_classification_systems()
     
-    def classification_system(self, system_name: str) -> ClassificationSystem:
+    def classification_system(self, system: str) -> ClassificationSystem:
         """Return information about the given classification system.
 
-        :param system_name: A str with name-version for a given classification_system.
-        :type system_name: str
+        :param system: A str with name-version for a given classification_system.
+        :type system: str
 
         :returns: A ClassificationSystem.
         :rtype: dict
         """
-        if system_name in self._classification_systems.keys() and self._classification_systems[system_name] is not None:
-            return self._classification_systems[system_name]
-
-        _system_id = self._id(system_name)
-
         try:
-            data = Utils._get(f'{self._url}/classification_systems/{_system_id["id"]}')
-            self._classification_systems[system_name] = ClassificationSystem(data, self._validate)
+            url = f'{self._url}/classification_systems/{system}{self._access_token}{self._language}'
+            data = Utils._get(url)
+            return ClassificationSystem(data, self._validate)
         except Exception:
-            raise KeyError('Could not retrieve information for classification_system: {}'.format(system_name))
-        return self._classification_systems[system_name]
+            raise KeyError(f'Could not retrieve information for classification_system: {system}')
 
-    def available_mappings(self, system_source_name: str) -> list:
+    def available_mappings(self, system_source: str) -> list:
         """Return the available mappings of classification system.
 
-        :param system_source_name: A classification system name.
-        :type system_source_name: str
+        :param system_source: The name or identifier of classification system.
+        :type system_source: str
 
         :returns: Available Classification Systems Mappings.
         :rtype: list
         """
-        _system_source_id = self._id(system_source_name)
-        
         result = list()
-        
+
         try:
-            data = Utils._get(f'{self._url}/mappings/{_system_source_id["id"]}')
+            data = Utils._get(f'{self._url}/mappings/{system_source}{self._access_token}{self._language}')
         except Exception:
-            raise KeyError('Could not retrieve any available mapping for {}'.format(system_source_name))
+            raise KeyError(f'Could not retrieve any available mapping for {system_source}')
 
         for i in data:
             if i['rel'] == 'child':
-                system_target_name = self._name(i['href'].split("/")[-1])
-                result.append(system_target_name)
+                system_target = self.classification_system(i['href'].split("/")[-1].split('?')[0])
+                result.append(system_target)
  
         return result
 
-    def mappings(self, system_name_source: str, system_name_target: str) -> MappingGroup:
+    def mappings(self, system_source: str, system_target: str) -> MappingGroup:
         """Return the given classification_system.
 
-        :param system_name_source: A classification system name.
-        :type system_name_source: str
-        :param system_name_target: A classification system name.
-        :type system_name_target: str
+        :param system_source: The name or identifier of classification system.
+        :type system_source: str
+        :param system_target: The name or identifier of classification system.
+        :type system_target: str
 
         :returns: Mappings of classification Systems.
         :rtype: list
         """
-        _system_source_id = self._id(system_name_source)
-        _system_target_id = self._id(system_name_target)
-        
         try:
-            data = Utils._get(f'{self._url}/mappings/{_system_source_id.id}/{_system_target_id.id}')
+            data = Utils._get(f'{self._url}/mappings/{system_source}/{system_target}{self._access_token}')
         except Exception:
-            raise KeyError('Could not retrieve mappings for {} and {}'.format(system_name_source, system_name_target))
+            raise KeyError(f'Could not retrieve mappings for {system_source} and {system_target}')
     
         data_result = dict()
         data_result['mappings'] = data
         
         return MappingGroup(data_result, self._validate)
 
+    # TODO: rever
     def available_style_formats(self) -> list:
         """Fetch the available style formats.
 
@@ -165,22 +147,20 @@ class LCCS:
 
         return result
  
-    def style_formats(self, system_source_name) -> list:
+    def style_formats(self, system) -> List[StyleFormats]:
         """Fetch styles of the a giving classification system.
 
-        :param system_source_name: classification system name.
-        :type system_source_name: str
+        :param system: The id or identifier of a classification system.
+        :type system: str
 
         :returns: Available Classification Systems Styles.
         :rtype: list
         """
-        _system_source_id = self._id(system_source_name)
-        
         result = list()
         try:
-            data = Utils._get(f'{self._url}/classification_systems/{_system_source_id.id}/style_formats')
+            data = Utils._get(f'{self._url}/classification_systems/{system}/style_formats{self._access_token}')
         except Exception:
-            raise KeyError('Could not retrieve any style format for {}'.format(system_source_name))
+            raise KeyError(f'Could not retrieve any style format for {system}')
         
         for i in data:
             if i['rel'] == 'style':
@@ -189,14 +169,14 @@ class LCCS:
 
         return result
     
-    def get_style(self, system_name, format_name, path=None):
+    def get_style(self, system, style_format, path=None):
         """Fetch styles of the a giving classification system.
 
-        :param system_name: A classification system name.
-        :type system_name: str
+        :param system: The id or identifier of a classification system.
+        :type system: str
 
-        :param format_name: A style system format name.
-        :type format_name: str
+        :param style_format: The id or name of style format.
+        :type style_format: str
 
         :param path: Directory path to save the file
         :type path: str
@@ -204,13 +184,10 @@ class LCCS:
         :returns: Style File
         :rtype: File
         """
-        _format_id = self._get_format_identifier(format_name)
-        _system_source_id = self._id(system_name)
-
         try:
-            file_name, data = Utils._get(f'{self._url}/classification_systems/{_system_source_id.id}/styles/{_format_id["id"]}')
+            file_name, data = Utils._get(f'{self._url}/classification_systems/{system}/styles/{style_format}{self._access_token}')
         except Exception:
-            raise KeyError(f'Could not retrieve any style for {system_name}')
+            raise KeyError(f'Could not retrieve any style for {system}')
         
         if path is not None:
             full_path = path + file_name
