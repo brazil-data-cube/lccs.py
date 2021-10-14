@@ -11,6 +11,7 @@ from .classification_system import ClassificationSystem
 from .mappings import MappingGroup, Mapping
 from .style_formats import StyleFormats
 from .utils import Utils
+from .style_utils import SldGenerator
 import json
 
 from cachetools import cached, LRUCache
@@ -25,7 +26,6 @@ class LCCS:
     :param url: The LCCS-WS server URL.
     :type url: str
     """
-    
     def __init__(self, url, validate=False, access_token=None, language=None):
         """Create a LCCS-WS client attached to the given host address (an URL)."""
         self._url = url.rstrip('/')
@@ -38,7 +38,7 @@ class LCCS:
         url = f'{self._url}/style_formats/search/{name}'
         data = Utils._get(url)
         return data
-    
+
     def _get_classification_systems(self):
         """Return the Classification Systems available in service."""
         url = f'{self._url}/classification_systems{self._access_token}{self._language}'
@@ -53,7 +53,7 @@ class LCCS:
         for k, v in self._classification_systems.items():
             if k == system_name:
                 return v
-    
+
     def _name(self, system_id: int):
         for k, v in self._classification_systems.items():
             if v.id == int(system_id):
@@ -106,7 +106,7 @@ class LCCS:
             if i['rel'] == 'child':
                 system_target = self.classification_system(i['href'].split("/")[-1].split('?')[0])
                 result.append(system_target)
- 
+
         return result
 
     @cached(cache=LRUCache(maxsize=128))
@@ -125,10 +125,10 @@ class LCCS:
             data = Utils._get(f'{self._url}/mappings/{system_source}/{system_target}{self._access_token}')
         except Exception:
             raise KeyError(f'Could not retrieve mappings for {system_source} and {system_target}')
-    
+
         data_result = dict()
         data_result['mappings'] = data
-        
+
         return MappingGroup(data_result, self._validate)
 
     def available_style_formats(self) -> list:
@@ -167,14 +167,13 @@ class LCCS:
             data = Utils._get(f'{self._url}/classification_systems/{system}/style_formats{self._access_token}')
         except Exception:
             raise KeyError(f'Could not retrieve any style format for {system}')
-        
         for i in data:
             if i['rel'] == 'style':
                 data = Utils._get(f'{self._url}/style_formats/{i["href"].split("/")[-1]}')
                 result.append(StyleFormats(data))
 
         return result
-    
+
     #TODO
     def get_style(self, system, style_format, path=None):
         """Fetch styles of the a giving classification system.
@@ -195,12 +194,12 @@ class LCCS:
             file_name, data = Utils._get(f'{self._url}/classification_systems/{system}/styles/{style_format}{self._access_token}')
         except Exception:
             raise KeyError(f'Could not retrieve any style for {system}')
-        
+
         if path is not None:
             full_path = path + file_name
             return open(full_path, 'wb').write(data)
         return open(file_name, 'wb').write(data)
-    
+
     def add_classification_system(self, name: str, authority_name: str, description: dict, title: dict,
                                   version: str) -> dict:
         """Add a new classification system."""
@@ -212,12 +211,12 @@ class LCCS:
         data["version"] = version
         data["description"] = description
         data["title"] = title
-        
+
         try:
             retval = Utils._post(url, json=data)
         except RuntimeError as e:
             raise ValueError(f'Could not insert classification system {name}!')
-        
+
         return retval
 
     def add_classes(self, system: str, classes: str) -> List[dict]:
@@ -234,7 +233,7 @@ class LCCS:
             raise ValueError('Could not insert classes!')
 
         return retval
-    
+
     def add_style(self, system: str, format: str, style_path: str) -> List[dict]:
         """Add a new style format system."""
         url = f'{self._url}/classification_systems/{system}/styles{self._access_token}'
@@ -250,9 +249,9 @@ class LCCS:
             retval = Utils._post(url, data=data, files=style)
         except RuntimeError:
             raise ValueError('Could not insert style!')
-        
+
         return retval
-    
+
     def add_mapping(self, system_source: str, system_target: str, mappings) -> list:
         """Add new classification system mapping."""
         url = f'{self._url}/mappings/{system_source}/{system_target}{self._access_token}'
@@ -325,20 +324,29 @@ class LCCS:
 
         return retval.status_code
 
+    #TODO
+    def create_style(self, system_name: str, options: dict, rules: list):
+        """Create style sld."""
+        sld = SldGenerator.create_sld(options=options, rules=rules, layer_name=system_name)
+
+        self.add_style(system_name, 'GeoServer', style_tex=sld.decode("utf-8"), style_name='lccs-style', style_extension='sld')
+
+        return
+
     @property
     def url(self):
         """Return the LCSS server instance URL."""
         return self._url
-    
+
     def __repr__(self):
         """Return the string representation of a lccs object."""
         text = f'lccs("{self.url}")'
         return text
-    
+
     def __str__(self):
         """Return the string representation of a lccs object."""
         return f'<LCCS [{self.url}]>'
-    
+
     def _repr_html_(self):
         """HTML repr."""
         classification_systems = str()

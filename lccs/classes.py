@@ -30,7 +30,7 @@ class ClassesGroup(dict):
     # def _repr_html_(self):
     #     """HTML repr."""
     #     return Utils.render_html('mapping.html', mappings=self)
-    #
+
     def __repr__(self):
         """Return the string representation of a mapping group object."""
         text = ''
@@ -93,11 +93,6 @@ class ClassificationSystemClass(dict):
     def class_parent_id(self):
         """:return: the class parent id."""
         return self['class_parent_id'] if 'class_parent_id' in self else None
-
-    # @property
-    # def class_parent_name(self):
-    #     """:return: the class parent name."""
-    #     return self['class_parent_name'] if 'class_parent_name' in self else None
 
     @property
     def class_parent_name(self):
