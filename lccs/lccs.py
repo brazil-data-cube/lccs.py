@@ -13,6 +13,8 @@ from .style_formats import StyleFormats
 from .utils import Utils
 import json
 
+from cachetools import cached, LRUCache
+
 
 class LCCS:
     """This class implements a Python API client wrapper for LCCS-WS.
@@ -65,7 +67,8 @@ class LCCS:
         :rtype: dict
         """
         return self._get_classification_systems()
-    
+
+    @cached(cache=LRUCache(maxsize=128))
     def classification_system(self, system: str) -> ClassificationSystem:
         """Return information about the given classification system.
 
@@ -82,6 +85,7 @@ class LCCS:
         except Exception:
             raise KeyError(f'Could not retrieve information for classification_system: {system}')
 
+    @cached(cache=LRUCache(maxsize=128))
     def available_mappings(self, system_source: str) -> list:
         """Return the available mappings of classification system.
 
@@ -105,6 +109,7 @@ class LCCS:
  
         return result
 
+    @cached(cache=LRUCache(maxsize=128))
     def mappings(self, system_source: str, system_target: str) -> MappingGroup:
         """Return the given classification_system.
 
@@ -126,7 +131,6 @@ class LCCS:
         
         return MappingGroup(data_result, self._validate)
 
-    # TODO: rever
     def available_style_formats(self) -> list:
         """Fetch the available style formats.
 
@@ -136,17 +140,19 @@ class LCCS:
         result = list()
 
         try:
-            data = Utils._get(f'{self._url}/style_formats')
+            data = Utils._get(f'{self._url}/style_formats{self._access_token}')
         except Exception:
             raise KeyError('Could not retrieve any style format')
 
         for i in data:
-            if i['rel'] == 'items':
-                data = Utils._get(f"{i['href']}")
-                result.append(StyleFormats(data))
+            for links in i['links']:
+                if links['rel'] == 'items':
+                    data = Utils._get(f"{links['href']}")
+                    result.append(StyleFormats(data))
 
         return result
- 
+
+    @cached(cache=LRUCache(maxsize=128))
     def style_formats(self, system) -> List[StyleFormats]:
         """Fetch styles of the a giving classification system.
 
@@ -169,6 +175,7 @@ class LCCS:
 
         return result
     
+    #TODO
     def get_style(self, system, style_format, path=None):
         """Fetch styles of the a giving classification system.
 
@@ -194,40 +201,32 @@ class LCCS:
             return open(full_path, 'wb').write(data)
         return open(file_name, 'wb').write(data)
     
-    def add_classification_system(self, name: str, authority_name: str, description: str,
-                                  version: str):
+    def add_classification_system(self, name: str, authority_name: str, description: dict, title: dict,
+                                  version: str) -> dict:
         """Add a new classification system."""
         url = f'{self._url}/classification_systems{self._access_token}'
-        
+
         data = dict()
         data["name"] = name
         data["authority_name"] = authority_name
-        data["description"] = description
         data["version"] = version
+        data["description"] = description
+        data["title"] = title
         
         try:
             retval = Utils._post(url, json=data)
-        except RuntimeError:
+        except RuntimeError as e:
             raise ValueError(f'Could not insert classification system {name}!')
         
         return retval
 
-    def add_classes(self, system_name, classes: str):
+    def add_classes(self, system: str, classes: str) -> List[dict]:
         """Add new classes to an classification system."""
-        _system_id = self._id(system_name)
-
-        url = f'{self._url}/classification_systems/{_system_id.id}/classes{self._access_token}'
+        url = f'{self._url}/classification_systems/{system}/classes{self._access_token}'
 
         if type(classes) == str:
             with open(classes) as file:
                 classes = json.load(file)
-
-        for i in classes:
-            if 'class_parent_id' not in i:
-                break
-            if type(i['class_parent_id']) != str:
-                break
-            i['class_parent_id'] = Utils.get_id_by_name(name=i['class_parent_id'], classes=_system_id.classes)
 
         try:
             retval = Utils._post(url, json=classes)
@@ -236,21 +235,16 @@ class LCCS:
 
         return retval
     
-    def add_style(self, system_name: str, format_name: str, style_path: str):
+    def add_style(self, system: str, format: str, style_path: str) -> List[dict]:
         """Add a new style format system."""
-        _format_id = self._get_format_identifier(format_name)
+        url = f'{self._url}/classification_systems/{system}/styles{self._access_token}'
 
-        _system_source_id = self._id(system_name)
-        
-        url = f'{self._url}/classification_systems/{_system_source_id.id}/styles{self._access_token}'
-        
         try:
             style = {'style': open(style_path, 'rb')}
         except RuntimeError:
             raise ValueError(f'Could not open style file {style_path}.')
-        
-        data = dict()
-        data["style_format_id"] = _format_id['id']
+
+        data = dict(style_format=format)
 
         try:
             retval = Utils._post(url, data=data, files=style)
@@ -259,23 +253,13 @@ class LCCS:
         
         return retval
     
-    def add_mapping(self, system_name_source: str, system_name_target: str, mappings):
+    def add_mapping(self, system_source: str, system_target: str, mappings) -> list:
         """Add new classification system mapping."""
-        _system_source_id = self._id(system_name_source)
-        _system_target_id = self._id(system_name_target)
-        
-        url = f'{self._url}/mappings/{_system_source_id.id}/{_system_target_id.id}{self._access_token}'
+        url = f'{self._url}/mappings/{system_source}/{system_target}{self._access_token}'
 
         if type(mappings) == str:
             with open(mappings) as file:
                 mappings = json.load(file)
-
-        for i in mappings:
-            if type(i['source_class_id']) != str:
-                break
-            i['source_class_id'] = Utils.get_id_by_name(i['source_class_id'], _system_source_id.classes)
-            i['target_class_id'] = Utils.get_id_by_name(i['target_class_id'], _system_target_id.classes)
-
         try:
             retval = Utils._post(url, json=mappings)
         except RuntimeError:
@@ -283,7 +267,7 @@ class LCCS:
 
         return retval
 
-    def add_style_format(self, name: str):
+    def add_style_format(self, name: str) -> dict:
         """Add a new style format."""
         url = f'{self._url}/style_formats{self._access_token}'
 
