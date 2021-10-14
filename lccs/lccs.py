@@ -280,71 +280,50 @@ class LCCS:
 
         return retval
 
-    def delete_classification_system(self, system_name: str):
+    def delete_classification_system(self, system: str) -> int:
         """Delete a specific classification system."""
-        if system_name in self._classification_systems.keys() and self._classification_systems[system_name] is not None:
-            return self._classification_systems[system_name]
-
-        _system_id = self._id(system_name)
-
         try:
-            retval = Utils._delete(f'{self._url}/classification_systems/{_system_id["id"]}{self._access_token}')
+            retval = Utils._delete(f'{self._url}/classification_systems/{system}{self._access_token}')
         except RuntimeError:
-            raise ValueError(f'Could not remove classification system {system_name}!')
+            raise ValueError(f'Could not remove classification system {system}!')
 
-        return retval
+        return retval.status_code
 
-    def delete_class(self, system_name: str, class_name: str):
+    def delete_class(self, system: str, class_name_or_id: str) -> int:
         """Delete a specific class."""
-        if system_name in self._classification_systems.keys() and self._classification_systems[system_name] is not None:
-            return self._classification_systems[system_name]
-
-        _system_id = self._id(system_name)
-
-        class_id = Utils.get_id_by_name(class_name, _system_id.classes)
-
         try:
-            retval = Utils._delete(f'{self._url}/classification_systems/{_system_id["id"]}/classes/{class_id}{self._access_token}')
+            retval = Utils._delete(f'{self._url}/classification_systems/{system}/classes/{class_name_or_id}{self._access_token}')
         except RuntimeError:
-            raise ValueError(f'Could not remove class {class_name} of classification system {system_name}!')
+            raise ValueError(f'Could not remove class {class_name_or_id} of classification system {system}!')
 
-        return retval
+        return retval.status_code
 
-    def delete_style_format(self, format_name: str):
+    def delete_style_format(self, style_format: str) -> int:
         """Delete a specific style format."""
-        _format_id = self._get_format_identifier(format_name)
-
         try:
-            retval = Utils._delete(f'{self._url}/style_formats/{_format_id["id"]}{self._access_token}')
+            retval = Utils._delete(f'{self._url}/style_formats/{style_format}{self._access_token}')
         except RuntimeError:
-            raise ValueError(f'Could not remove style format {format_name} !')
+            raise ValueError(f'Could not remove style format {style_format} !')
 
-        return retval
+        return retval.status_code
 
-    def delete_style(self, system_name, format_name):
+    def delete_style(self, system: str, style_format: str) -> int:
         """Delete the style of a classification system."""
-        _format_id = self._get_format_identifier(format_name)
-
-        _system_id = self._id(system_name)
-
         try:
-            retval = Utils._delete(f'{self._url}/classification_systems/{_system_id.id}/styles/{_format_id["id"]}{self._access_token}')
+            retval = Utils._delete(f'{self._url}/classification_systems/{system}/styles/{style_format}{self._access_token}')
         except RuntimeError:
-            raise ValueError(f'Could not remove style {format_name} of classification system {system_name}!')
+            raise ValueError(f'Could not remove style {style_format} of classification system {system}!')
 
-        return retval
+        return retval.status_code
 
-    def delete_mapping(self, system_name_source: str, system_name_target: str):
+    def delete_mapping(self, system_source: str, system_target: str) -> int:
         """Delete the mapping."""
-        _system_source_id = self._id(system_name_source)
-        _system_target_id = self._id(system_name_target)
-
         try:
-            retval = Utils._delete(f'{self._url}/mappings/{_system_source_id.id}/{_system_target_id.id}{self._access_token}')
+            retval = Utils._delete(f'{self._url}/mappings/{system_source}/{system_target}{self._access_token}')
         except RuntimeError:
-            raise ValueError(f'Could not remove mapping of {system_name_source} and {system_name_target}!')
+            raise ValueError(f'Could not remove mapping of {system_source} and {system_target}!')
 
-        return retval
+        return retval.status_code
 
     @property
     def url(self):

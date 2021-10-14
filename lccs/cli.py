@@ -227,7 +227,6 @@ def styles(config: Config, system, verbose):
 @pass_config
 def style_file(config: Config, system_name, style_format_name, output, verbose):
     """Return and save the style for a specific classification system and style format in the service provider."""
-
     if verbose:
         click.secho(f'Server: {config.url}', bold=True, fg='black')
         click.secho('\tRetrieving the list of available styles formats... ',
@@ -363,101 +362,107 @@ def add_classes(config: Config, system, classes_path, verbose):
 
 
 @cli.command()
-@click.option('--system_name', type=click.STRING, required=True,
-              help='The classification system (Identifier by name-version).')
+@click.option('--system', type=click.STRING, required=True,
+              help='The classification system (Identifier by name-version or ID).')
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @pass_config
-def delete_classification_systems(config: Config, system_name, verbose):
+def delete_classification_system(config: Config, system, verbose):
     """Delete a specific classification system."""
     if verbose:
         click.secho(f'Server: {config.url}', bold=True, fg='black')
         click.secho('\tDeleting the classification system ... ',
                     bold=False, fg='black')
 
-    config.service.delete_classification_system(system_name=system_name)
+        config.service.delete_classification_system(system=system)
 
-    click.secho(f'\t - Deleted classification system: {system_name}!', bold=True, fg='green')
-
-    if verbose:
         click.secho('\tFinished!', bold=False, fg='black')
+
+    else:
+        config.service.delete_classification_system(system=system)
+
+        click.secho(f'\t - Deleted classification system: {system}!', bold=True, fg='green')
 
 
 @cli.command()
-@click.option('--system_name', type=click.STRING, required=True,
+@click.option('--system', type=click.STRING, required=True,
               help='The classification system (Identifier by name-version).')
-@click.option('--class_name', type=click.STRING, required=True, help='The class name.')
+@click.option('--class_name_or_id', type=click.STRING, required=True, help='The class name or ID.')
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @pass_config
-def delete_class(config: Config, system_name, class_name, verbose):
+def delete_class(config: Config, system, class_name_or_id, verbose):
     """Delete class of a classification system in the service provider."""
     if verbose:
         click.secho(f'Server: {config.url}', bold=True, fg='black')
         click.secho('\tDeleting class... ',
                     bold=False, fg='black')
 
-    config.service.delete_class(system_name=system_name, class_name=class_name)
+        config.service.delete_class(system=system, class_name_or_id=class_name_or_id)
 
-    click.secho(f'\t Deleted class {class_name} of classification system {system_name}', bold=True, fg='green')
-
-    if verbose:
         click.secho('\tFinished!', bold=False, fg='black')
+
+    else:
+        config.service.delete_class(system=system, class_name_or_id=class_name_or_id)
+        click.secho(f'\t Deleted class {class_name_or_id} of classification system {system}', bold=True, fg='green')
 
 
 @cli.command()
-@click.option('--style_format_name', type=click.STRING, required=True, default=None,
-              help='The style format name.')
+@click.option('--style_format', type=click.STRING, required=True, default=None,
+              help='The style format name or id.')
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @pass_config
-def delete_style_format(config: Config, style_format_name, verbose):
+def delete_style_format(config: Config, style_format, verbose):
     """Delete a style format."""
     if verbose:
         click.secho(f'Server: {config.url}', bold=True, fg='black')
         click.secho('\tDeleting the style format ... ', bold=False, fg='black')
 
-    config.service.delete_style_format(format_name=style_format_name)
+        config.service.delete_style_format(format=style_format)
 
-    click.secho(f'\t Deleted style format {style_format_name}', bold=True, fg='green')
-
-    if verbose:
         click.secho('\tFinished!', bold=False, fg='black')
+
+    else:
+        config.service.delete_style_format(format=style_format)
+
+        click.secho(f'\t Deleted style format {style_format}', bold=True, fg='green')
 
 
 @cli.command()
-@click.option('--system_name', type=click.STRING, required=True,
-              help='The classification system (Identifier by name-version).')
-@click.option('--style_format_name', type=click.STRING, required=True, default=None,
-              help='The style format name.')
+@click.option('--system', type=click.STRING, required=True,
+              help='The classification system (Identifier by name-version or ID).')
+@click.option('--style_format', type=click.STRING, required=True, default=None,
+              help='The style format name or id.')
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @pass_config
-def delete_style(config: Config, system_name, style_format_name, verbose):
+def delete_style(config: Config, system, style_format, verbose):
     """Delete a style for a classification system."""
     if verbose:
         click.secho(f'Server: {config.url}', bold=True, fg='black')
         click.secho('\tDeleting the style ... ', bold=False, fg='black')
 
-    config.service.delete_style(system_name=system_name, format_name=style_format_name)
+        config.service.delete_style(system=system, style_format=style_format)
 
-    if verbose:
         click.secho('\tFinished!', bold=False, fg='black')
+
+    else:
+        config.service.delete_style(system=system, style_format=style_format)
 
 
 @cli.command()
-@click.option('--system_name_source', type=click.STRING, required=True,
-              help='The classification system source (Identifier by name-version).')
-@click.option('--system_name_target', type=click.STRING, required=True, default=None,
-              help='The classification system target (Identifier by name-version).')
+@click.option('--system_source', type=click.STRING, required=True,
+              help='The classification system source (Identifier by name-version or ID).')
+@click.option('--system_target', type=click.STRING, required=True, default=None,
+              help='The classification system target (Identifier by name-version or ID).')
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @pass_config
-def delete_mapping(config: Config, system_name_source, system_name_target, verbose):
+def delete_mapping(config: Config, system_source, system_target, verbose):
     """Delete a mapping between classification systems."""
     if verbose:
         click.secho(f'Server: {config.url}', bold=True, fg='black')
         click.secho('\tDeleting the mapping ... ', bold=False, fg='black')
 
-    config.service.delete_mapping(system_name_source=system_name_source, system_name_target=system_name_target)
+        config.service.delete_mapping(system_source=system_source, system_target=system_target)
 
-    click.secho(f'Mapping between {system_name_source} and '
-                f'{system_name_target} deleted!', bold=True, fg='green')
-
-    if verbose:
         click.secho('\tFinished!', bold=False, fg='black')
+    else:
+        config.service.delete_mapping(system_source=system_source, system_target=system_target)
+
