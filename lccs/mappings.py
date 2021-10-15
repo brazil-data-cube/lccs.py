@@ -23,15 +23,10 @@ class MappingGroup(dict):
         super(MappingGroup, self).__init__(data or {})
 
     @property
-    def mapping(self):
+    def mappings(self):
         """:return: Mapping."""
         return [Mapping(mapping, self._validate) for mapping in self['mappings']]
 
-    @property
-    def mappings(self):
-        """:return: Mappings."""
-        return [Mapping(link) for link in self['links']]
-    
     def _repr_html_(self):
         """HTML repr."""
         return Utils.render_html('mapping.html', mappings=self)
@@ -101,6 +96,16 @@ class Mapping(dict):
     def target_class(self):
         """:return: the source class."""
         return self['target_class']
+
+    @property
+    def source_class_id(self):
+        """:return: the source class."""
+        return self['source_class_id']
+
+    @property
+    def target_class_id(self):
+        """:return: the source class."""
+        return self['target_class_id']
 
     def __repr__(self):
         """Return the string representation of a mapping object."""
