@@ -279,7 +279,7 @@ def add_style(config: Config, system, style_format, style_path, verbose):
         click.secho(f'Server: {config.url}', bold=True, fg='black')
         click.secho('\tAdding new classification system style ... ', bold=False, fg='black')
 
-    config.service.add_style(system=system, style_path=style_path, format=style_format)
+    config.service.add_style(system=system, style_path=style_path, style_format=style_format)
 
     click.secho('\tFinished!', bold=False, fg='black')
 

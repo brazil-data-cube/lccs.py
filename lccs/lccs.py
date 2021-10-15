@@ -234,16 +234,22 @@ class LCCS:
 
         return retval
 
-    def add_style(self, system: str, format: str, style_path: str) -> List[dict]:
-        """Add a new style format system."""
+    def add_style(self, system: str, style_format: str, style_path: str = None, style_tex: str = None,
+                  style_name: str = None, style_extension: str = None) -> List[dict]:
+        """Add a new style to a system."""
         url = f'{self._url}/classification_systems/{system}/styles{self._access_token}'
 
-        try:
-            style = {'style': open(style_path, 'rb')}
-        except RuntimeError:
-            raise ValueError(f'Could not open style file {style_path}.')
+        if style_path:
+            try:
+                style = {'style': open(style_path, 'rb')}
+            except RuntimeError:
+                raise ValueError(f'Could not open style file {style_path}.')
+        elif style_tex:
+            style = {'style': (f'{style_name}.{style_extension}', f'{style_tex}')}
+        else:
+            raise ValueError('You must provide a file path or a string with the style!')
 
-        data = dict(style_format=format)
+        data = dict(style_format=style_format)
 
         try:
             retval = Utils._post(url, data=data, files=style)
@@ -325,11 +331,11 @@ class LCCS:
         return retval.status_code
 
     #TODO
-    def create_style(self, system_name: str, options: dict, rules: list):
+    def create_style(self, system: str, style_format: str, options: dict, rules: list):
         """Create style sld."""
-        sld = SldGenerator.create_sld(options=options, rules=rules, layer_name=system_name)
+        sld = SldGenerator.create_sld(options=options, rules=rules, layer_name=system)
 
-        self.add_style(system_name, 'GeoServer', style_tex=sld.decode("utf-8"), style_name='lccs-style', style_extension='sld')
+        self.add_style(system=system, style_format=style_format, style_tex=sld.decode("utf-8"), style_name='lccs-style', style_extension='sld')
 
         return
 
