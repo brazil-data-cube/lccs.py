@@ -27,9 +27,9 @@ class ClassesGroup(dict):
         """:return: classes."""
         return self._classes
 
-    # def _repr_html_(self):
-    #     """HTML repr."""
-    #     return Utils.render_html('mapping.html', mappings=self)
+    def _repr_html_(self):
+        """HTML repr."""
+        return Utils.render_html('mapping.html', mappings=self)
 
     def __repr__(self):
         """Return the string representation of a mapping group object."""
