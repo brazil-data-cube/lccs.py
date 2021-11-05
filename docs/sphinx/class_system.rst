@@ -9,7 +9,7 @@ Classification System
 ---------------------
 
 
-.. autoclass:: lccs.class_system::ClassificationSystem
+.. autoclass:: lccs.classification_system::ClassificationSystem
     :members:
     :special-members: __init__
     :member-order: bysource

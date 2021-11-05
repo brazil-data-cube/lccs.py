@@ -10,9 +10,9 @@
 from lccs import LCCS
 
 # Change to the LCCS-WS URL you want to use.
-service = LCCS("https://brazildatacube.dpi.inpe.br/lccs/")
+service = LCCS("https://brazildatacube.dpi.inpe.br/lccs/", access_token='change-me', language='en')
 
 # Get all styles available for a specific classification system
-styles = service.style_formats('PRODES-1.0')
+style_formats = service.style_formats(system='prodes-1.0')
 
-print(styles)
+print(style_formats)

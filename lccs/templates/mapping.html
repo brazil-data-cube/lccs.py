@@ -4,15 +4,19 @@
         <tr>
         </tr>
         <tr>
+            <th>source_class_id</th>
             <th>source_class</th>
+            <th>target_class_id</th>
             <th>target_class</th>
             <th>description</th>
             <th>degree_of_similarity</th>
         </tr>
         {% for mp in mappings.mapping%}
         <tr>
+            <td>{{mp.source_class.id}}</td>
             <td>{{mp.source_class.name}}</td>
-            <td>{{mp.source_class.name}}</td>
+            <td>{{mp.target_class.id}}</td>
+            <td>{{mp.target_class.name}}</td>
             <td>{{mp.description}}</td>
             <td>{{mp.degree_of_similarity}}</td>
         </tr>

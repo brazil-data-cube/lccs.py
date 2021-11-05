@@ -1,17 +1,23 @@
 <div>
-    <b>Classification System:</b> {{classification_system.name}}
+    <b>Classification System:</b> {{classification_system.title}}
 </div>
 <div>
     <b>Id:</b> {{classification_system.id}}
+</div>
+<div>
+    <b>Name:</b> {{classification_system.name}}
+</div>
+<div>
+    <b>Identifier:</b> {{classification_system.identifier}}
+</div>
+<div>
+    <b>Version:</b> {{classification_system.version}}
 </div>
 <div>
     <b>Description:</b> {{classification_system.description}}
 </div>
 <div>
     <b>Authority Name:</b> {{classification_system.authority_name}}
-</div>
-<div>
-    <b>Version:</b> {{classification_system.version}}
 </div>
 </br>
 <b>Classes</b>
@@ -22,6 +28,7 @@
         <tr>
             <th>id</th>
             <th>name</th>
+            <th>title</th>
             <th>code</th>
             <th>description</th>
             <th>class_parent_id</th>
@@ -29,12 +36,13 @@
         </tr>
         {% for class in classification_system.classes()%}
         <tr>
-            <td>{{class['id']}}</td>
-            <td>{{class['name']}}</td>
-            <td>{{class['code']}}</td>
-            <td>{{class['description']}}</td>
-            <td>{{class['class_parent_id']}}</td>
-            <td>{{class['class_parent_name']}}</td>
+            <td>{{class.id}}</td>
+            <td>{{class.name}}</td>
+            <td>{{class.title}}</td>
+            <td>{{class.code}}</td>
+            <td>{{class.description}}</td>
+            <td>{{class.class_parent_id}}</td>
+            <td>{{class.class_parent_name}}</td>
         </tr>
         {% endfor %}
     </table>
