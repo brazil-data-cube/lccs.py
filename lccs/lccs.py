@@ -26,13 +26,29 @@ class LCCS:
     :param url: The LCCS-WS server URL.
     :type url: str
     """
+
     def __init__(self, url, validate=False, access_token=None, language=None):
         """Create a LCCS-WS client attached to the given host address (an URL)."""
         self._url = url.rstrip('/')
         self._validate = validate
         self._classification_systems = {}
         self._access_token = f'?access_token={access_token}' if access_token else ''
-        self._language = f'&language={language}' if language else ''
+        self._support_l = self._support_language()
+        self._language = self._validate_language(language) if language else ''
+
+    def _support_language(self):
+        """Get the support language from service."""
+        import enum
+        data = Utils._get(f'{self._url}/')
+        return enum.Enum('Language', {i['language']: i['language'] for i in data['supported_language']}, type=str)
+
+    def _validate_language(self, language):
+        """Get the support language from service."""
+        if language in [e.value for e in self._support_l]:
+            return f'&language={language}'
+        else:
+            s = ', '.join([e for e in self.allowed_language])
+            raise KeyError(f'Language not supported! Use: {s}')
 
     def _get_format_identifier(self, name):
         url = f'{self._url}/style_formats/search/{name}'
@@ -58,6 +74,11 @@ class LCCS:
         for k, v in self._classification_systems.items():
             if v.id == int(system_id):
                 return k
+
+    @property
+    def allowed_language(self):
+        """Retrieve a list of languages allowed by the service."""
+        return [e.value for e in self._support_l]
 
     @property
     def classification_systems(self):
