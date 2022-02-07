@@ -13,46 +13,53 @@ import lccs
 print(lccs.__version__)
 
 server_url = os.environ.get('LCCS_SERVER_URL', 'https://brazildatacube.dpi.inpe.br/lccs/')
-
-service = lccs.LCCS(server_url)
+service = lccs.LCCS(url=server_url, access_token='change-me', language='en')
 
 print("Return all classification systems available in service")
 print(service.classification_systems)
 
 # The examples presented in this code vary depending on the database used. Check the parameters informed.
-
 # Return a specific classification system
-class_system = service.classification_system('PRODES-1.0')
-print(class_system.description)
-print(class_system.name)
+classification_system = service.classification_system('prodes-1.0')
+print(classification_system.id)
+print(classification_system.name)
+print(classification_system.title)
+print(classification_system.version)
+print(classification_system.description)
+
 
 # Return a classes of a classification system
-classes = class_system.classes()
+classes = classification_system.classes()
+print(classes)
+
 for i in classes:
-    print(i.name)
+    print(f'ID: {i.id} Name: {i.name} Title: {i.title} Description :{i.description} class_parent_id {i.class_parent_id} class_parent_name {i.class_parent_name}')
 
 # Return a specific class of a classification system
-prodes_desflorestamento = class_system.classes('Desmatamento')
-print(prodes_desflorestamento.name)
+prodes_desflorestamento = classification_system.classes('1')
+print(prodes_desflorestamento.title)
 
 # Get all available mappings for a specific classification system
-all_mapping = service.available_mappings(system_source_name='PRODES-1.0')
+all_mapping = service.available_mappings(system_source='prodes-1.0')
 print(all_mapping)
+print(all_mapping[0].id)
+print(all_mapping[0].name)
+print(all_mapping[0].version)
 
 # Get mapping
-mapping = service.mappings(system_name_source='PRODES-1.0', system_name_target='TerraClass_AMZ-1.0')
-
-print(f"\nMapping PRODES-1.0 to TerraClass_AMZ-1.0:")
-
+mapping = service.mappings(system_source='prodes-1.0', system_target='terraclass-amz-1.0')
 print(mapping)
 
+# Get All Styles Formarts
+print(service.available_style_formats())
+
 # Get all styles available for a specific classification system
-style_formats = service.style_formats(system_source_name='PRODES-1.0')
+style_formats = service.style_formats(system='prodes-1.0')
 for style_f in style_formats:
     print(style_f.name)
 
 # Save a style file of a specific classification system and style format
-service.get_style(system_name='PRODES-1.0', format_name='QGIS')
+service.get_style(system='prodes-1.0', style_format='SLD-Feature-Polygon')
 
 # Save Style File passing the path directory
-service.get_style(system_name='PRODES-1.0', format_name='QGIS', path='/home/user/Downloads/')
+service.get_style(system='prodes-1.0', style_format='SLD-Feature-Polygon', path='/home/user/Downloads/')

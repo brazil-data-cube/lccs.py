@@ -10,18 +10,17 @@
 from lccs import LCCS
 
 # Change to the LCCS-WS URL you want to use.
-service = LCCS("https://brazildatacube.dpi.inpe.br/lccs/")
+service = LCCS("https://brazildatacube.dpi.inpe.br/lccs/", access_token='change-me', language='en')
 
 # Return the metadata of a specific classification system
 # Make sure the classification system is available in service
-classification_system = service.classification_system('PRODES-1.0')
-print(classification_system)
+classification_system = service.classification_system('prodes-1.0')
 
 # You can access specific attributes
 print(classification_system.id)
 print(classification_system.name)
+print(classification_system.title)
 print(classification_system.description)
 print(classification_system.authority_name)
 print(classification_system.version)
-
 

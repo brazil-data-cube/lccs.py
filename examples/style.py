@@ -10,10 +10,11 @@
 from lccs import LCCS
 
 # Change to the LCCS-WS URL you want to use.
-service = LCCS("https://brazildatacube.dpi.inpe.br/dev/lccs/")
+service = LCCS("https://brazildatacube.dpi.inpe.br/lccs/", access_token='change-me', language='en')
 
 # Save Style File
-service.get_style(system_name='PRODES-1.0', format_name='QGIS')
+service.get_style(system='prodes-1.0', style_format='SLD-Feature-Polygon')
 
 # Save Style File passing the path directory
-service.get_style(system_name='PRODES-1.0', format_name='QGIS', path='/home/user/Downloads/')
+service.get_style(system='prodes-1.0', style_format='SLD-Feature-Polygon', path='/home/user/Downloads/')
+

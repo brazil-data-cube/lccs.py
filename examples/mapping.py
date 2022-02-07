@@ -10,10 +10,10 @@
 from lccs import LCCS
 
 # Change to the LCCS-WS URL you want to use.
-service = LCCS("https://brazildatacube.dpi.inpe.br/lccs/")
+service = LCCS("https://brazildatacube.dpi.inpe.br/lccs/", access_token='change-me', language='en')
 
 # Returns the mapping between two classification systems.
 # Make sure the classification system is available in service
-mapping = service.mappings(system_name_source='PRODES-1.0', system_name_target='TerraClass_AMZ-1.0')
+mapping = service.mappings(system_source='prodes-1.0', system_target='terraclass-amz-1.0')
 
 print(mapping)

@@ -10,7 +10,7 @@
 from lccs import LCCS
 
 # Change to the LCCS-WS URL you want to use.
-service = LCCS("http://brazildatacube.dpi.inpe.br/dev/lccs/")
+service = LCCS("http://brazildatacube.dpi.inpe.br/dev/lccs/", access_token='change-me', language='en')
 
 # Get a specific classification system
 # Make sure the classification system is available in service
