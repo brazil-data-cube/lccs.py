@@ -51,7 +51,7 @@ install_requires = [
     'cachetools>=4.2.4',
     'requests>=2.20',
     'Jinja2>=2.11.1',
-    'lxml==4.6.3',
+    'lxml>=4.9.1',
     'python-sld==1.0.10',
 ]
 
