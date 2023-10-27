@@ -10,6 +10,19 @@
 Changes
 =======
 
+Version 0.8.1 (2022-02-07)
+--------------------------
+
+- Create a dynamic enum based on supported languages enhancement (`#41 <https://github.com/brazil-data-cube/lccs.py/issues/41>`_).
+- Adding allowed language of service (`#48 <https://github.com/brazil-data-cube/lccs.py/issues/48>`_).
+- Add fully support with LCCS-WS 0.8.0 (`#47 <https://github.com/brazil-data-cube/lccs.py/issues/47>`_).
+
+
+Version 0.8.0 (2021-08-11)
+--------------------------
+
+- Add support for create and save style file: (`#41 <https://github.com/brazil-data-cube/lccs.py/issues/41>`_).
+
 
 Version 0.6.0 (2021-04-09)
 --------------------------
