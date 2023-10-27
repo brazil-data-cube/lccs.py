@@ -1,9 +1,19 @@
 #
-# This file is part of Python Client Library for the LCCS Web Service.
-# Copyright (C) 2019-2020 INPE.
+# This file is part of Python Client Library for the LCCS-WS.
+# Copyright (C) 2022 INPE.
 #
-# Python Client Library for the LCCS Web Service is free software; you can redistribute it and/or modify it
-# under the terms of the MIT License; see LICENSE file for more details.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 #
 
 """Python Client Library for the LCCS Web Service."""
@@ -68,7 +78,7 @@ setup(
     description=__doc__,
     long_description=readme + '\n\n' + history,
     keywords=['Land Use and Land Cover', 'GIS'],
-    license='MIT',
+    license='GPLv3',
     author='INPE',
     author_email='brazildatacube@dpi.inpe.br',
     url='https://github.com/brazil-data-cube/lccs.py',
@@ -90,7 +100,7 @@ setup(
         'Environment :: Web Environment',
         'Intended Audience :: Education',
         'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: GPL v3 License',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3 :: Only',
         'Topic :: Scientific/Engineering :: GIS',
