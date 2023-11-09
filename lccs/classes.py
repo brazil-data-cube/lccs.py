@@ -112,9 +112,15 @@ class ClassificationSystemClass(dict):
     def _get_parent_name(self):
         if 'class_parent_id' in self:
             parent = [link['href'] for link in self['links'] if link['rel'] == 'parent'][0]
-            token = parent.rsplit('/', maxsplit=1)[1].split('?')[1]
             system = parent.rsplit('/', maxsplit=1)[1].split('?')[0]
-            parent_class_uri = parent.rsplit('/', maxsplit=1)[0] + f'/{system}' + f'/classes/{self["class_parent_id"]}?{token}'
+
+            if len(parent.rsplit('/', maxsplit=1)[1].split('?')) > 1:
+                token = parent.rsplit('/', maxsplit=1)[1].split('?')[1]
+                parent_class_uri = parent.rsplit('/', maxsplit=1)[
+                                       0] + f'/{system}' + f'/classes/{self["class_parent_id"]}?{token}'
+            else:
+                parent_class_uri = parent.rsplit('/', maxsplit=1)[
+                                       0] + f'/{system}' + f'/classes/{self["class_parent_id"]}'
             class_parent_name = ClassificationSystemClass(Utils._get(parent_class_uri)).name
             return class_parent_name
         else:
