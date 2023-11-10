@@ -1,6 +1,6 @@
 ..
     This file is part of Python Client Library for LCCS-WS.
-    Copyright (C) 2022 INPE.
+    Copyright (C) 2023 INPE.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,6 +19,13 @@
 =======
 Changes
 =======
+
+Version 0.8.2 (2023-11-10)
+--------------------------
+
+- Update lxml dependency (`#55 <https://github.com/brazil-data-cube/lccs.py/issues/55>`_)
+- Change license to GPLv3 (`#56 <https://github.com/brazil-data-cube/lccs.py/issues/56>`_)
+
 
 Version 0.8.1 (2022-02-07)
 --------------------------

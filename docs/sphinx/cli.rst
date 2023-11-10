@@ -15,8 +15,8 @@
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 
-Running LCCS Client in the Command Line
-=======================================
+Usage
+=====
 
 If you want to know the LCCS version, use the option ``--version`` as in::
 
