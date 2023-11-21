@@ -24,6 +24,7 @@ print(lccs.__version__)
 
 server_url = os.environ.get('LCCS_SERVER_URL', 'https://brazildatacube.dpi.inpe.br/lccs/')
 
+service = lccs.LCCS(server_url, access_token='change-me', language='pt-br')
 
 # The examples presented in this code vary depending on the database used. Check the parameters informed.
 # Return a specific classification system

@@ -3,6 +3,7 @@
     "authority_name": "INPE",
     "description": "Sistema de Classificação Anual de Desmatamento",
     "id": 1,
+    "identifier": "prodes-1.0",
     "links": [
       {
         "href": "http://localhost:5000/classification_systems/1",
@@ -35,7 +36,10 @@
         "type": "application/json"
       }
     ],
-    "name": "PRODES",
-    "version": "1.0"
+    "name": "prodes",
+    "title": "PRODES",
+    "version": "1.0",
+    "version_predecessor": null,
+    "version_successor": null
   }
 ]
