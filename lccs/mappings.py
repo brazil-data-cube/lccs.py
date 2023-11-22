@@ -44,14 +44,14 @@ class MappingGroup(dict):
     def __repr__(self):
         """Return the string representation of a mapping group object."""
         text = ''
-        for i in self.mapping:
+        for i in self.mappings:
             text += f'\n\t{i}'
         return text
 
     def __str__(self):
         """Return the string representation of a mapping group object."""
         text = ''
-        for i in self.mapping:
+        for i in self.mappings:
             text += f'\n\t{i}'
         return text
 

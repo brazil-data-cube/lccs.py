@@ -1,6 +1,6 @@
 ..
     This file is part of Python Client Library for LCCS-WS.
-    Copyright (C) 2022 INPE.
+    Copyright (C) 2023 INPE.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,10 +22,6 @@ Python Client Library for Land Cover Classification System Web Service
 .. image:: https://img.shields.io/badge/License-GPLv3-blue.svg
         :target: https://github.com/brazil-data-cube/bdc-catalog/blob/master/LICENSE
         :alt: Software License
-
-.. image:: https://codecov.io/gh/brazil-data-cube/lccs.py/branch/master/graph/badge.svg?token=F88NQY6FNA
-        :target: https://codecov.io/gh/brazil-data-cube/lccs.py
-        :alt: Code Coverage Test
 
 .. image:: https://readthedocs.org/projects/lccs/badge/?version=latest
         :target: https://lccs.readthedocs.io/en/latest/?badge=latest
@@ -62,14 +58,14 @@ See `INSTALL.rst <./INSTALL.rst>`_.
 Developer Documentation
 =======================
 
-See https://lccspy.readthedocs.io/en/latest.
+See https://lccs.readthedocs.io/en/latest/.
 
 
 License
 =======
 
 .. admonition::
-    Copyright (C) 2022 INPE.
+    Copyright (C) 2023 INPE.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

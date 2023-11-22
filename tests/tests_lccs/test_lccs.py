@@ -69,12 +69,16 @@ class TestLCCS:
                      headers={'content-type': 'application/json'})
 
     def test_lccs(self, requests_mock):
-        requests_mock.get(match_url, json=dict(lccs_version='0.6.0', links=list()),
+        requests_mock.get(match_url, json=dict(version='0.8.2',
+                                               application_name="Land Cover Classification System Service",
+                                               links=list(),
+                                               supported_language=list([dict(language="pt-br",
+                                                                             description="Brazilian Portuguese")])),
                           status_code=200,
                           headers={'content-type': 'application/json'})
 
         self._setup_lccs(requests_mock, list(), list())
-        
+
         service = lccs.LCCS(url)
         assert service.url == url
         assert repr(service) == 'lccs("{}")'.format(url)
@@ -89,7 +93,7 @@ class TestLCCS:
 
             response = service.classification_systems
 
-            assert response == ['PRODES-1.0']
+            assert response == ['prodes-1.0']
 
     def test_classification_system(self, lccs_object, requests_mock):
         for k in lccs_object:
@@ -99,10 +103,12 @@ class TestLCCS:
 
             service = lccs.LCCS(url, True)
 
-            class_system = service.classification_system('PRODES-1.0')
+            class_system = service.classification_system('prodes-1.0')
 
             assert class_system.id
             assert class_system.name
+            assert class_system.title
+            assert class_system.identifier
             assert class_system.description
             assert class_system.version
             assert class_system.links[0].href
