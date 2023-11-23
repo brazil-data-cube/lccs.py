@@ -88,7 +88,7 @@ The above command will return a::
 
 Retrieve all available classification system mappings, use the ``available-mappings`` command::
 
-    lccs --url 'https://brazildatacube.dpi.inpe.br/dev/lccs/' --access-token 'change-me' available-mappings --system 'terraclass-amz-1.0'
+    lccs --url 'https://brazildatacube.dpi.inpe.br/lccs/' --access-token 'change-me' available-mappings --system 'terraclass-amz-1.0'
 
 The above command will return a list of classification systems as::
 
@@ -97,7 +97,7 @@ The above command will return a list of classification systems as::
 
 To get a mapping between classification systems, use the ``mappings`` command::
 
-    lccs --url 'https://brazildatacube.dpi.inpe.br/dev/lccs/' mappings --system_id_source 'terraclass-amz-1.0' --system_id_target 'prodes-1.0'
+    lccs --url 'https://brazildatacube.dpi.inpe.br/lccs/' mappings --system_id_source 'terraclass-amz-1.0' --system_id_target 'prodes-1.0'
 
 
 Output::
