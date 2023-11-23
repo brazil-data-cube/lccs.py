@@ -91,4 +91,4 @@ class TestLCCS:
 
 
 if __name__ == '__main__':
-    pytest.main(['--color=auto'])
+    pytest.main(['--color=auto', '--no-cov'])
