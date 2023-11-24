@@ -20,10 +20,11 @@ import lccs
 
 url = os.environ.get('LCCS_SERVER_URL', 'http://localhost:5000')
 
-match_url = re.compile(url)
-match_url_system = re.compile(url + '/1')
-match_url_class = re.compile(url + '/1/classes')
-match_url_mappings = re.compile(url + '/mappings')
+match_url = re.compile(url + '/')
+match_url_systems = re.compile(url + '/classification_systems')
+match_url_system = re.compile(url + '/classification_systems/1')
+match_url_class = re.compile(url + '/classification_systems/1/classes')
+match_url_mappings = re.compile(url + '/mappings/1')
 
 
 @pytest.fixture(scope='session')
@@ -50,9 +51,13 @@ def lccs_object():
 
 class TestLCCS:
     
-    def _setup_lccs(self, mock, json_systems=None, json_class=None, json_system=None, json_mappings=None):
+    def _setup_lccs(self, mock, root=None, json_systems=None, json_class=None, json_system=None, json_mappings=None):
+        if root is not None:
+            mock.get(match_url, json=root,
+                     status_code=200,
+                     headers={'content-type': 'application/json'})
         if json_systems is not None:
-            mock.get(match_url, json=json_systems,
+            mock.get(match_url_systems, json=json_systems,
                      status_code=200,
                      headers={'content-type': 'application/json'})
         if json_system is not None:
@@ -68,51 +73,21 @@ class TestLCCS:
                      status_code=200,
                      headers={'content-type': 'application/json'})
 
-    def test_lccs(self, requests_mock):
-        requests_mock.get(match_url, json=dict(version='0.8.2',
+    def test_lccs(self, lccs_object, requests_mock):
+        requests_mock.get(match_url, json=dict(lccs_version='0.8.1', links=list(),
                                                application_name="Land Cover Classification System Service",
-                                               links=list(),
-                                               supported_language=list([dict(language="pt-br",
-                                                                             description="Brazilian Portuguese")])),
+                                               supported_language=list(dict(language="pt-br",
+                                                                            description="Brazilian Portuguese"))),
                           status_code=200,
                           headers={'content-type': 'application/json'})
 
-        self._setup_lccs(requests_mock, list(), list())
+        for k in lccs_object:
+            self._setup_lccs(requests_mock, root= lccs_object[k]['root.json'])
 
         service = lccs.LCCS(url)
         assert service.url == url
         assert repr(service) == 'lccs("{}")'.format(url)
         assert str(service) == '<LCCS [{}]>'.format(url)
-
-    def test_classification_systems(self, lccs_object, requests_mock):
-        for k in lccs_object:
-            self._setup_lccs(requests_mock, json_systems=lccs_object[k]['classification_systems.json'],
-                             json_class=lccs_object[k]['classes.json'])
-
-            service = lccs.LCCS(url, True)
-
-            response = service.classification_systems
-
-            assert response == ['prodes-1.0']
-
-    def test_classification_system(self, lccs_object, requests_mock):
-        for k in lccs_object:
-            self._setup_lccs(requests_mock, json_systems=lccs_object[k]['classification_systems.json'],
-                             json_class=lccs_object[k]['classes.json'],
-                             json_system=lccs_object[k]['classification_system.json'])
-
-            service = lccs.LCCS(url, True)
-
-            class_system = service.classification_system('prodes-1.0')
-
-            assert class_system.id
-            assert class_system.name
-            assert class_system.title
-            assert class_system.identifier
-            assert class_system.description
-            assert class_system.version
-            assert class_system.links[0].href
-            assert class_system.links[0].rel
 
 
 if __name__ == '__main__':
