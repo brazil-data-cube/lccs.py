@@ -20,9 +20,10 @@
 Changes
 =======
 
-Version 0.8.2 (2023-11-10)
+Version 0.8.2 (2023-11-28)
 --------------------------
 
+- Upgrade Python version (`#59 <https://github.com/brazil-data-cube/lccs.py/issues/59>`_)
 - Update lxml dependency (`#55 <https://github.com/brazil-data-cube/lccs.py/issues/55>`_)
 - Change license to GPLv3 (`#56 <https://github.com/brazil-data-cube/lccs.py/issues/56>`_)
 
