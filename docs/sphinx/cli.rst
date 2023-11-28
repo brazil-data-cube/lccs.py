@@ -49,7 +49,7 @@ Output::
         - description: Annual Deforestation Classification System
         - id: 1
         - identifier: prodes-1.0
-        - links: [{'href': 'https://brazildatacube.dpi.inpe.br/dev/lccs/classification_system', 'rel': 'parent', 'title': 'Link to this document', 'type': 'application/json'}, ..]
+        - links: [{'href': 'https://brazildatacube.dpi.inpe.br/lccs/classification_system', 'rel': 'parent', 'title': 'Link to this document', 'type': 'application/json'}, ..]
         - name: prodes
         - title: PRODES
         - version: 1.0
