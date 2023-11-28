@@ -1,9 +1,19 @@
 #
-# This file is part of Python Client Library for the LCCS Web Service.
-# Copyright (C) 2020 INPE.
+# This file is part of Python Client Library for the LCCS-WS.
+# Copyright (C) 2022 INPE.
 #
-# Python Client Library for the LCCS Web Service is free software; you can redistribute it and/or modify it
-# under the terms of the MIT License; see LICENSE file for more details.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 #
 """LCCS Python Client examples."""
 
@@ -13,10 +23,8 @@ import lccs
 print(lccs.__version__)
 
 server_url = os.environ.get('LCCS_SERVER_URL', 'https://brazildatacube.dpi.inpe.br/lccs/')
-service = lccs.LCCS(url=server_url, access_token='change-me', language='en')
 
-print("Return all classification systems available in service")
-print(service.classification_systems)
+service = lccs.LCCS(server_url, access_token='change-me', language='pt-br')
 
 # The examples presented in this code vary depending on the database used. Check the parameters informed.
 # Return a specific classification system

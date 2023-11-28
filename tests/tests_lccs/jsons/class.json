@@ -28,5 +28,6 @@
       "type": "application/json"
     }
   ],
-  "name": "Floresta"
+  "name": "floresta",
+  "title": "Floresta"
 }

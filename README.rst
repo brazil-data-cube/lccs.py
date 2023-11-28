@@ -1,26 +1,27 @@
 ..
-    This file is part of Python Client Library for the LCCS Web Service.
-    Copyright (C) 2019-2020 INPE.
+    This file is part of Python Client Library for LCCS-WS.
+    Copyright (C) 2023 INPE.
 
-    Python Client Library for the LCCS Web Service is free software; you can redistribute it and/or modify it
-    under the terms of the MIT License; see LICENSE file for more details.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 
 ======================================================================
 Python Client Library for Land Cover Classification System Web Service
 ======================================================================
 
-.. image:: https://img.shields.io/badge/license-MIT-green
-        :target: https://github.com//brazil-data-cube/lccs.py/blob/master/LICENSE
+.. image:: https://img.shields.io/badge/License-GPLv3-blue.svg
+        :target: https://github.com/brazil-data-cube/bdc-catalog/blob/master/LICENSE
         :alt: Software License
-
-.. image:: https://drone.dpi.inpe.br/api/badges/brazil-data-cube/lccs.py/status.svg
-        :target: https://drone.dpi.inpe.br/brazil-data-cube/lccs.py
-        :alt: Build Status
-
-.. image:: https://codecov.io/gh/brazil-data-cube/lccs.py/branch/master/graph/badge.svg?token=F88NQY6FNA
-        :target: https://codecov.io/gh/brazil-data-cube/lccs.py
-        :alt: Code Coverage Test
 
 .. image:: https://readthedocs.org/projects/lccs/badge/?version=latest
         :target: https://lccs.readthedocs.io/en/latest/?badge=latest
@@ -57,14 +58,16 @@ See `INSTALL.rst <./INSTALL.rst>`_.
 Developer Documentation
 =======================
 
-See https://lccspy.readthedocs.io/en/latest.
+See https://lccs.readthedocs.io/en/latest/.
 
 
 License
 =======
 
 .. admonition::
-    Copyright (C) 2019-2020 INPE.
+    Copyright (C) 2023 INPE.
 
-    Python Client Library for the LCCS Web Service is free software; you can redistribute it and/or modify it
-    under the terms of the MIT License; see LICENSE file for more details.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
