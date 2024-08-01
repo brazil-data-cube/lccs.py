@@ -32,7 +32,7 @@ class Utils:
     """Utils class."""
 
     @staticmethod
-    def _get(url, params=None):
+    def _get(url, access_token=None, params=None):
         """Query the LCCS-WS using HTTP GET verb and return the result as a JSON document.
 
         :param url: The URL to query must be a valid LCCS-WS endpoint.
@@ -45,7 +45,13 @@ class Utils:
         :rtype: dict
         :raises ValueError: If the response body does not contain a valid json.
         """
-        response = requests.get(url, params=params)
+        _headers = {}
+        if access_token != None:
+            _headers = {
+                "x-api-key": access_token
+            }
+
+        response = requests.get(url, params=params, headers=_headers)
 
         response.raise_for_status()
 
@@ -68,18 +74,30 @@ class Utils:
         return response.json()
 
     @staticmethod
-    def _post(url, data=None, json=None, files=None):
+    def _post(url, access_token, data=None, json=None, files=None):
         """Request post method."""
-        response = requests.post(url, data=data, files=files, json=json)
+        _headers = {}
+        if access_token != None:
+            _headers = {
+                "x-api-key": access_token
+            }
+
+        response = requests.post(url, headers=_headers, data=data, files=files, json=json)
 
         response.raise_for_status()
 
         return response.json()
 
     @staticmethod
-    def _delete(url, params=None):
+    def _delete(url, access_token, params=None):
         """Request delete method."""
-        response = requests.delete(url, params=params)
+        _headers = {}
+        if access_token != None:
+            _headers = {
+                "x-api-key": access_token
+            }
+
+        response = requests.delete(url, params=params, headers=_headers)
 
         response.raise_for_status()
 
