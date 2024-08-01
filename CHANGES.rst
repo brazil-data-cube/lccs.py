@@ -20,6 +20,12 @@
 Changes
 =======
 
+Version 0.9.0 (2024-08-01)
+--------------------------
+
+- Add support to INPE Identity Access Management (`#70 <https://github.com/brazil-data-cube/lccs.py/issues/70>`_)
+
+
 Version 0.8.2 (2023-11-28)
 --------------------------
 
