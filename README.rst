@@ -52,7 +52,7 @@ If you want to know more about LCCS service, please, take a look at its `specifi
 Installation
 ============
 
-See `INSTALL.rst <./INSTALL.rst>`_.
+See https://lccs.readthedocs.io/en/latest/installation.html
 
 
 Developer Documentation
