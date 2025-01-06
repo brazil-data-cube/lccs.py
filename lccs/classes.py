@@ -90,6 +90,11 @@ class ClassificationSystemClass(dict):
         return self['description'] if 'description' in self else None
 
     @property
+    def color(self):
+        """:return: the class description."""
+        return self['color'] if 'color' in self else None
+
+    @property
     def code(self):
         """:return: the class code."""
         return self['code']

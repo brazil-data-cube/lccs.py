@@ -71,7 +71,7 @@ class LCCS:
         data = Utils._get(url, access_token=self._access_token)
         result = list()
 
-        [result.append(i['identifier']) for i in data]
+        [result.append(f"{i['identifier']}") for i in data]
 
         return result
 
@@ -231,32 +231,15 @@ class LCCS:
             return open(full_path, 'wb').write(data)
         return open(file_name, 'wb').write(data)
 
-    def add_classification_system(self, name: str, authority_name: str, description: dict, title: dict,
-                                  version: str) -> dict:
-        """Add a new classification system."""
+
+    def add_classification_system(self, system_path: str) -> List[dict]:
+        """Add new classification system."""
         url = f'{self._url}/classification_systems'
 
-        data = dict()
-        data["name"] = name
-        data["authority_name"] = authority_name
-        data["version"] = version
-        data["description"] = description
-        data["title"] = title
+        print(system_path)
 
-        try:
-            retval = Utils._post(url, access_token=self._access_token, json=data)
-        except RuntimeError as e:
-            raise ValueError(f'Could not insert classification system {name}!')
-
-        return retval
-
-    def add_classes(self, system: str, classes: str) -> List[dict]:
-        """Add new classes to an classification system."""
-        url = f'{self._url}/classification_systems/{system}/classes'
-
-        if type(classes) == str:
-            with open(classes) as file:
-                classes = json.load(file)
+        with open(system_path) as file:
+            system = json.load(system_path)
 
         try:
             retval = Utils._post(url, access_token=self._access_token, json=classes)

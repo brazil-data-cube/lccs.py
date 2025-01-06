@@ -17,6 +17,10 @@
 #
 """Command line interface for the LCCS-WS client."""
 import click
+from rich.console import Console
+from rich.table import Table
+from rich.panel import Panel
+
 
 from .lccs import LCCS
 
@@ -33,6 +37,8 @@ class Config:
 
 
 pass_config = click.make_pass_decorator(Config, ensure=True)
+
+console = Console()
 
 
 @click.group()
@@ -53,18 +59,25 @@ def cli(config, url, access_token=None, language=None):
 def classification_systems(config: Config, verbose):
     """Return the list of available classification systems in the service provider."""
     if verbose:
-        click.secho(f'Server: {config.url}', bold=True, fg='black')
-        click.secho('\tRetrieving the list of available classification systems... ',
-                    bold=False, fg='black')
+        console.print(f"[bold black]Server:[/bold black] [green]{config.url}[/green]")
+        console.print("[black]\tRetrieving the list of available classification systems...[/black]")
+
+        table = Table(title="Available Classification Systems", show_header=True, header_style="bold magenta")
+        table.add_column("Title", style="green", no_wrap=True)
+        table.add_column("Version", style="green", no_wrap=True)
+        table.add_column("Identifier", style="green", no_wrap=True)
 
         for cs in config.service.classification_systems:
-            click.secho(f'\t\t- {cs}', bold=True, fg='green')
+            system = config.service.classification_system(cs)
+            table.add_row(system.title, system.version, system.identifier)
 
-        click.secho('\tFinished!', bold=False, fg='black')
+        console.print(table)
+
+        console.print("[black]\tFinished![/black]")
 
     else:
         for cs in config.service.classification_systems:
-            click.secho(f'{cs}', bold=True, fg='green')
+            console.print(f"[green]{cs}[/green]", style="bold")
 
 
 @cli.command()
@@ -81,10 +94,19 @@ def classification_system_description(config: Config, system, verbose):
         click.secho('\tRetrieving the classification system metadata... ',
                     bold=False, fg='black')
 
-        for ds_key, ds_value in retval.items():
-            click.secho(f'\t\t- {ds_key}: {ds_value}', bold=True, fg='green')
+        table = Table(show_header=True, header_style="bold cyan")
+        table.add_column("Name", style="bold magenta", no_wrap=True)
+        table.add_column("Value", style="green")
 
-        click.secho('\tFinished!', bold=False, fg='black')
+        for key, value in retval.items():
+            if isinstance(value, list):
+                value = "\n".join(f"- {item}" for item in value)
+            elif isinstance(value, dict):
+                value = "\n".join(f"{k}: {v}" for k, v in value.items())
+            table.add_row(str(key), str(value))
+
+        panel = Panel(table, title="[bold green]Metadata[/bold green]", border_style="bright_blue")
+        console.print(panel)
 
     else:
         for ds_key, ds_value in retval.items():
@@ -94,49 +116,37 @@ def classification_system_description(config: Config, system, verbose):
 @cli.command()
 @click.option('--system', type=click.STRING, required=True,
               help='The classification system (Identifier by name-version or the ID).')
+@click.option('--style_format', type=click.STRING, required=False,
+              help='The style format.')
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @pass_config
-def classes(config: Config, system, verbose):
+def classes(config: Config, system, style_format, verbose):
     """Return the list of available classes given a classification system in the service provider."""
     class_system = config.service.classification_system(system=system)
 
     if verbose:
-        click.secho(f'Server: {config.url}', bold=True, fg='black')
-        click.secho('\tRetrieving the the list of classes for a given classification system.... ',
-                    bold=False, fg='black')
-        for cv in class_system.classes():
-            click.secho(f'\t\t- {cv.name}', bold=True, fg='green')
+        console.print(f"[bold green]Server:[/bold green] [green]{config.url}[/green]")
+        console.print("[green]\tRetrieving the list of classes for a given classification systems...[/green]")
 
-        click.secho('\tFinished!', bold=False, fg='black')
+        table = Table(title="Classes", show_header=True, header_style="bold magenta")
+        table.add_column("Title", style="cyan")
+        table.add_column("Color", style="green", no_wrap=True)
+        table.add_column("Description", style="green", no_wrap=True)
+        table.add_column("Code", style="green", no_wrap=True)
+        table.add_column("Name", justify="right", style="cyan")
+
+        for cv in class_system.classes(style_format_name_or_id=style_format):
+            table.add_row(cv.title, cv.color, cv.description, cv.code, cv.name)
+
+        panel = Panel(table, title=f"[bold green]{class_system.title}[/bold green]", expand=False, border_style="bright_blue")
+        console.print(panel)
+
+        console.print("[black]\tFinished![/black]")
+
     else:
         for cv in class_system.classes():
             click.secho(f'{cv.name}', bold=True, fg='green')
 
-
-@cli.command()
-@click.option('--system', type=click.STRING, required=True,
-              help='The classification system (Identifier by name-version or the ID).')
-@click.option('--system_class', type=click.STRING, required=True, help='The class name or id.')
-@click.option('-v', '--verbose', is_flag=True, default=False)
-@pass_config
-def class_describe(config: Config, system, system_class, verbose):
-    """Return information for a classes given a classification system in the service provider."""
-    classification_system = config.service.classification_system(system=system)
-    retval = classification_system.classes(system_class)
-
-    if verbose:
-        click.secho(f'Server: {config.url}', bold=True, fg='black')
-        click.secho('\tRetrieving the class metadata... ',
-                    bold=False, fg='black')
-
-        for ds_key, ds_value in retval.items():
-            click.secho(f'\t\t- {ds_key}: {ds_value}', bold=True, fg='green')
-
-        click.secho('\tFinished!', bold=False, fg='black')
-
-    else:
-        for ds_key, ds_value in retval.items():
-            click.secho(f'{ds_key}: {ds_value}', bold=True, fg='green')
 
 
 @cli.command()
@@ -235,7 +245,7 @@ def styles(config: Config, system, verbose):
 @click.option('-o', '--output', help='Output to a file', type=click.Path(dir_okay=True), required=False)
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @pass_config
-def style_file(config: Config, system_name, style_format_name, output, verbose):
+def style_file(config: Config, system, style_format, output, verbose):
     """Return and save the style for a specific classification system and style format in the service provider."""
     if verbose:
         click.secho(f'Server: {config.url}', bold=True, fg='black')
@@ -243,11 +253,11 @@ def style_file(config: Config, system_name, style_format_name, output, verbose):
                     bold=False, fg='black')
 
     if output:
-        config.service.get_style(system_name=system_name, format_name=style_format_name, path=output)
+        config.service.get_style(system=system, style_format=style_format, path=output)
         click.secho(f'Style file save in {output}', bold=True, fg='green')
 
     else:
-        config.service.get_style(system_name=system_name, format_name=style_format_name)
+        config.service.get_style(system=system, style_format=style_format)
         click.secho(f'Style file save', bold=True, fg='green')
 
 
@@ -313,62 +323,60 @@ def add_style_format(config: Config, name, verbose):
         config.service.add_style_format(name=name)
 
 
+# @cli.command()
+# @click.option('--name', type=click.STRING, required=True, help='The classification system name.')
+# @click.option('--authority_name', type=click.STRING, required=True, default=None,
+#               help='The classification system authority name.')
+# @click.option('--version', type=click.STRING, required=True, default=None,
+#               help='The classification system version.')
+# @click.option('--description', type=(str, str), required=True, default=None,
+#               help='The classification system description.')
+# @click.option('--title', type=(str, str), required=True, default=None,
+#               help='The classification system title')
+# @click.option('-v', '--verbose', is_flag=True, default=False)
+# @pass_config
+# def add_classification_system(config: Config, name, authority_name, version, title, description, verbose):
+#     """Add a new classification system."""
+#     title_pt, title_en = title
+#     description_pt, description_en = description
+#
+#     if verbose:
+#         click.secho(f'Server: {config.url}', bold=True, fg='black')
+#         click.secho('\tAdding new classification system ... ', bold=False, fg='black')
+#
+#         config.service.add_classification_system(name=name,
+#                                                  authority_name=authority_name,
+#                                                  version=version,
+#                                                  title={'en': title_en, 'pt-br': title_pt},
+#                                                  description={'en': description_en, 'pt-br': description_pt})
+#
+#         click.secho('\tFinished!', bold=False, fg='black')
+#
+#     else:
+#         config.service.add_classification_system(name=name,
+#                                                  authority_name=authority_name,
+#                                                  version=version,
+#                                                  title={'en': title_en, 'pt-br': title_pt},
+#                                                  description={'en': description_en, 'pt-br': description_pt})
+#
+
 @cli.command()
-@click.option('--name', type=click.STRING, required=True, help='The classification system name.')
-@click.option('--authority_name', type=click.STRING, required=True, default=None,
-              help='The classification system authority name.')
-@click.option('--version', type=click.STRING, required=True, default=None,
-              help='The classification system version.')
-@click.option('--description', type=(str, str), required=True, default=None,
-              help='The classification system description.')
-@click.option('--title', type=(str, str), required=True, default=None,
-              help='The classification system title')
+@click.option('--system_path', type=click.Path(exists=True), required=True,  help='Json file with classes')
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @pass_config
-def add_classification_system(config: Config, name, authority_name, version, title, description, verbose):
-    """Add a new classification system."""
-    title_pt, title_en = title
-    description_pt, description_en = description
-
+def add_classification_system(config: Config, system_path, verbose):
+    """Add a new classification systems."""
     if verbose:
         click.secho(f'Server: {config.url}', bold=True, fg='black')
         click.secho('\tAdding new classification system ... ', bold=False, fg='black')
 
-        config.service.add_classification_system(name=name,
-                                                 authority_name=authority_name,
-                                                 version=version,
-                                                 title={'en': title_en, 'pt-br': title_pt},
-                                                 description={'en': description_en, 'pt-br': description_pt})
+        config.service.add_classification_system(system_path=system_path)
 
         click.secho('\tFinished!', bold=False, fg='black')
 
     else:
-        config.service.add_classification_system(name=name,
-                                                 authority_name=authority_name,
-                                                 version=version,
-                                                 title={'en': title_en, 'pt-br': title_pt},
-                                                 description={'en': description_en, 'pt-br': description_pt})
-
-
-@cli.command()
-@click.option('--system', type=click.STRING, required=True,
-              help='The classification system (Identifier by name-version or ID).')
-@click.option('--classes_path', type=click.Path(exists=True), required=True,  help='Json file with classes')
-@click.option('-v', '--verbose', is_flag=True, default=False)
-@pass_config
-def add_classes(config: Config, system, classes_path, verbose):
-    """Add a mapping between classification systems."""
-    if verbose:
-        click.secho(f'Server: {config.url}', bold=True, fg='black')
-        click.secho('\tAdding new mapping ... ', bold=False, fg='black')
-
-        config.service.add_classes(system=system, classes=classes_path)
-
-        click.secho('\tFinished!', bold=False, fg='black')
-
-    else:
-        config.service.add_classes(system=system, classes=classes_path)
-        click.secho(f'Added classes for {system}', bold=True, fg='green')
+        # config.service.add_classes(system=system, classes=classes_path)
+        click.secho(f'New classification system created', bold=True, fg='green')
 
 
 @cli.command()
