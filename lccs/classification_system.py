@@ -78,7 +78,7 @@ class ClassificationSystem(dict):
     def classes(self, class_name_or_id: Optional[str] = None, style_format_name_or_id: Optional[str] = None) -> Union[ClassesGroup, ClassificationSystemClass]:
         """:return: classes of the classification system."""
         if style_format_name_or_id is not None:
-            _classes_data = next(Utils._get(f"{link['href']}?style_format_id={style_format_name_or_id}") for link in self['links'] if link['rel'] == 'classes')
+            _classes_data = next(Utils._get(f"{link['href']}&style_format_id={style_format_name_or_id}") for link in self['links'] if link['rel'] == 'classes')
 
         else:
             _classes_data = next(Utils._get(link['href']) for link in self['links'] if link['rel'] == 'classes')

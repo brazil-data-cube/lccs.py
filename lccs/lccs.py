@@ -71,8 +71,7 @@ class LCCS:
         data = Utils._get(url, access_token=self._access_token)
         result = list()
 
-        [result.append(f"{i['identifier']}") for i in data]
-
+        [result.append(dict(identifier=i['identifier'], title=i['title'], version=i['version'])) for i in data]
         return result
 
     def _id(self, system_name: str):
@@ -207,7 +206,7 @@ class LCCS:
 
     #TODO
     def get_style(self, system, style_format, path=None):
-        """Fetch styles of the a giving classification system.
+        """Fetch styles of a giving classification system.
 
         :param system: The id or identifier of a classification system.
         :type system: str
@@ -218,7 +217,7 @@ class LCCS:
         :param path: Directory path to save the file
         :type path: str
 
-        :returns: Style File
+        :returns: Style
         :rtype: File
         """
         try:
@@ -239,10 +238,12 @@ class LCCS:
         print(system_path)
 
         with open(system_path) as file:
-            system = json.load(system_path)
+            system = json.load(file)
 
         try:
-            retval = Utils._post(url, access_token=self._access_token, json=classes)
+            print(self._access_token)
+            retval = Utils._post(url, access_token=self._access_token, json=system)
+            # retval = Utils._post(url, access_token=self._access_token, json=system)
         except RuntimeError:
             raise ValueError('Could not insert classes!')
 

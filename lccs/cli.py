@@ -45,6 +45,7 @@ console = Console()
 @click.option('--url', default='http://127.0.0.1:5000/',
               help='The LCCS server address (an URL).')
 @click.option('--access-token', default=None, help='Personal Access Token of the BDC Auth')
+@click.option('--language', default='pt-br', help='The language of the response.')
 @click.version_option()
 @pass_config
 def cli(config, url, access_token=None, language=None):
@@ -68,8 +69,7 @@ def classification_systems(config: Config, verbose):
         table.add_column("Identifier", style="green", no_wrap=True)
 
         for cs in config.service.classification_systems:
-            system = config.service.classification_system(cs)
-            table.add_row(system.title, system.version, system.identifier)
+            table.add_row(cs['title'], cs['version'], cs['identifier'])
 
         console.print(table)
 
@@ -322,43 +322,6 @@ def add_style_format(config: Config, name, verbose):
     else:
         config.service.add_style_format(name=name)
 
-
-# @cli.command()
-# @click.option('--name', type=click.STRING, required=True, help='The classification system name.')
-# @click.option('--authority_name', type=click.STRING, required=True, default=None,
-#               help='The classification system authority name.')
-# @click.option('--version', type=click.STRING, required=True, default=None,
-#               help='The classification system version.')
-# @click.option('--description', type=(str, str), required=True, default=None,
-#               help='The classification system description.')
-# @click.option('--title', type=(str, str), required=True, default=None,
-#               help='The classification system title')
-# @click.option('-v', '--verbose', is_flag=True, default=False)
-# @pass_config
-# def add_classification_system(config: Config, name, authority_name, version, title, description, verbose):
-#     """Add a new classification system."""
-#     title_pt, title_en = title
-#     description_pt, description_en = description
-#
-#     if verbose:
-#         click.secho(f'Server: {config.url}', bold=True, fg='black')
-#         click.secho('\tAdding new classification system ... ', bold=False, fg='black')
-#
-#         config.service.add_classification_system(name=name,
-#                                                  authority_name=authority_name,
-#                                                  version=version,
-#                                                  title={'en': title_en, 'pt-br': title_pt},
-#                                                  description={'en': description_en, 'pt-br': description_pt})
-#
-#         click.secho('\tFinished!', bold=False, fg='black')
-#
-#     else:
-#         config.service.add_classification_system(name=name,
-#                                                  authority_name=authority_name,
-#                                                  version=version,
-#                                                  title={'en': title_en, 'pt-br': title_pt},
-#                                                  description={'en': description_en, 'pt-br': description_pt})
-#
 
 @cli.command()
 @click.option('--system_path', type=click.Path(exists=True), required=True,  help='Json file with classes')
