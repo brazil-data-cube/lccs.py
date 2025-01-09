@@ -370,15 +370,4 @@ class LCCS:
 
     def _repr_html_(self):
         """HTML repr."""
-        classification_systems = str()
-        for classification_sys in self.classification_systems:
-            classification_systems += f"<li>{classification_sys}</li>"
-        return f"""<p>LCCS-WS</p>
-                    <ul>
-                     <li><b>URL:</b> {self._url}</li>
-                     <li><b>Classification Systems:</b></li>
-                     <ul>
-                     {classification_systems}
-                     </ul>
-                   </ul>
-               """
+        return Utils.render_html('classification_systems.html', classification_systems=self.classification_systems)

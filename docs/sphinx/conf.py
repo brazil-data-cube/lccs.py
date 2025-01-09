@@ -61,14 +61,10 @@ exclude_patterns = [
 html_theme = 'sphinx_rtd_theme'
 
 html_theme_options = {
-    #'canonical_url': 'https://brazil-data-cube.github.io/',
-    'analytics_id': 'XXXXXXXXXX',
     'logo_only': False,
     'display_version': True,
     'prev_next_buttons_location': 'both',
     'style_external_links': True,
-    #'vcs_pageview_mode': 'edit',
-    #'github_url': 'https://github.com/brazil-data-cube/lccs.py',
     'style_nav_header_background': '#2980B9',
     'collapse_navigation': True,
     'sticky_navigation': False,
@@ -79,9 +75,6 @@ html_theme_options = {
 
 html_baseurl = 'https://brazil-data-cube.github.io/'
 
-#html_theme_path = ''
-
-#html_style = ''
 
 html_title = 'LCCS'
 
@@ -98,8 +91,6 @@ html_show_sourcelink = False
 html_logo = './img/logo-bdc.png'
 
 html_favicon = './img/favicon.ico'
-
-#html_static_path = ['_static']
 
 html_css_files = [ ]
 
@@ -126,6 +117,4 @@ import os
 LCCS_EXAMPLE_URL = os.getenv('LCCS_EXAMPLE_URL', None)
 '''
 
-#todo_include_todos = True
-#todo_emit_warnings = True
 master_doc = 'index'
