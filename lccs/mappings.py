@@ -16,118 +16,112 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 #
 """Python Client Library for the LCCS Web Service."""
+from typing import List, Optional
 from .utils import Utils
 from .classes import ClassificationSystemClass
 
 
 class MappingGroup(dict):
-    """Group of classes mappings."""
+    """Group of class mappings."""
 
-    def __init__(self, data, validate=False):
-        """Initialize instance with dictionary data.
-
-        :param data: Dict with Item Collection metadata.
-        :param validate: true if the Item Collection should be validate using its jsonschema. Default is False.
+    def __init__(self, data: dict, validate: bool = False) -> None:
         """
+        Initialize a MappingGroup with mapping data.
+
+        :param data: Dictionary containing mapping group metadata.
+        :param validate: Whether to validate the data using jsonschema. Default is False.
+        """
+        super().__init__(data or {})
         self._validate = validate
-        super(MappingGroup, self).__init__(data or {})
 
     @property
-    def mappings(self):
-        """:return: Mapping."""
-        return [Mapping(mapping, self._validate) for mapping in self['mappings']]
+    def mappings(self) -> List["Mapping"]:
+        """Return a list of mappings."""
+        return [Mapping(mapping, self._validate) for mapping in self.get('mappings', [])]
 
-    def _repr_html_(self):
-        """HTML repr."""
+    def _repr_html_(self) -> str:
+        """Render an HTML representation of the mapping group."""
         return Utils.render_html('mapping.html', mappings=self)
 
-    def __repr__(self):
-        """Return the string representation of a mapping group object."""
-        text = ''
-        for i in self.mappings:
-            text += f'\n\t{i}'
-        return text
+    def __repr__(self) -> str:
+        """Return a string representation of the mapping group."""
+        return "\n\t".join(map(str, self.mappings))
 
-    def __str__(self):
-        """Return the string representation of a mapping group object."""
-        text = ''
-        for i in self.mappings:
-            text += f'\n\t{i}'
-        return text
+    def __str__(self) -> str:
+        """Return a human-readable string representation of the mapping group."""
+        return "\n\t".join(map(str, self.mappings))
 
 
 class Mapping(dict):
-    """Mapping."""
+    """Representation of a single mapping."""
 
-    def __init__(self, data, validate=False):
-        """Initialize instance with dictionary data.
-
-        :param data: Dict with Mapping metadata.
-        :param validate: true if the Classes should be validate using its jsonschema. Default is False.
+    def __init__(self, data: dict, validate: bool = False) -> None:
         """
+        Initialize a Mapping with metadata.
+
+        :param data: Dictionary containing mapping metadata.
+        :param validate: Whether to validate the data using jsonschema. Default is False.
+        """
+        super().__init__(data or {})
         self._validate = validate
-        super(Mapping, self).__init__(data or {})
-        self._source_class()
-        self._target_class()
+        self._initialize_classes()
 
     @property
-    def degree_of_similarity(self):
-        """:return: the degree_of_similarity."""
-        return self['degree_of_similarity']
+    def degree_of_similarity(self) -> Optional[float]:
+        """Return the degree of similarity."""
+        return self.get('degree_of_similarity')
 
     @property
-    def description(self):
-        """:return: the description."""
-        return self['description']
+    def description(self) -> Optional[str]:
+        """Return the description of the mapping."""
+        return self.get('description')
 
     @property
-    def link(self):
-        """:return: the links."""
-        return self['links']
+    def link(self) -> List[dict]:
+        """Return the links associated with the mapping."""
+        return self.get('links', [])
 
-    def _source_class(self):
-        """:return: get the source_class."""
-        for i in self['links']:
-            if i['rel'] == 'item' and i['title'] == 'Link to source class':
-                self['source_class'] = ClassificationSystemClass(Utils._get(i['href']))
-
-    def _target_class(self):
-        """:return: get the target_class."""
-        for i in self['links']:
-            if i['rel'] == 'item' and i['title'] == 'Link to target class':
-                self['target_class'] = ClassificationSystemClass(Utils._get(i['href']))
+    def _initialize_classes(self) -> None:
+        """Initialize source and target classes from the mapping links."""
+        for link in self.link:
+            if link.get('rel') == 'item':
+                if link.get('title') == 'Link to source class':
+                    self['source_class'] = ClassificationSystemClass(Utils._get(link['href']))
+                elif link.get('title') == 'Link to target class':
+                    self['target_class'] = ClassificationSystemClass(Utils._get(link['href']))
 
     @property
-    def source_class(self):
-        """:return: the source class."""
-        return self['source_class']
+    def source_class(self) -> Optional[ClassificationSystemClass]:
+        """Return the source class."""
+        return self.get('source_class')
 
     @property
-    def target_class(self):
-        """:return: the source class."""
-        return self['target_class']
+    def target_class(self) -> Optional[ClassificationSystemClass]:
+        """Return the target class."""
+        return self.get('target_class')
 
     @property
-    def source_class_id(self):
-        """:return: the source class."""
-        return self['source_class_id']
+    def source_class_id(self) -> Optional[int]:
+        """Return the ID of the source class."""
+        return self.get('source_class_id')
 
     @property
-    def target_class_id(self):
-        """:return: the source class."""
-        return self['target_class_id']
+    def target_class_id(self) -> Optional[int]:
+        """Return the ID of the target class."""
+        return self.get('target_class_id')
 
-    def __repr__(self):
-        """Return the string representation of a mapping object."""
-        text = f'{self.source_class.title} -> {self.target_class.title} -' \
-               f' Degree_of_similarity {self.degree_of_similarity}'
-        return text
-    
-    def __str__(self):
-        """Return the string representation of a mapping object."""
-        text = f'{self.source_class.title} -> {self.target_class.title} -' \
-               f' Degree_of_similarity {self.degree_of_similarity}'
-        return text
+    def __repr__(self) -> str:
+        """Return a string representation of the mapping."""
+        return (
+            f"{self.source_class.title if self.source_class else 'Unknown Source'} -> "
+            f"{self.target_class.title if self.target_class else 'Unknown Target'} - "
+            f"Degree of Similarity: {self.degree_of_similarity}"
+        )
+
+    def __str__(self) -> str:
+        """Return a human-readable string representation of the mapping."""
+        return self.__repr__()
+
 
 
 

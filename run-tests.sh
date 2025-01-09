@@ -19,6 +19,6 @@
 
 pydocstyle lccs && \
 isort --check-only --diff tests setup.py && \
-check-manifest --ignore ".drone.yml,.readthedocs.yml" && \
+check-manifest --ignore ".readthedocs.yml" && \
 sphinx-build -qnW --color -b doctest docs/sphinx/ docs/sphinx/_build/doctest && \
 pytest

@@ -16,117 +16,118 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 #
 """Python Client Library for the LCCS Web Service."""
+from typing import List, Optional
 from .utils import Utils
 
 
 class ClassesGroup(dict):
-    """Group of classes mappings."""
+    """Group of classification system classes."""
 
-    def __init__(self, data, validate=False):
-        """Initialize instance with dictionary data.
-
-        :param data: Dict with Item Collection metadata.
-        :param validate: true if the Item Collection should be validate using its jsonschema. Default is False.
+    def __init__(self, data: dict, validate: bool = False) -> None:
         """
+        Initialize instance with dictionary data.
+
+        :param data: Dictionary containing classification group data.
+        :param validate: Whether to validate the data using jsonschema. Default is False.
+        """
+        super().__init__(data or {})
         self._validate = validate
-        super(ClassesGroup, self).__init__(data or {})
-        self._classes = [ClassificationSystemClass(i, self._validate) for i in self['classes']]
+        self._classes: List[ClassificationSystemClass] = [
+            ClassificationSystemClass(i, self._validate) for i in self.get('classes', [])
+        ]
 
     @property
-    def classes(self):
-        """:return: classes."""
+    def classes(self) -> List['ClassificationSystemClass']:
+        """Return the list of classification system classes."""
         return self._classes
 
-    def _repr_html_(self):
-        """HTML repr."""
+    def _repr_html_(self) -> str:
+        """Render HTML representation."""
         return Utils.render_html('mapping.html', mappings=self)
 
-    def __repr__(self):
-        """Return the string representation of a mapping group object."""
-        text = ''
-        for i in self._classes:
-            text += f'\n\t{i}'
-        return text
+    def __repr__(self) -> str:
+        """Return the string representation of the group."""
+        return "\n".join([str(cls) for cls in self._classes])
 
-    def __str__(self):
-        """Return the string representation of a mapping group object."""
-        text = ''
-        for i in self._classes:
-            text += f'\n\t{i}'
-        return text
+    def __str__(self) -> str:
+        """Return the string representation of the group (readable)."""
+        return self.__repr__()
 
 
 class ClassificationSystemClass(dict):
-    """Class of the classification system."""
+    """Class representing a classification system."""
 
-    def __init__(self, data, validate=False) -> None:
-        """Initialize instance with dictionary data.
-
-        :param data: Dict with Class metadata.
-
-        :param validate: true if the Class should be validate using its jsonschema. Default is False.
+    def __init__(self, data: dict, validate: bool = False) -> None:
         """
+        Initialize instance with dictionary data.
+
+        :param data: Dictionary containing class metadata.
+        :param validate: Whether to validate the data using jsonschema. Default is False.
+        """
+        super().__init__(data or {})
         self._validate = validate
-        super(ClassificationSystemClass, self).__init__(data or {})
 
     @property
-    def id(self):
-        """:return: the class id."""
-        return self['id']
+    def id(self) -> str:
+        """Return the class ID."""
+        return self.get('id')
 
     @property
-    def name(self):
-        """:return: the class name."""
-        return self['name']
+    def name(self) -> str:
+        """Return the class name."""
+        return self.get('name')
 
     @property
-    def title(self):
-        """:return: the class title."""
-        return self['title']
+    def title(self) -> str:
+        """Return the class title."""
+        return self.get('title')
 
     @property
-    def description(self):
-        """:return: the class description."""
-        return self['description'] if 'description' in self else None
+    def description(self) -> Optional[str]:
+        """Return the class description."""
+        return self.get('description')
 
     @property
-    def color(self):
-        """:return: the class description."""
-        return self['color'] if 'color' in self else None
+    def color(self) -> Optional[str]:
+        """Return the class color."""
+        return self.get('color')
 
     @property
-    def code(self):
-        """:return: the class code."""
-        return self['code']
+    def code(self) -> str:
+        """Return the class code."""
+        return self.get('code')
 
     @property
-    def links(self):
-        """:return: the class links."""
-        return self['links']
+    def links(self) -> List[dict]:
+        """Return the class links."""
+        return self.get('links', [])
 
     @property
-    def class_parent_id(self):
-        """:return: the class parent id."""
-        return self['class_parent_id'] if 'class_parent_id' in self else None
+    def class_parent_id(self) -> Optional[str]:
+        """Return the parent class ID."""
+        return self.get('class_parent_id')
 
     @property
-    def class_parent_name(self):
-        """:return: class_parent_name of classification system."""
+    def class_parent_name(self) -> Optional[str]:
+        """Return the parent class name."""
         return self._get_parent_name()
 
-    def _get_parent_name(self):
-        if 'class_parent_id' in self:
-            parent = [link['href'] for link in self['links'] if link['rel'] == 'parent'][0]
-            system = parent.rsplit('/', maxsplit=1)[1].split('?')[0]
+    def _get_parent_name(self) -> Optional[str]:
+        """Resolve and return the parent class name, if available."""
+        if self.class_parent_id:
+            parent_link = next((link for link in self.links if link.get('rel') == 'parent'), None)
+            if parent_link:
+                try:
+                    parent_url = self._build_parent_url(parent_link['href'])
+                    parent_data = Utils._get(parent_url)
+                    return ClassificationSystemClass(parent_data).name
+                except Exception as e:
+                    return None
+        return None
 
-            if len(parent.rsplit('/', maxsplit=1)[1].split('?')) > 1:
-                token = parent.rsplit('/', maxsplit=1)[1].split('?')[1]
-                parent_class_uri = parent.rsplit('/', maxsplit=1)[
-                                       0] + f'/{system}' + f'/classes/{self["class_parent_id"]}?{token}'
-            else:
-                parent_class_uri = parent.rsplit('/', maxsplit=1)[
-                                       0] + f'/{system}' + f'/classes/{self["class_parent_id"]}'
-            class_parent_name = ClassificationSystemClass(Utils._get(parent_class_uri)).name
-            return class_parent_name
-        else:
-            return None
+    def _build_parent_url(self, href: str) -> str:
+        """Build the full URL for the parent class."""
+        system = href.rsplit('/', maxsplit=1)[1].split('?')[0]
+        token = href.split('?')[-1] if '?' in href else ""
+        base_url = href.rsplit('/', maxsplit=1)[0]
+        return f"{base_url}/{system}/classes/{self['class_parent_id']}?{token}" if token else f"{base_url}/{system}/classes/{self['class_parent_id']}"

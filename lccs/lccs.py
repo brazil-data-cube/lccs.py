@@ -345,7 +345,6 @@ class LCCS:
 
         return retval.status_code
 
-    #TODO
     def create_style(self, system: str, style_format: str, options: dict, rules: list):
         """Create style sld."""
         sld = SldGenerator.create_sld(options=options, rules=rules, layer_name=system)
