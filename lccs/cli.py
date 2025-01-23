@@ -339,7 +339,6 @@ def add_classification_system(config: Config, system_path, verbose):
         click.secho('\tFinished!', bold=False, fg='black')
 
     else:
-        # config.service.add_classes(system=system, classes=classes_path)
         click.secho(f'New classification system created', bold=True, fg='green')
 
 
