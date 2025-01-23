@@ -99,6 +99,32 @@ class Utils:
         return response.json()
 
     @staticmethod
+    def _put(
+            url: str,
+            access_token: Optional[str] = None,
+            data: Optional[Dict[str, Any]] = None,
+            json: Optional[Dict[str, Any]] = None,
+            files: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        Perform an HTTP PUT request.
+
+        :param url: The URL to query.
+        :param access_token: (Optional) Access token for authentication.
+        :param data: (Optional) Data to send in the body of the request.
+        :param json: (Optional) JSON to send in the body of the request.
+        :param files: (Optional) Files to send in the body of the request.
+        :return: JSON response as a dictionary.
+        """
+        headers = {"x-api-key": access_token} if access_token else {}
+
+        with httpx.Client(timeout=100.0) as client:
+            response = client.put(url, headers=headers, data=data, json=json, files=files)
+            response.raise_for_status()
+
+        return response.json()
+
+    @staticmethod
     def _delete(
         url: str,
         access_token: Optional[str] = None,

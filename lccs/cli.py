@@ -134,9 +134,10 @@ def classes(config: Config, system, style_format, verbose):
         table.add_column("Description", style="green", no_wrap=True)
         table.add_column("Code", style="green", no_wrap=True)
         table.add_column("Name", justify="right", style="cyan")
+        table.add_column("Class Parent", justify="right", style="cyan")
 
         for cv in class_system.classes(style_format_name_or_id=style_format):
-            table.add_row(cv.title, cv.color, cv.description, cv.code, cv.name)
+            table.add_row(cv.title, cv.color, cv.description, cv.code, cv.name, cv.class_parent_name)
 
         panel = Panel(table, title=f"[bold green]{class_system.title}[/bold green]", expand=False, border_style="bright_blue")
         console.print(panel)

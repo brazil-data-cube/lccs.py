@@ -231,21 +231,29 @@ class LCCS:
         return open(file_name, 'wb').write(data)
 
 
-    def add_classification_system(self, system_path: str) -> List[dict]:
+    def add_classification_system(self, system_path: str | dict) -> List[dict]:
         """Add new classification system."""
         url = f'{self._url}/classification_systems'
 
-        print(system_path)
-
-        with open(system_path) as file:
-            system = json.load(file)
-
+        if type(system_path) == str:
+            with open(system_path) as file:
+                system_path = json.load(file)
         try:
-            print(self._access_token)
-            retval = Utils._post(url, access_token=self._access_token, json=system)
-            # retval = Utils._post(url, access_token=self._access_token, json=system)
+            retval = Utils._post(url, access_token=self._access_token, json=system_path)
+
         except RuntimeError:
             raise ValueError('Could not insert classes!')
+
+        return retval
+
+    def update_class(self, system: str, class_id: int, class_info: dict) -> List[dict]:
+        """Update class to a classification system."""
+        url = f'{self._url}/classification_systems/{system}/classes/{class_id}'
+
+        try:
+            retval = Utils._put(url, access_token=self._access_token, json=class_info)
+        except RuntimeError:
+            raise ValueError('Could not update class!')
 
         return retval
 
