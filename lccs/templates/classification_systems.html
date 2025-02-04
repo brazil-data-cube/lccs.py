@@ -1,0 +1,91 @@
+<style>
+    .collapsible {
+        background-color: #eee;
+        color: #444;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+    }
+
+    .active, .collapsible:hover {
+        background-color: #ccc;
+    }
+
+    .content {
+        padding: 0 18px;
+        display: none;
+        overflow: hidden;
+        background-color: #ffffff;
+    }
+
+    .collapsible:after {
+        content: '+'; /* Unicode character for "plus" sign (+) */
+        font-size: 18px;
+        color: black;
+        float: right;
+        margin-left: 5px;
+    }
+
+    .active:after {
+        content: "-"; /* Unicode character for "minus" sign (-) */
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f4f4f4;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+</style>
+
+<h1>Classification Systems</h1>
+
+{% for system in classification_systems %}
+<button type="button" class="collapsible">
+    <b>{{ system.title }} (Version {{ system.version }})</b>
+</button>
+<div class="content">
+    <table>
+        <tr>
+            <th>Identifier</th>
+            <th>Title</th>
+            <th>Version</th>
+        </tr>
+        <tr>
+            <td>{{ system.identifier }}</td>
+            <td>{{ system.title }}</td>
+            <td>{{ system.version }}</td>
+        </tr>
+    </table>
+</div>
+{% endfor %}
+
+<script>
+    document.querySelectorAll(".collapsible").forEach(button => {
+        button.addEventListener("click", function() {
+            this.classList.toggle("active");
+            let content = this.nextElementSibling;
+            content.style.display = content.style.display === "block" ? "none" : "block";
+        });
+    });
+</script>

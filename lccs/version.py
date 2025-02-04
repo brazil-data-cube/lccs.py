@@ -21,6 +21,6 @@
 This file is imported by ``lccs.__init__``,
 and parsed by ``setup.py``.
 """
+from importlib.metadata import version
 
-
-__version__ = '0.9.0'
+__version__ = version(__package__)

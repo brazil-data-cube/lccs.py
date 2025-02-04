@@ -16,89 +16,114 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 #
 """Python Client Library for the LCCS Web Service."""
-from typing import Union, Any, List, Optional, cast
-
+from typing import Union, Any, List, Optional
 from .classes import ClassificationSystemClass, ClassesGroup
 from .link import Link
 from .utils import Utils
 
 
 class ClassificationSystem(dict):
-    """Classification System Class."""
+    """Representation of a Classification System."""
 
-    def __init__(self, data, validate=False):
-        """Initialize instance with dictionary data.
-
-        :param data: Dict with class system metadata.
-        :param validate: true if the Class System should be validate using its jsonschema. Default is False.
+    def __init__(self, data: dict, validate: bool = False) -> None:
         """
+        Initialize a classification system with metadata.
+
+        :param data: Dictionary containing classification system metadata.
+        :param validate: Whether to validate the data using jsonschema. Default is False.
+        """
+        super().__init__(data or {})
         self._validate = validate
-        super(ClassificationSystem, self).__init__(data or {})
 
     @property
     def id(self) -> int:
-        """:return: id of classification system."""
-        return self['id']
+        """Return the ID of the classification system."""
+        return self.get('id')
 
     @property
     def identifier(self) -> str:
-        """:return: identifier of classification system."""
-        return self['identifier']
+        """Return the identifier of the classification system."""
+        return self.get('identifier')
 
     @property
     def name(self) -> str:
-        """:return: name of classification system."""
-        return self['name']
+        """Return the name of the classification system."""
+        return self.get('name')
 
     @property
     def title(self) -> str:
-        """:return: title of classification system."""
-        return self['title']
+        """Return the title of the classification system."""
+        return self.get('title')
 
     @property
     def links(self) -> List[Link]:
-        """:return: a list of link in the classification system."""
-        return [Link(link) for link in self['links']]
+        """Return a list of links associated with the classification system."""
+        return [Link(link) for link in self.get('links', [])]
 
     @property
-    def description(self) -> str:
-        """:return: description of classification system."""
-        return self['description']
+    def description(self) -> Optional[str]:
+        """Return the description of the classification system."""
+        return self.get('description')
 
     @property
     def version(self) -> str:
-        """:return: version of classification system."""
-        return self['version']
+        """Return the version of the classification system."""
+        return self.get('version')
 
     @property
-    def authority_name(self) -> str:
-        """:return: authority_name of classification system."""
-        return self['authority_name']
+    def authority_name(self) -> Optional[str]:
+        """Return the authority name of the classification system."""
+        return self.get('authority_name')
 
-    def classes(self, class_name_or_id: Optional[str] = None) -> Union[ClassesGroup, ClassificationSystemClass]:
-        """:return: classes of the classification system."""
-        _classes_data = next(Utils._get(link['href']) for link in self['links'] if link['rel'] == 'classes')
+    def classes(
+        self,
+        class_name_or_id: Optional[str] = None,
+        style_format_name_or_id: Optional[str] = None
+    ) -> Union[ClassesGroup, ClassificationSystemClass]:
+        """
+        Return the classes of the classification system.
 
-        if class_name_or_id is not None:
-            _classes_link = [link['href'] for link in self['links'] if link['rel'] == 'classes'][0]
-            link = _classes_link.split('classes')
-            data = Utils._get(f'{link[0]}classes/{class_name_or_id}{link[1]}')
-            return ClassificationSystemClass(data, self._validate)
+        :param class_name_or_id: Name or ID of a specific class. Default is None.
+        :param style_format_name_or_id: Style format ID for filtering classes. Default is None.
+        :return: A group of classes or a specific classification system class.
+        """
+        try:
+            if style_format_name_or_id:
+                classes_url = next(
+                    link['href'] + f"&style_format_id={style_format_name_or_id}"
+                    for link in self.get('links', []) if link.get('rel') == 'classes'
+                )
+            else:
+                classes_url = next(
+                    link['href'] for link in self.get('links', []) if link.get('rel') == 'classes'
+                )
+            classes_data = Utils._get(classes_url)
 
-        all_classes = ClassesGroup(dict(classes=_classes_data))
-        return all_classes.classes
+            if class_name_or_id:
+                classes_link = next(
+                    link['href'] for link in self.get('links', []) if link.get('rel') == 'classes'
+                )
+                base_url, params = classes_link.split('classes', 1)
+                specific_class_data = Utils._get(f"{base_url}classes/{class_name_or_id}{params}")
+                return ClassificationSystemClass(specific_class_data, self._validate)
 
-    def _repr_html_(self):
-        """HTML repr."""
+            all_classes = ClassesGroup({"classes": classes_data})
+            return all_classes.classes
+        except StopIteration:
+            raise ValueError("No 'classes' link found in the classification system.")
+        except Exception as e:
+            raise RuntimeError(f"An error occurred while retrieving classes: {e}")
+
+    def _repr_html_(self) -> str:
+        """Render an HTML representation of the classification system."""
         return Utils.render_html('classification_system.html', classification_system=self)
 
     def __repr__(self) -> str:
-        """Return the string representation of a classification system object."""
-        text = f'{self.id}:{self.name}-{self.version} - Title: {self.title}'
-        return text
+        """Return the string representation of the classification system."""
+        return f'{self.id}:{self.name}-{self.version} - Title: {self.title}'
 
     def __str__(self) -> str:
-        """Return the string representation of a classification system object."""
+        """Return a human-readable string representation of the classification system."""
         return f'<Classification System [{self.id}:{self.name}-{self.version} - Title: {self.title}]>'
 
 

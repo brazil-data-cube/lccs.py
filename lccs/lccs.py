@@ -71,8 +71,7 @@ class LCCS:
         data = Utils._get(url, access_token=self._access_token)
         result = list()
 
-        [result.append(i['identifier']) for i in data]
-
+        [result.append(dict(identifier=i['identifier'], title=i['title'], version=i['version'])) for i in data]
         return result
 
     def _id(self, system_name: str):
@@ -207,7 +206,7 @@ class LCCS:
 
     #TODO
     def get_style(self, system, style_format, path=None):
-        """Fetch styles of the a giving classification system.
+        """Fetch styles of a giving classification system.
 
         :param system: The id or identifier of a classification system.
         :type system: str
@@ -218,7 +217,7 @@ class LCCS:
         :param path: Directory path to save the file
         :type path: str
 
-        :returns: Style File
+        :returns: Style
         :rtype: File
         """
         try:
@@ -231,37 +230,30 @@ class LCCS:
             return open(full_path, 'wb').write(data)
         return open(file_name, 'wb').write(data)
 
-    def add_classification_system(self, name: str, authority_name: str, description: dict, title: dict,
-                                  version: str) -> dict:
-        """Add a new classification system."""
+
+    def add_classification_system(self, system_path: str | dict) -> List[dict]:
+        """Add new classification system."""
         url = f'{self._url}/classification_systems'
 
-        data = dict()
-        data["name"] = name
-        data["authority_name"] = authority_name
-        data["version"] = version
-        data["description"] = description
-        data["title"] = title
-
+        if type(system_path) == str:
+            with open(system_path) as file:
+                system_path = json.load(file)
         try:
-            retval = Utils._post(url, access_token=self._access_token, json=data)
-        except RuntimeError as e:
-            raise ValueError(f'Could not insert classification system {name}!')
+            retval = Utils._post(url, access_token=self._access_token, json=system_path)
+
+        except RuntimeError:
+            raise ValueError('Could not insert classes!')
 
         return retval
 
-    def add_classes(self, system: str, classes: str) -> List[dict]:
-        """Add new classes to an classification system."""
-        url = f'{self._url}/classification_systems/{system}/classes'
-
-        if type(classes) == str:
-            with open(classes) as file:
-                classes = json.load(file)
+    def update_class(self, system: str, class_id: int, class_info: dict) -> List[dict]:
+        """Update class to a classification system."""
+        url = f'{self._url}/classification_systems/{system}/classes/{class_id}'
 
         try:
-            retval = Utils._post(url, access_token=self._access_token, json=classes)
+            retval = Utils._put(url, access_token=self._access_token, json=class_info)
         except RuntimeError:
-            raise ValueError('Could not insert classes!')
+            raise ValueError('Could not update class!')
 
         return retval
 
@@ -361,7 +353,6 @@ class LCCS:
 
         return retval.status_code
 
-    #TODO
     def create_style(self, system: str, style_format: str, options: dict, rules: list):
         """Create style sld."""
         sld = SldGenerator.create_sld(options=options, rules=rules, layer_name=system)
@@ -386,15 +377,4 @@ class LCCS:
 
     def _repr_html_(self):
         """HTML repr."""
-        classification_systems = str()
-        for classification_sys in self.classification_systems:
-            classification_systems += f"<li>{classification_sys}</li>"
-        return f"""<p>LCCS-WS</p>
-                    <ul>
-                     <li><b>URL:</b> {self._url}</li>
-                     <li><b>Classification Systems:</b></li>
-                     <ul>
-                     {classification_systems}
-                     </ul>
-                   </ul>
-               """
+        return Utils.render_html('classification_systems.html', classification_systems=self.classification_systems)

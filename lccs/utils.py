@@ -16,8 +16,12 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 #
 """Python Client Library for the LCCS Web Service."""
+from importlib.resources import files
+
+import httpx
+from typing import Optional, Union, Tuple, Dict, Any
+
 import re
-import requests
 import jinja2
 
 from jsonschema import RefResolver, validate
@@ -28,78 +32,117 @@ templateLoader = jinja2.FileSystemLoader(searchpath=resource_filename(__name__, 
 templateEnv = jinja2.Environment(loader=templateLoader)
 
 
+
 class Utils:
-    """Utils class."""
+    """Utilities class for interacting with LCCS-WS."""
 
     @staticmethod
-    def _get(url, access_token=None, params=None):
-        """Query the LCCS-WS using HTTP GET verb and return the result as a JSON document.
-
-        :param url: The URL to query must be a valid LCCS-WS endpoint.
-        :type url: str
-
-        :param params: (optional) Dictionary, list of tuples or bytes to send
-        in the query string for the underlying `Requests`.
-        :type params: dict
-
-        :rtype: dict
-        :raises ValueError: If the response body does not contain a valid json.
+    def _get(
+        url: str,
+        access_token: Optional[str] = None,
+        params: Optional[Dict[str, Any]] = None
+    ) -> Union[Dict[str, Any], Tuple[str, bytes]]:
         """
-        _headers = {}
-        if access_token != None:
-            _headers = {
-                "x-api-key": access_token
-            }
+        Perform an HTTP GET request and return the result as a JSON document or file content.
 
-        response = requests.get(url, params=params, headers=_headers)
+        :param url: The URL to query; must be a valid LCCS-WS endpoint.
+        :param access_token: (Optional) Access token for authentication.
+        :param params: (Optional) Query parameters as a dictionary.
+        :return: JSON response as a dictionary or a tuple with file name and binary content.
+        :raises ValueError: If the response body does not contain valid JSON or is not of an expected content type.
+        """
+        headers = {"x-api-key": access_token} if access_token else {}
 
-        response.raise_for_status()
+        with httpx.Client(timeout=100.0) as client:
+            response = client.get(url, params=params, headers=headers)
+            response.raise_for_status()
 
-        content_type = response.headers.get('content-type')
+        content_type = response.headers.get('content-type', '')
 
         if content_type == 'application/octet-stream':
-
-            content = response.headers.get('content-disposition')
-
+            content_disposition = response.headers.get('content-disposition', '')
             try:
-                file_name = re.findall('filename=(.+)', content)[0]
-            except RuntimeError:
-                raise ValueError('Error while download file')
-
+                file_name = re.findall(r'filename="?(.*?)"?$', content_disposition)[0]
+            except IndexError:
+                raise ValueError('Error extracting file name from Content-Disposition header.')
             return file_name, response.content
 
-        elif content_type not in ('application/json', 'application/geo+json'):
-            raise ValueError('HTTP response is not JSON: Content-Type: {}'.format(content_type))
+        if content_type not in ('application/json', 'application/geo+json'):
+            raise ValueError(f'HTTP response is not JSON: Content-Type: {content_type}')
 
         return response.json()
 
     @staticmethod
-    def _post(url, access_token, data=None, json=None, files=None):
-        """Request post method."""
-        _headers = {}
-        if access_token != None:
-            _headers = {
-                "x-api-key": access_token
-            }
+    def _post(
+        url: str,
+        access_token: Optional[str] = None,
+        data: Optional[Dict[str, Any]] = None,
+        json: Optional[Dict[str, Any]] = None,
+        files: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        Perform an HTTP POST request.
 
-        response = requests.post(url, headers=_headers, data=data, files=files, json=json)
+        :param url: The URL to query.
+        :param access_token: (Optional) Access token for authentication.
+        :param data: (Optional) Data to send in the body of the request.
+        :param json: (Optional) JSON to send in the body of the request.
+        :param files: (Optional) Files to send in the body of the request.
+        :return: JSON response as a dictionary.
+        """
+        headers = {"x-api-key": access_token} if access_token else {}
 
-        response.raise_for_status()
+        with httpx.Client(timeout=100.0) as client:
+            response = client.post(url, headers=headers, data=data, json=json, files=files)
+            response.raise_for_status()
 
         return response.json()
 
     @staticmethod
-    def _delete(url, access_token, params=None):
-        """Request delete method."""
-        _headers = {}
-        if access_token != None:
-            _headers = {
-                "x-api-key": access_token
-            }
+    def _put(
+            url: str,
+            access_token: Optional[str] = None,
+            data: Optional[Dict[str, Any]] = None,
+            json: Optional[Dict[str, Any]] = None,
+            files: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        Perform an HTTP PUT request.
 
-        response = requests.delete(url, params=params, headers=_headers)
+        :param url: The URL to query.
+        :param access_token: (Optional) Access token for authentication.
+        :param data: (Optional) Data to send in the body of the request.
+        :param json: (Optional) JSON to send in the body of the request.
+        :param files: (Optional) Files to send in the body of the request.
+        :return: JSON response as a dictionary.
+        """
+        headers = {"x-api-key": access_token} if access_token else {}
 
-        response.raise_for_status()
+        with httpx.Client(timeout=100.0) as client:
+            response = client.put(url, headers=headers, data=data, json=json, files=files)
+            response.raise_for_status()
+
+        return response.json()
+
+    @staticmethod
+    def _delete(
+        url: str,
+        access_token: Optional[str] = None,
+        params: Optional[Dict[str, Any]] = None
+    )-> httpx.Response:
+        """
+        Perform an HTTP DELETE request.
+
+        :param url: The URL to query.
+        :param access_token: (Optional) Access token for authentication.
+        :param params: (Optional) Query parameters as a dictionary.
+        :return: JSON response as a dictionary.
+        """
+        headers = {"x-api-key": access_token} if access_token else {}
+
+        with httpx.Client(timeout=100.0) as client:
+            response = client.delete(url, params=params, headers=headers)
+            response.raise_for_status()
 
         return response
 

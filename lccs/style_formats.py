@@ -33,26 +33,26 @@ class StyleFormats(dict):
         super(StyleFormats, self).__init__(data or {})
 
     @property
-    def id(self):
+    def id(self) -> int:
         """:return: the style format id."""
         return self['id']
 
     @property
-    def name(self):
+    def name(self) -> str:
         """:return: the style format name."""
         return self['name']
     
     @property
-    def links(self):
+    def links(self) -> list[Link]:
         """:return: a list of link in the classification system."""
         return [Link(link) for link in self['links']]
     
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return the string representation of a style format object."""
         text = f'Name:{self.name}'
         return text
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return the string representation of a style format object."""
         return f'<Name:{self.name}>'
 

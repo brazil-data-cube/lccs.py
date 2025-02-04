@@ -21,7 +21,7 @@
 class Link(dict):
     """Link object."""
 
-    def __init__(self, data):
+    def __init__(self, data) -> None:
         """Initialize instance with dictionary data.
 
         :param data: Dict with Link metadata.
@@ -29,21 +29,21 @@ class Link(dict):
         super(Link, self).__init__(data or {})
 
     @property
-    def rel(self):
+    def rel(self) -> str:
         """:return: the Link relation."""
         return self['rel']
 
     @property
-    def href(self):
+    def href(self) -> str:
         """:return: the Link url."""
         return self['href']
 
     @property
-    def type(self):
+    def type(self) -> str:
         """:return: the type of the Link object."""
         return self['type']
 
     @property
-    def title(self):
+    def title(self)  -> str:
         """:return: the title of the Link object."""
         return self['title']

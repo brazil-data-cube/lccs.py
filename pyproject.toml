@@ -1,0 +1,72 @@
+[project]
+name = "lccs"
+description = "."
+readme = "README.rst"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Brazil Data Cube Team", email = "bdc.team@inpe.br"},
+]
+keywords = [
+    "lulc"
+]
+classifiers = [
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License version 3 License",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+version="1.0.0"
+dependencies = [
+    "Click>=7.0",
+    "jsonschema>=3.2",
+    "cachetools>=4.2.4",
+    "requests>=2.20",
+    "Jinja2>=2.11.1",
+    "lxml>=4.9.1",
+    "python-sld==1.0.10",
+    "rich>=10.0.0",
+    "httpx>=0.19.0",
+]
+
+# Extras Dependencies
+[project.optional-dependencies]
+dev = ["pre-commit"]
+docs = [
+    "Sphinx>=7.0",
+    "sphinx_rtd_theme",
+    "sphinx-copybutton",
+    "sphinx-tabs",
+]
+tests = [
+    "coverage>=6.4",
+    "coveralls>=3.3",
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "pytest-pep8>=1.0",
+    "pydocstyle>=4.0",
+    "isort>4.3",
+    "check-manifest>=0.40",
+]
+all = ["lccs-ws[docs,tests]"]
+## End extras dependencies
+
+[build-system]
+requires = ["setuptools>=67.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["lccs*"]
+exclude = ["tests*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+"lccs" = ["py.typed"]
+
+[project.scripts]
+lccs = "lccs.cli:cli"
