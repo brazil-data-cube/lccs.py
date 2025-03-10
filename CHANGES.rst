@@ -20,6 +20,15 @@
 Changes
 =======
 
+Version 1.0.0 (2025-03-11)
+--------------------------
+
+- Add support to lccs-ws version 1.0.0 (`#73 <https://github.com/brazil-data-cube/lccs.py/issues/73>`_)
+- Add classification system template (`#72 <https://github.com/brazil-data-cube/lccs.py/issues/72>`_)
+- Add pyproject.toml (`#74 <https://github.com/brazil-data-cube/lccs.py/issues/74>`_)
+- Change request to httpx (`#75 <https://github.com/brazil-data-cube/lccs.py/issues/75>`_)
+
+
 Version 0.9.0 (2024-08-01)
 --------------------------
 
