@@ -22,9 +22,8 @@ from typing import Any, Dict, Optional, Tuple, Union
 
 import httpx
 import jinja2
-from jsonschema import RefResolver, validate
+from jsonschema import validate, Draft7Validator
 
-# Usando importlib.resources para pegar paths
 with as_file(files(__package__) / 'jsonschemas') as base_schemas_path:
     base_schemas_path_str = str(base_schemas_path) + '/'
 
@@ -51,6 +50,11 @@ class Utils:
         :return: JSON response as a dictionary or a tuple with file name and binary content.
         :raises ValueError: If the response body does not contain valid JSON or is not of an expected content type.
         """
+        if params is None:
+            params = {}
+
+        params.setdefault("language", "pt-br")
+
         headers = {"x-api-key": access_token} if access_token else {}
 
         with httpx.Client(timeout=100.0) as client:
@@ -148,12 +152,9 @@ class Utils:
 
     @staticmethod
     def validate(lccs_object):
-        """Validate a lucc Object using its jsonschemas.
-
-        :raise ValidationError: raise a ValidationError if the lucc Object couldn't be validated.
-        """
-        resolver = RefResolver(f"file://{base_schemas_path_str}{lccs_object}", None)
-        validate(lccs_object, lccs_object._schema, resolver=resolver)
+        """Validade function lccs object."""
+        validator = Draft7Validator(schema=lccs_object._schema)
+        validator.validate(lccs_object)
 
     @staticmethod
     def render_html(template_name, **kwargs):
