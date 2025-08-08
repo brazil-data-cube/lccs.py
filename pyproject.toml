@@ -53,7 +53,7 @@ tests = [
     "isort>4.3",
     "check-manifest>=0.40",
 ]
-all = ["lccs-ws[docs,tests]"]
+all = ["lccs[docs,tests]"]
 ## End extras dependencies
 
 [build-system]

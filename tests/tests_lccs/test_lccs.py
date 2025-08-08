@@ -14,10 +14,12 @@ import re
 from pathlib import Path
 
 import pytest
-from pkg_resources import resource_filename, resource_string
+import respx
+from httpx import Response
 
 import lccs
 
+# URL base do serviço
 url = os.environ.get('LCCS_SERVER_URL', 'http://localhost:5000')
 
 match_url = re.compile(url + '/')
@@ -29,66 +31,54 @@ match_url_mappings = re.compile(url + '/mappings/1')
 
 @pytest.fixture(scope='session')
 def lccs_object():
-    resource_package = __name__
-    directory = resource_filename(resource_package, 'jsons/')
-    files = dict()
-    for path in Path(directory).rglob('*.json'):
-        path = str(path)
-
-        s = path.split('/')
-
-        file_path = '/'.join(s[-2:])
-
-        file = json.loads(resource_string(resource_package, file_path).decode('utf-8'))
-
-        if s[-2] in files:
-            files[s[-2]][s[-1]] = file
-        else:
-            files[s[-2]] = {s[-1]: file}
-
+    """Carrega todos os JSONs da pasta tests/jsons de forma recursiva."""
+    base_dir = Path(__file__).parent / "jsons"
+    files = {}
+    for path in base_dir.rglob("*.json"):
+        rel_parts = path.parts[-2:]  # pega última pasta + arquivo
+        folder, filename = rel_parts
+        with open(path, encoding="utf-8") as f:
+            file_data = json.load(f)
+        files.setdefault(folder, {})[filename] = file_data
     return files
 
 
 class TestLCCS:
-    
-    def _setup_lccs(self, mock, root=None, json_systems=None, json_class=None, json_system=None, json_mappings=None):
+
+    def _setup_lccs(self, root=None, json_systems=None, json_class=None, json_system=None, json_mappings=None):
+        """Configura mocks no respx para cada rota."""
         if root is not None:
-            mock.get(match_url, json=root,
-                     status_code=200,
-                     headers={'content-type': 'application/json'})
+            respx.get(match_url).mock(return_value=Response(200, json=root))
         if json_systems is not None:
-            mock.get(match_url_systems, json=json_systems,
-                     status_code=200,
-                     headers={'content-type': 'application/json'})
+            respx.get(match_url_systems).mock(return_value=Response(200, json=json_systems))
         if json_system is not None:
-            mock.get(match_url_system, json=json_system,
-                     status_code=200,
-                     headers={'content-type': 'application/json'})
+            respx.get(match_url_system).mock(return_value=Response(200, json=json_system))
         if json_class is not None:
-            mock.get(match_url_class, json=json_class,
-                     status_code=200,
-                     headers={'content-type': 'application/json'})
+            respx.get(match_url_class).mock(return_value=Response(200, json=json_class))
         if json_mappings is not None:
-            mock.get(match_url_mappings, json=json_mappings,
-                     status_code=200,
-                     headers={'content-type': 'application/json'})
+            respx.get(match_url_mappings).mock(return_value=Response(200, json=json_mappings))
 
-    def test_lccs(self, lccs_object, requests_mock):
-        requests_mock.get(match_url, json=dict(lccs_version='0.8.1', links=list(),
-                                               application_name="Land Cover Classification System Service",
-                                               supported_language=list(dict(language="pt-br",
-                                                                            description="Brazilian Portuguese"))),
-                          status_code=200,
-                          headers={'content-type': 'application/json'})
+    @respx.mock
+    def test_lccs(self, lccs_object):
+        # Mock da URL raiz
+        respx.get(match_url).mock(
+            return_value=Response(
+                200,
+                json=dict(
+                    lccs_version='0.8.1',
+                    links=[],
+                    application_name="Land Cover Classification System Service",
+                    supported_language=[dict(language="pt-br", description="Brazilian Portuguese")]
+                ),
+            )
+        )
 
+        # Configura mocks adicionais usando fixture lccs_object
         for k in lccs_object:
-            self._setup_lccs(requests_mock, root= lccs_object[k]['root.json'])
+            self._setup_lccs(root=lccs_object[k].get('root.json'))
 
         service = lccs.LCCS(url)
+
         assert service.url == url
-        assert repr(service) == 'lccs("{}")'.format(url)
-        assert str(service) == '<LCCS [{}]>'.format(url)
-
-
-if __name__ == '__main__':
-    pytest.main(['--color=auto', '--no-cov'])
+        assert repr(service) == f'lccs("{url}")'
+        assert str(service) == f'<LCCS [{url}]>'

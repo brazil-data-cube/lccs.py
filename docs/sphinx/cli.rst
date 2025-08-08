@@ -30,37 +30,36 @@ Output::
 
 To list the available classification systems in a service, use the ``classification-systems`` command and provides a URL to the ``--url`` option::
 
-    lccs --url 'https://brazildatacube.dpi.inpe.br/lccs/' --access-token 'change-me' classification-systems
+    lccs --url 'https://data.inpe.br/bdc/lccs/v1/' --access-token 'change-me' classification-systems
 
 
 The above command will return a list of classification system names as::
 
-    prodes-1.0
-    terraclass-amz-1.0
-    deter-amz-1.0
+    {'identifier': 'prodes-1.0', 'title': 'PRODES', 'version': '1.0'}
+    {'identifier': 'prodes_cerrado-1.0', 'title': 'PRODES_Cerrado', 'version': '1.0'}
+    {'identifier': 'deter-cerrado-1.0', 'title': 'DETER Cerrado', 'version': '1.0'}
+
 
 To get more information about a specific classification system, use the ``classification-systems-describe`` command::
 
-    lccs --url 'https://brazildatacube.dpi.inpe.br/lccs/' --access-token 'change-me' classification-system-description --system 'prodes-1.0'
+    lccs --url 'https://data.inpe.br/bdc/lccs/v1/' --access-token 'change-me' classification-system-description --system 'prodes-1.0'
 
 Output::
 
         - authority_name: INPE
-        - description: Annual Deforestation Classification System
-        - id: 1
+        - description: Sistema de Classificação Anual de Desmatamento
+        - id: 4
         - identifier: prodes-1.0
-        - links: [{'href': 'https://brazildatacube.dpi.inpe.br/lccs/classification_system', 'rel': 'parent', 'title': 'Link to this document', 'type': 'application/json'}, ..]
+        - links: [{'href': 'https://data.inpe.br/bdc/lccs/v1/classification_systems?language=pt-br', 'rel': 'parent', 'title': 'Link to this document', 'type': 'application/json'}, {'href': 'https://data.inpe.br/bdc/lccs/v1/classification_systems/4?language=pt-br', 'rel': 'self', 'title': 'The classification_system', 'type': 'application/json'}, {'href': 'https://data.inpe.br/bdc/lccs/v1/classification_systems/4/classes?language=pt-br', 'rel': 'classes', 'title': 'The classes related to this item', 'type': 'application/json'}, {'href': 'https://data.inpe.br/bdc/lccs/v1/classification_systems/4/style_formats', 'rel': 'styles_formats', 'title': 'The styles formats related to this item', 'type': 'application/json'}, {'href': 'https://data.inpe.br/bdc/lccs/v1/mappings/4', 'rel': 'mappings', 'title': 'The classification system mappings', 'type': 'application/json'}, {'href': 'https://data.inpe.br/bdc/lccs/v1?language=pt-br', 'rel': 'root', 'title': 'API landing page.', 'type': 'application/json'}]
         - name: prodes
         - title: PRODES
         - version: 1.0
         - version_predecessor: None
         - version_successor: None
 
-
-
 List the available classes of a classification system, use the ``classes`` command::
 
-    lccs --url 'https://brazildatacube.dpi.inpe.br/lccs/' --access-token 'change-me' classes --system 'prodes-1.0'
+    lccs --url 'https://data.inpe.br/bdc/lccs/v1/' --access-token 'change-me' classes --system 'prodes-1.0'
 
 The above command will return a list of classes of PRODES as::
 
@@ -74,7 +73,7 @@ The above command will return a list of classes of PRODES as::
 
 To get more information about a specific class, use the ``class-describe`` command::
 
-    lccs --url 'https://brazildatacube.dpi.inpe.br/lccs/' --access-token 'change-me' class-describe --system 'prodes-1.0' --system_class 'desmatamento'
+    lccs --url 'https://data.inpe.br/bdc/lccs/v1/' --access-token 'change-me' class-describe --system 'prodes-1.0' --system_class 'desmatamento'
 
 The above command will return a::
 
@@ -97,7 +96,7 @@ The above command will return a list of classification systems as::
 
 To get a mapping between classification systems, use the ``mappings`` command::
 
-    lccs --url 'https://brazildatacube.dpi.inpe.br/lccs/' mappings --system_id_source 'terraclass-amz-1.0' --system_id_target 'prodes-1.0'
+    lccs --url 'https://data.inpe.br/bdc/lccs/v1/' mappings --system_id_source 'terraclass-amz-1.0' --system_id_target 'prodes-1.0'
 
 
 Output::

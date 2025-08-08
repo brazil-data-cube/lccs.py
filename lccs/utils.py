@@ -16,21 +16,21 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 #
 """Python Client Library for the LCCS Web Service."""
-from importlib.resources import files
+import re
+from importlib.resources import as_file, files
+from typing import Any, Dict, Optional, Tuple, Union
 
 import httpx
-from typing import Optional, Union, Tuple, Dict, Any
-
-import re
 import jinja2
-
 from jsonschema import RefResolver, validate
-from pkg_resources import resource_filename
 
-base_schemas_path = resource_filename(__name__, 'jsonschemas/')
-templateLoader = jinja2.FileSystemLoader(searchpath=resource_filename(__name__, 'templates/'))
-templateEnv = jinja2.Environment(loader=templateLoader)
+# Usando importlib.resources para pegar paths
+with as_file(files(__package__) / 'jsonschemas') as base_schemas_path:
+    base_schemas_path_str = str(base_schemas_path) + '/'
 
+with as_file(files(__package__) / 'templates') as templates_path:
+    templateLoader = jinja2.FileSystemLoader(searchpath=str(templates_path))
+    templateEnv = jinja2.Environment(loader=templateLoader)
 
 
 class Utils:
@@ -152,8 +152,7 @@ class Utils:
 
         :raise ValidationError: raise a ValidationError if the lucc Object couldn't be validated.
         """
-        resolver = RefResolver("file://{}{}/".format(base_schemas_path, lccs_object))
-
+        resolver = RefResolver(f"file://{base_schemas_path_str}{lccs_object}", None)
         validate(lccs_object, lccs_object._schema, resolver=resolver)
 
     @staticmethod
