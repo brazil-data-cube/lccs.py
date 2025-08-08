@@ -19,19 +19,18 @@ from httpx import Response
 
 import lccs
 
-# URL base do serviço
-url = os.environ.get('LCCS_SERVER_URL', 'http://localhost:5000')
+url = os.environ.get("LCCS_SERVER_URL", "http://localhost:5000")
 
-match_url = re.compile(url + '/')
-match_url_systems = re.compile(url + '/classification_systems')
-match_url_system = re.compile(url + '/classification_systems/1')
-match_url_class = re.compile(url + '/classification_systems/1/classes')
-match_url_mappings = re.compile(url + '/mappings/1')
+match_url = re.compile(url + "/")
+match_url_systems = re.compile(url + "/classification_systems")
+match_url_system = re.compile(url + "/classification_systems/1")
+match_url_class = re.compile(url + "/classification_systems/1/classes")
+match_url_mappings = re.compile(url + "/mappings/1")
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def lccs_object():
-    """Carrega todos os JSONs da pasta tests/jsons de forma recursiva."""
+    """Load jsons files."""
     base_dir = Path(__file__).parent / "jsons"
     files = {}
     for path in base_dir.rglob("*.json"):
@@ -45,40 +44,53 @@ def lccs_object():
 
 class TestLCCS:
 
-    def _setup_lccs(self, root=None, json_systems=None, json_class=None, json_system=None, json_mappings=None):
-        """Configura mocks no respx para cada rota."""
+    def _setup_lccs(
+        self,
+        root=None,
+        json_systems=None,
+        json_class=None,
+        json_system=None,
+        json_mappings=None,
+    ):
+        """Config mocks endpoints."""
         if root is not None:
             respx.get(match_url).mock(return_value=Response(200, json=root))
         if json_systems is not None:
-            respx.get(match_url_systems).mock(return_value=Response(200, json=json_systems))
+            respx.get(match_url_systems).mock(
+                return_value=Response(200, json=json_systems)
+            )
         if json_system is not None:
-            respx.get(match_url_system).mock(return_value=Response(200, json=json_system))
+            respx.get(match_url_system).mock(
+                return_value=Response(200, json=json_system)
+            )
         if json_class is not None:
             respx.get(match_url_class).mock(return_value=Response(200, json=json_class))
         if json_mappings is not None:
-            respx.get(match_url_mappings).mock(return_value=Response(200, json=json_mappings))
+            respx.get(match_url_mappings).mock(
+                return_value=Response(200, json=json_mappings)
+            )
 
     @respx.mock
     def test_lccs(self, lccs_object):
-        # Mock da URL raiz
         respx.get(match_url).mock(
             return_value=Response(
                 200,
                 json=dict(
-                    lccs_version='0.8.1',
+                    lccs_version="0.8.1",
                     links=[],
                     application_name="Land Cover Classification System Service",
-                    supported_language=[dict(language="pt-br", description="Brazilian Portuguese")]
+                    supported_language=[
+                        dict(language="pt-br", description="Brazilian Portuguese")
+                    ],
                 ),
             )
         )
 
-        # Configura mocks adicionais usando fixture lccs_object
         for k in lccs_object:
-            self._setup_lccs(root=lccs_object[k].get('root.json'))
+            self._setup_lccs(root=lccs_object[k].get("root.json"))
 
         service = lccs.LCCS(url)
 
         assert service.url == url
         assert repr(service) == f'lccs("{url}")'
-        assert str(service) == f'<LCCS [{url}]>'
+        assert str(service) == f"<LCCS [{url}]>"
