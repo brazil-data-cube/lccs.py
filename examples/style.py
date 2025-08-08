@@ -20,7 +20,7 @@
 from lccs import LCCS
 
 # Change to the LCCS-WS URL you want to use.
-service = LCCS("https://brazildatacube.dpi.inpe.br/lccs/", access_token='change-me', language='en')
+service = LCCS("https://data.inpe.br/bdc/lccs/v1/", access_token='change-me', language='en')
 
 # Save Style File
 service.get_style(system='prodes-1.0', style_format='SLD-Feature-Polygon')
