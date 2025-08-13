@@ -20,7 +20,7 @@
 from lccs import LCCS
 
 # Change to the LCCS-WS URL you want to use.
-service = LCCS("https://brazildatacube.dpi.inpe.br/lccs/", access_token='change-me', language='en')
+service = LCCS("https://data.inpe.br/bdc/lccs/v1/", access_token='change-me', language='en')
 
 # Return the list of available clasification system for mapping
 available_mappings = service.available_mappings('prodes-1.0')

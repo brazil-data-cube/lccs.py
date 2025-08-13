@@ -16,21 +16,20 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 #
 """Python Client Library for the LCCS Web Service."""
-from importlib.resources import files
+import re
+from importlib.resources import as_file, files
+from typing import Any, Dict, Optional, Tuple, Union
 
 import httpx
-from typing import Optional, Union, Tuple, Dict, Any
-
-import re
 import jinja2
+from jsonschema import validate, Draft7Validator
 
-from jsonschema import RefResolver, validate
-from pkg_resources import resource_filename
+with as_file(files(__package__) / 'jsonschemas') as base_schemas_path:
+    base_schemas_path_str = str(base_schemas_path) + '/'
 
-base_schemas_path = resource_filename(__name__, 'jsonschemas/')
-templateLoader = jinja2.FileSystemLoader(searchpath=resource_filename(__name__, 'templates/'))
-templateEnv = jinja2.Environment(loader=templateLoader)
-
+with as_file(files(__package__) / 'templates') as templates_path:
+    templateLoader = jinja2.FileSystemLoader(searchpath=str(templates_path))
+    templateEnv = jinja2.Environment(loader=templateLoader)
 
 
 class Utils:
@@ -51,6 +50,11 @@ class Utils:
         :return: JSON response as a dictionary or a tuple with file name and binary content.
         :raises ValueError: If the response body does not contain valid JSON or is not of an expected content type.
         """
+        if params is None:
+            params = {}
+
+        params.setdefault("language", "pt-br")
+
         headers = {"x-api-key": access_token} if access_token else {}
 
         with httpx.Client(timeout=100.0) as client:
@@ -148,13 +152,9 @@ class Utils:
 
     @staticmethod
     def validate(lccs_object):
-        """Validate a lucc Object using its jsonschemas.
-
-        :raise ValidationError: raise a ValidationError if the lucc Object couldn't be validated.
-        """
-        resolver = RefResolver("file://{}{}/".format(base_schemas_path, lccs_object))
-
-        validate(lccs_object, lccs_object._schema, resolver=resolver)
+        """Validade function lccs object."""
+        validator = Draft7Validator(schema=lccs_object._schema)
+        validator.validate(lccs_object)
 
     @staticmethod
     def render_html(template_name, **kwargs):

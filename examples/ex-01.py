@@ -22,7 +22,7 @@ import lccs
 
 print(lccs.__version__)
 
-server_url = os.environ.get('LCCS_SERVER_URL', 'https://brazildatacube.dpi.inpe.br/lccs/')
+server_url = os.environ.get('LCCS_SERVER_URL', 'https://data.inpe.br/bdc/lccs/v1/')
 
 service = lccs.LCCS(server_url, access_token='change-me', language='pt-br')
 
