@@ -76,7 +76,7 @@ class TestLCCS:
             return_value=Response(
                 200,
                 json=dict(
-                    lccs_version="0.8.1",
+                    lccs_version="1.0.1",
                     links=[],
                     application_name="Land Cover Classification System Service",
                     supported_language=[
