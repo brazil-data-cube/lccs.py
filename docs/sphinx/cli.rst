@@ -25,7 +25,7 @@ If you want to know the LCCS version, use the option ``--version`` as in::
 
 Output::
 
-    lccs, version 1.0.2
+    lccs, version 1.0.1
 
 
 To list the available classification systems in a service, use the ``classification-systems`` command and provides a URL to the ``--url`` option::
