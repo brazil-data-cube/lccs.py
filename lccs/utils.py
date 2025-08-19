@@ -22,12 +22,12 @@ from typing import Any, Dict, Optional, Tuple, Union
 
 import httpx
 import jinja2
-from jsonschema import validate, Draft7Validator
+from jsonschema import Draft7Validator, validate
 
-with as_file(files(__package__) / 'jsonschemas') as base_schemas_path:
-    base_schemas_path_str = str(base_schemas_path) + '/'
+with as_file(files(__package__) / "jsonschemas") as base_schemas_path:
+    base_schemas_path_str = str(base_schemas_path) + "/"
 
-with as_file(files(__package__) / 'templates') as templates_path:
+with as_file(files(__package__) / "templates") as templates_path:
     templateLoader = jinja2.FileSystemLoader(searchpath=str(templates_path))
     templateEnv = jinja2.Environment(loader=templateLoader)
 
@@ -39,7 +39,7 @@ class Utils:
     def _get(
         url: str,
         access_token: Optional[str] = None,
-        params: Optional[Dict[str, Any]] = None
+        params: Optional[Dict[str, Any]] = None,
     ) -> Union[Dict[str, Any], Tuple[str, bytes]]:
         """
         Perform an HTTP GET request and return the result as a JSON document or file content.
@@ -61,18 +61,20 @@ class Utils:
             response = client.get(url, params=params, headers=headers)
             response.raise_for_status()
 
-        content_type = response.headers.get('content-type', '')
+        content_type = response.headers.get("content-type", "")
 
-        if content_type == 'application/octet-stream':
-            content_disposition = response.headers.get('content-disposition', '')
+        if content_type == "application/octet-stream":
+            content_disposition = response.headers.get("content-disposition", "")
             try:
                 file_name = re.findall(r'filename="?(.*?)"?$', content_disposition)[0]
             except IndexError:
-                raise ValueError('Error extracting file name from Content-Disposition header.')
+                raise ValueError(
+                    "Error extracting file name from Content-Disposition header."
+                )
             return file_name, response.content
 
-        if content_type not in ('application/json', 'application/geo+json'):
-            raise ValueError(f'HTTP response is not JSON: Content-Type: {content_type}')
+        if content_type not in ("application/json", "application/geo+json"):
+            raise ValueError(f"HTTP response is not JSON: Content-Type: {content_type}")
 
         return response.json()
 
@@ -82,7 +84,7 @@ class Utils:
         access_token: Optional[str] = None,
         data: Optional[Dict[str, Any]] = None,
         json: Optional[Dict[str, Any]] = None,
-        files: Optional[Dict[str, Any]] = None
+        files: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
         Perform an HTTP POST request.
@@ -97,18 +99,20 @@ class Utils:
         headers = {"x-api-key": access_token} if access_token else {}
 
         with httpx.Client(timeout=100.0) as client:
-            response = client.post(url, headers=headers, data=data, json=json, files=files)
+            response = client.post(
+                url, headers=headers, data=data, json=json, files=files
+            )
             response.raise_for_status()
 
         return response.json()
 
     @staticmethod
     def _put(
-            url: str,
-            access_token: Optional[str] = None,
-            data: Optional[Dict[str, Any]] = None,
-            json: Optional[Dict[str, Any]] = None,
-            files: Optional[Dict[str, Any]] = None
+        url: str,
+        access_token: Optional[str] = None,
+        data: Optional[Dict[str, Any]] = None,
+        json: Optional[Dict[str, Any]] = None,
+        files: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
         Perform an HTTP PUT request.
@@ -123,7 +127,9 @@ class Utils:
         headers = {"x-api-key": access_token} if access_token else {}
 
         with httpx.Client(timeout=100.0) as client:
-            response = client.put(url, headers=headers, data=data, json=json, files=files)
+            response = client.put(
+                url, headers=headers, data=data, json=json, files=files
+            )
             response.raise_for_status()
 
         return response.json()
@@ -132,8 +138,8 @@ class Utils:
     def _delete(
         url: str,
         access_token: Optional[str] = None,
-        params: Optional[Dict[str, Any]] = None
-    )-> httpx.Response:
+        params: Optional[Dict[str, Any]] = None,
+    ) -> httpx.Response:
         """
         Perform an HTTP DELETE request.
 
@@ -165,4 +171,4 @@ class Utils:
     @staticmethod
     def get_id_by_name(name, classes):
         """Get id of class."""
-        return list(filter(lambda x: x.name == name, classes))[0]['id']
+        return list(filter(lambda x: x.name == name, classes))[0]["id"]
