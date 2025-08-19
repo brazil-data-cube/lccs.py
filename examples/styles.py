@@ -20,7 +20,7 @@
 from lccs import LCCS
 
 # Change to the LCCS-WS URL you want to use.
-service = LCCS("https://brazildatacube.dpi.inpe.br/lccs/", access_token='change-me', language='en')
+service = LCCS("https://data.inpe.br/bdc/lccs/v1/", access_token='change-me', language='en')
 
 # Get all styles available for a specific classification system
 style_formats = service.style_formats(system='prodes-1.0')
