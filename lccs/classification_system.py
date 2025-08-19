@@ -16,8 +16,9 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 #
 """Python Client Library for the LCCS Web Service."""
-from typing import Union, Any, List, Optional
-from .classes import ClassificationSystemClass, ClassesGroup
+from typing import Any, List, Optional, Union
+
+from .classes import ClassesGroup, ClassificationSystemClass
 from .link import Link
 from .utils import Utils
 
@@ -88,27 +89,24 @@ class ClassificationSystem(dict):
         :return: A group of classes or a specific classification system class.
         """
         try:
+            classes_url = next(
+                link['href'] for link in self.get('links', []) if link.get('rel') == 'classes'
+            )
+
+            params = {}
             if style_format_name_or_id:
-                classes_url = next(
-                    link['href'] + f"&style_format_id={style_format_name_or_id}"
-                    for link in self.get('links', []) if link.get('rel') == 'classes'
-                )
-            else:
-                classes_url = next(
-                    link['href'] for link in self.get('links', []) if link.get('rel') == 'classes'
-                )
-            classes_data = Utils._get(classes_url)
+                params["style_format_id"] = style_format_name_or_id
+
+            classes_data = Utils._get(classes_url, params=params)
 
             if class_name_or_id:
-                classes_link = next(
-                    link['href'] for link in self.get('links', []) if link.get('rel') == 'classes'
-                )
-                base_url, params = classes_link.split('classes', 1)
-                specific_class_data = Utils._get(f"{base_url}classes/{class_name_or_id}{params}")
+                specific_class_url = f"{classes_url}/{class_name_or_id}"
+                specific_class_data = Utils._get(specific_class_url, params=params)
                 return ClassificationSystemClass(specific_class_data, self._validate)
 
             all_classes = ClassesGroup({"classes": classes_data})
             return all_classes.classes
+
         except StopIteration:
             raise ValueError("No 'classes' link found in the classification system.")
         except Exception as e:
@@ -125,5 +123,3 @@ class ClassificationSystem(dict):
     def __str__(self) -> str:
         """Return a human-readable string representation of the classification system."""
         return f'<Classification System [{self.id}:{self.name}-{self.version} - Title: {self.title}]>'
-
-
