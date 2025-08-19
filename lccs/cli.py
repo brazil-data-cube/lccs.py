@@ -131,7 +131,7 @@ def classes(config: Config, system, style_format, verbose):
         table = Table(title="Classes", show_header=True, header_style="bold magenta")
         table.add_column("Title", style="cyan")
         table.add_column("Color", style="green", no_wrap=True)
-        table.add_column("Description", style="green", no_wrap=True)
+        table.add_column("Description", style="green", no_wrap=False, max_width=50)
         table.add_column("Code", style="green", no_wrap=True)
         table.add_column("Name", justify="right", style="cyan")
         table.add_column("Class Parent", justify="right", style="cyan")
