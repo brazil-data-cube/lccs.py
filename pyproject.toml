@@ -21,7 +21,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-version="1.0.0"
+version="1.0.1"
 dependencies = [
     "Click>=7.0",
     "jsonschema>=3.2",
@@ -52,6 +52,7 @@ tests = [
     "pydocstyle>=4.0",
     "isort>4.3",
     "check-manifest>=0.40",
+    "respx>=0.22.0",
 ]
 all = ["lccs[docs,tests]"]
 ## End extras dependencies
