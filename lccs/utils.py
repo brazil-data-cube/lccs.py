@@ -16,21 +16,20 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 #
 """Python Client Library for the LCCS Web Service."""
-from importlib.resources import files
+import re
+from importlib.resources import as_file, files
+from typing import Any, Dict, Optional, Tuple, Union
 
 import httpx
-from typing import Optional, Union, Tuple, Dict, Any
-
-import re
 import jinja2
+from jsonschema import Draft7Validator, validate
 
-from jsonschema import RefResolver, validate
-from pkg_resources import resource_filename
+with as_file(files(__package__) / "jsonschemas") as base_schemas_path:
+    base_schemas_path_str = str(base_schemas_path) + "/"
 
-base_schemas_path = resource_filename(__name__, 'jsonschemas/')
-templateLoader = jinja2.FileSystemLoader(searchpath=resource_filename(__name__, 'templates/'))
-templateEnv = jinja2.Environment(loader=templateLoader)
-
+with as_file(files(__package__) / "templates") as templates_path:
+    templateLoader = jinja2.FileSystemLoader(searchpath=str(templates_path))
+    templateEnv = jinja2.Environment(loader=templateLoader)
 
 
 class Utils:
@@ -40,7 +39,7 @@ class Utils:
     def _get(
         url: str,
         access_token: Optional[str] = None,
-        params: Optional[Dict[str, Any]] = None
+        params: Optional[Dict[str, Any]] = None,
     ) -> Union[Dict[str, Any], Tuple[str, bytes]]:
         """
         Perform an HTTP GET request and return the result as a JSON document or file content.
@@ -51,24 +50,31 @@ class Utils:
         :return: JSON response as a dictionary or a tuple with file name and binary content.
         :raises ValueError: If the response body does not contain valid JSON or is not of an expected content type.
         """
+        if params is None:
+            params = {}
+
+        params.setdefault("language", "pt-br")
+
         headers = {"x-api-key": access_token} if access_token else {}
 
         with httpx.Client(timeout=100.0) as client:
             response = client.get(url, params=params, headers=headers)
             response.raise_for_status()
 
-        content_type = response.headers.get('content-type', '')
+        content_type = response.headers.get("content-type", "")
 
-        if content_type == 'application/octet-stream':
-            content_disposition = response.headers.get('content-disposition', '')
+        if content_type == "application/octet-stream":
+            content_disposition = response.headers.get("content-disposition", "")
             try:
                 file_name = re.findall(r'filename="?(.*?)"?$', content_disposition)[0]
             except IndexError:
-                raise ValueError('Error extracting file name from Content-Disposition header.')
+                raise ValueError(
+                    "Error extracting file name from Content-Disposition header."
+                )
             return file_name, response.content
 
-        if content_type not in ('application/json', 'application/geo+json'):
-            raise ValueError(f'HTTP response is not JSON: Content-Type: {content_type}')
+        if content_type not in ("application/json", "application/geo+json"):
+            raise ValueError(f"HTTP response is not JSON: Content-Type: {content_type}")
 
         return response.json()
 
@@ -78,7 +84,7 @@ class Utils:
         access_token: Optional[str] = None,
         data: Optional[Dict[str, Any]] = None,
         json: Optional[Dict[str, Any]] = None,
-        files: Optional[Dict[str, Any]] = None
+        files: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
         Perform an HTTP POST request.
@@ -93,18 +99,20 @@ class Utils:
         headers = {"x-api-key": access_token} if access_token else {}
 
         with httpx.Client(timeout=100.0) as client:
-            response = client.post(url, headers=headers, data=data, json=json, files=files)
+            response = client.post(
+                url, headers=headers, data=data, json=json, files=files
+            )
             response.raise_for_status()
 
         return response.json()
 
     @staticmethod
     def _put(
-            url: str,
-            access_token: Optional[str] = None,
-            data: Optional[Dict[str, Any]] = None,
-            json: Optional[Dict[str, Any]] = None,
-            files: Optional[Dict[str, Any]] = None
+        url: str,
+        access_token: Optional[str] = None,
+        data: Optional[Dict[str, Any]] = None,
+        json: Optional[Dict[str, Any]] = None,
+        files: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
         Perform an HTTP PUT request.
@@ -119,7 +127,9 @@ class Utils:
         headers = {"x-api-key": access_token} if access_token else {}
 
         with httpx.Client(timeout=100.0) as client:
-            response = client.put(url, headers=headers, data=data, json=json, files=files)
+            response = client.put(
+                url, headers=headers, data=data, json=json, files=files
+            )
             response.raise_for_status()
 
         return response.json()
@@ -128,8 +138,8 @@ class Utils:
     def _delete(
         url: str,
         access_token: Optional[str] = None,
-        params: Optional[Dict[str, Any]] = None
-    )-> httpx.Response:
+        params: Optional[Dict[str, Any]] = None,
+    ) -> httpx.Response:
         """
         Perform an HTTP DELETE request.
 
@@ -148,13 +158,9 @@ class Utils:
 
     @staticmethod
     def validate(lccs_object):
-        """Validate a lucc Object using its jsonschemas.
-
-        :raise ValidationError: raise a ValidationError if the lucc Object couldn't be validated.
-        """
-        resolver = RefResolver("file://{}{}/".format(base_schemas_path, lccs_object))
-
-        validate(lccs_object, lccs_object._schema, resolver=resolver)
+        """Validade function lccs object."""
+        validator = Draft7Validator(schema=lccs_object._schema)
+        validator.validate(lccs_object)
 
     @staticmethod
     def render_html(template_name, **kwargs):
@@ -165,4 +171,4 @@ class Utils:
     @staticmethod
     def get_id_by_name(name, classes):
         """Get id of class."""
-        return list(filter(lambda x: x.name == name, classes))[0]['id']
+        return list(filter(lambda x: x.name == name, classes))[0]["id"]
