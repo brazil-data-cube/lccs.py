@@ -20,6 +20,15 @@
 Changes
 =======
 
+Version 1.0.1 (2025-08-20)
+--------------------------
+
+- Bug fix: Remove pkg_resources - deprecated (`#79 <https://github.com/brazil-data-cube/lccs.py/issues/79>`_)
+- Bug fix: RefResolver - deprecated (`#80 <https://github.com/brazil-data-cube/lccs.py/issues/80>`_)
+- Bug fix: Install all in pyproject (`#82 <https://github.com/brazil-data-cube/lccs.py/issues/82>`_)
+- Bug fix: No access token is provided (`#58 <https://github.com/brazil-data-cube/lccs.py/issues/58>`_)
+
+
 Version 1.0.0 (2025-03-11)
 --------------------------
 
