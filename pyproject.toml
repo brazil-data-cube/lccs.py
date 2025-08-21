@@ -62,12 +62,13 @@ requires = ["setuptools>=67.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-include = ["lccs.*"]
+include = ["lccs", "lccs.*"]
 exclude = ["tests*"]
 namespaces = false
 
 [tool.setuptools.package-data]
 "lccs" = [
+    "*.py",
     "py.typed",
     "jsonschemas/*.json",
     "templates/*.html"
