@@ -68,7 +68,6 @@ namespaces = false
 
 [tool.setuptools.package-data]
 "lccs" = [
-    "*.py",
     "py.typed",
     "jsonschemas/*.json",
     "templates/*.html"
