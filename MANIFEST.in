@@ -21,6 +21,7 @@ include *.rst
 include *.sh
 include *.txt
 include LICENSE
+include README.rst
 include pytest.ini
 recursive-exclude docs/sphinx/_build *
 recursive-include docs *.bat
@@ -36,4 +37,5 @@ recursive-include tests *.py
 recursive-include tests *.json
 recursive-include examples *.py
 recursive-include lccs/jsonschemas *.json
+recursive-include lccs/templates *.html
 recursive-include lccs *.html
