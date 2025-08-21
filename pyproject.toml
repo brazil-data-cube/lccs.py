@@ -1,5 +1,6 @@
 [project]
 name = "lccs"
+version="1.0.1"
 description = "."
 readme = "README.rst"
 requires-python = ">=3.8"
@@ -13,7 +14,7 @@ keywords = [
 classifiers = [
     "Intended Audience :: Information Technology",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: GNU General Public License version 3 License",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -21,7 +22,6 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-version="1.0.1"
 dependencies = [
     "Click>=7.0",
     "jsonschema>=3.2",
@@ -62,12 +62,16 @@ requires = ["setuptools>=67.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-include = ["lccs*"]
+include = ["lccs", "lccs.*"]
 exclude = ["tests*"]
 namespaces = false
 
 [tool.setuptools.package-data]
-"lccs" = ["py.typed"]
+"lccs" = [
+    "py.typed",
+    "jsonschemas/*.json",
+    "templates/*.html"
+]
 
 [project.scripts]
 lccs = "lccs.cli:cli"
