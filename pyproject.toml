@@ -1,6 +1,6 @@
 [project]
 name = "lccs"
-version="1.0.1"
+version="1.0.2"
 description = "."
 readme = "README.rst"
 requires-python = ">=3.8"

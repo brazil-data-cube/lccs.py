@@ -96,7 +96,7 @@ class Utils:
         :param files: (Optional) Files to send in the body of the request.
         :return: JSON response as a dictionary.
         """
-        headers = {"x-api-key": access_token} if access_token else {}
+        headers = {"X-Api-Key": access_token} if access_token else {}
 
         with httpx.Client(timeout=100.0) as client:
             response = client.post(
@@ -124,7 +124,7 @@ class Utils:
         :param files: (Optional) Files to send in the body of the request.
         :return: JSON response as a dictionary.
         """
-        headers = {"x-api-key": access_token} if access_token else {}
+        headers = {"X-Api-Key": access_token} if access_token else {}
 
         with httpx.Client(timeout=100.0) as client:
             response = client.put(
@@ -148,7 +148,7 @@ class Utils:
         :param params: (Optional) Query parameters as a dictionary.
         :return: JSON response as a dictionary.
         """
-        headers = {"x-api-key": access_token} if access_token else {}
+        headers = {"X-Api-Key": access_token} if access_token else {}
 
         with httpx.Client(timeout=100.0) as client:
             response = client.delete(url, params=params, headers=headers)
