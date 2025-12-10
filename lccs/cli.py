@@ -45,7 +45,7 @@ console = Console()
     "--url", default="http://127.0.0.1:5000/", help="The LCCS server address (an URL)."
 )
 @click.option(
-    "--access-token", default=None, help="Personal Access Token of the BDC Auth"
+    "--access-token", default=None, help="Personal Access Token of the BDC KeyCloak"
 )
 @click.option("--language", default="pt-br", help="The language of the response.")
 @click.version_option()
@@ -494,6 +494,32 @@ def delete_classification_system(config: Config, system, verbose):
         click.secho(
             f"\t - Deleted classification system: {system}!", bold=True, fg="green"
         )
+
+
+@cli.command()
+@click.option(
+    "--system", type=click.STRING, required=True, help="The classification system."
+)
+@click.option(
+    "--classes_path",
+    type=click.Path(exists=True),
+    required=True,
+    help="Json file with classes",
+)
+@click.option("-v", "--verbose", is_flag=True, default=False)
+@pass_config
+def add_classes(config: Config, system, classes_path, verbose):
+    """Add a new class into classification systems."""
+    if verbose:
+        click.secho(f"Server: {config.url}", bold=True, fg="black")
+        click.secho("\tAdding new mapping ... ", bold=False, fg="black")
+
+    config.service.add_classes(system=system, classes=classes_path)
+
+    click.secho(f"Added classes for {system}", bold=True, fg="green")
+
+    if verbose:
+        click.secho("\tFinished!", bold=False, fg="black")
 
 
 @cli.command()
