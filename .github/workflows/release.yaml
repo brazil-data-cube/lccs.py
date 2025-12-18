@@ -174,7 +174,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Force modern build tooling
+      - name: Install build and twine
         run: |
           python3 -m pip install --upgrade pip
           python3 -m pip install --upgrade "setuptools>=67" wheel build twine
