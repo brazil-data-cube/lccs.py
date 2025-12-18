@@ -20,6 +20,13 @@
 Changes
 =======
 
+Version 1.0.2 (2025-12-18)
+--------------------------
+
+- Add actions for release (`#89 <https://github.com/brazil-data-cube/lccs.py/issues/89>`_)
+- Bug fix: Review add classes (`#87 <https://github.com/brazil-data-cube/lccs.py/issues/87>`_)
+
+
 Version 1.0.1 (2025-08-21)
 --------------------------
 
