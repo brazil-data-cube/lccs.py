@@ -177,7 +177,11 @@ jobs:
       - name: Install build and twine
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install build twine
+          python3 -m pip install --upgrade "setuptools>=67" wheel build twine
+
+      - name: Clean previous artifacts
+        run: |
+          rm -rf dist *.egg-info
 
       - name: Generate stubs
         run: |
@@ -187,6 +191,10 @@ jobs:
       - name: Build source and wheel distribution
         run: |
           python3 -m build
+
+      - name: Check distributions (fail fast)
+        run: |
+          python3 -m twine check dist/*
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -212,8 +220,12 @@ jobs:
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
         run: |
+          python3 -m pip install --upgrade pip
           python3 -m pip install twine
-          python3 -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+          python3 -m twine upload \
+            --repository-url https://test.pypi.org/legacy/ \
+            --verbose \
+            dist/*
 
   # Publish to PYPI
   pypi_publish:
