@@ -18,7 +18,8 @@
 """Python API client wrapper for LCCS-WS."""
 import enum
 import json
-from typing import List
+from pathlib import Path
+from typing import Any
 
 from cachetools import LRUCache, cached
 
@@ -39,16 +40,23 @@ class LCCS:
     :type url: str
     """
 
-    def __init__(self, url, validate=False, access_token=None, language=None):
+    _url: str
+    _validate: bool
+    _access_token: str | None
+    _support_l: enum.EnumMeta
+    _language: str | None
+    _classification_systems: list[dict[str, str]]
+
+    def __init__(self, url: str, validate=False, access_token=None, language=None):
         """Create a LCCS-WS client attached to the given host address (an URL)."""
         self._url = url.rstrip("/")
         self._validate = validate
-        self._classification_systems = {}
         self._access_token = access_token if access_token else ""
         self._support_l = self._support_language()
         self._language = (
             self._validate_language(language) if language else None
         )  # Apenas o código, ex: 'en'
+        self._classification_systems = self._get_classification_systems()
 
     def _support_language(self):
         """Get the support language from service."""
@@ -87,14 +95,16 @@ class LCCS:
         return result
 
     def _id(self, system_name: str):
-        for k, v in self._classification_systems.items():
+        for k, v in self._classification_systems[0].items():
             if k == system_name:
                 return v
+        return None
 
     def _name(self, system_id: int):
-        for k, v in self._classification_systems.items():
+        for k, v in self._classification_systems[0].items():
             if v.id == int(system_id):
                 return k
+        return None
 
     @property
     def allowed_language(self):
@@ -105,10 +115,10 @@ class LCCS:
     def classification_systems(self):
         """Retrieve the list of names of all available classification systems in the service.
 
-        :returns: List of Classification Systems.
+        :returns: list of Classification Systems.
         :rtype: dict
         """
-        return self._get_classification_systems()
+        return self._classification_systems
 
     @cached(cache=LRUCache(maxsize=128))
     def classification_system(self, system: str) -> ClassificationSystem:
@@ -124,11 +134,13 @@ class LCCS:
         params = {"language": self._language} if self._language else None
         try:
             data = Utils._get(url, access_token=self._access_token, params=params)
-            return ClassificationSystem(data, self._validate)
-        except Exception:
+            return ClassificationSystem(
+                data, self._validate
+            )  # pyright: ignore[reportArgumentType]
+        except Exception as exc:
             raise KeyError(
                 f"Could not retrieve information for classification_system: {system}"
-            )
+            ) from exc
 
     @cached(cache=LRUCache(maxsize=128))
     def available_mappings(self, system_source: str) -> list:
@@ -206,7 +218,7 @@ class LCCS:
         return result
 
     @cached(cache=LRUCache(maxsize=128))
-    def style_formats(self, system) -> List[StyleFormats]:
+    def style_formats(self, system) -> list[StyleFormats]:
         """Fetch styles of the a giving classification system.
 
         :param system: The id or identifier of a classification system.
@@ -264,12 +276,12 @@ class LCCS:
             return open(full_path, "wb").write(data)
         return open(file_name, "wb").write(data)
 
-    def add_classification_system(self, system_path: str | dict) -> List[dict]:
+    def add_classification_system(self, system_path: str | dict) -> list[dict]:
         """Add new classification system."""
         url = f"{self._url}/classification_systems"
 
         if type(system_path) == str:
-            with open(system_path) as file:
+            with open(system_path, encoding="utf-8") as file:
                 system_path = json.load(file)
         try:
             retval = Utils._post(url, access_token=self._access_token, json=system_path)
@@ -279,7 +291,7 @@ class LCCS:
 
         return retval
 
-    def update_class(self, system: str, class_id: int, class_info: dict) -> List[dict]:
+    def update_class(self, system: str, class_id: int, class_info: dict) -> list[dict]:
         """Update class to a classification system."""
         url = f"{self._url}/classification_systems/{system}/classes/{class_id}"
 
@@ -287,6 +299,40 @@ class LCCS:
             retval = Utils._put(url, access_token=self._access_token, json=class_info)
         except RuntimeError:
             raise ValueError("Could not update class!")
+
+        return retval
+
+    def add_classes(
+        self, system: str, classes: str | list[dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Add new classes to an classification system."""
+        url = f"{self._url}/classification_systems/{system}/classes"
+
+        if isinstance(classes, str):
+            classes_path = Path(classes)
+            if not classes_path.exists():
+                raise ValueError(f"File not found: {classes_path}")
+
+            try:
+                with classes_path.open("r", encoding="utf-8") as f:
+                    classes = json.load(f)
+            except json.JSONDecodeError as exc:
+                raise ValueError(f"Invalid JSON file: {classes_path}") from exc
+
+        for i in classes:  # type: dict[str, Any]
+            if "class_parent_id" not in i:
+                break
+            if not isinstance(i["class_parent_id"], str):
+                break
+            i["class_parent_id"] = Utils.get_id_by_name(
+                name=i["class_parent_id"], classes=_system_id.classes
+            )
+
+        try:
+            retval = Utils._post(url=url, access_token=self._access_token, json=classes)
+
+        except RuntimeError:
+            raise ValueError("Could not insert classes!")
 
         return retval
 
@@ -298,7 +344,7 @@ class LCCS:
         style_tex: str = None,
         style_name: str = None,
         style_extension: str = None,
-    ) -> List[dict]:
+    ) -> list[dict]:
         """Add a new style to a system."""
         url = f"{self._url}/classification_systems/{system}/styles"
 
@@ -328,7 +374,7 @@ class LCCS:
         url = f"{self._url}/mappings/{system_source}/{system_target}"
 
         if type(mappings) == str:
-            with open(mappings) as file:
+            with open(mappings, encoding="utf-8") as file:
                 mappings = json.load(file)
         try:
             retval = Utils._post(url, access_token=self._access_token, json=mappings)
